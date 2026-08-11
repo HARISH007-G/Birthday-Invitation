@@ -37,9 +37,7 @@ export function Cake3DBackground({ modelPath }: { modelPath?: string }) {
 
   return (
     <div className="cake-3d-container">
-      <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
-        <color attach="background" args={["#ffb6d5"]} />
-
+      <Canvas camera={{ position: [0, 0, 5], fov: 45 }} gl={{ alpha: true }}>
         <ambientLight intensity={3} />
         <directionalLight position={[5, 5, 5]} intensity={5} />
 
