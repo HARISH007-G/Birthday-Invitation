@@ -65,7 +65,7 @@ export const birthdayConfig = {
     whatsappNumber: "919884948318",
     notificationEmail: "harish02102006@gmail.com",
     web3formsKey: "5c020812-6d1b-41b8-8931-9a3d1440f653",
-    sharedAlbumUrl: "https://photos.google.com", // Replace with your Google Drive / Google Photos shared link!
+    sharedAlbumUrl: "https://drive.google.com/drive/folders/1DHCxR1wotk03Mvhg8j6RzrmcHSFODZf0?usp=drive_link",
   },
 
 
