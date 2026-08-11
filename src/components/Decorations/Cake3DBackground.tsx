@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { Sparkles, Eye, EyeOff, RefreshCw, Upload } from 'lucide-react';
 
 interface Cake3DBackgroundProps {
@@ -46,7 +47,7 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
       0.1,
       1000
     );
-    camera.position.set(0, 1.5, 6);
+    camera.position.set(0, 1.2, 5.5);
     camera.lookAt(0, 0, 0);
 
     // 3. Renderer setup
@@ -60,22 +61,34 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.2;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-    // 4. Lighting setup (warm party illumination)
-    const ambientLight = new THREE.AmbientLight(0xfff5ea, 1.2);
+    // 4. Studio Environment Lighting (Critical for PBR Chocolate Cake materials!)
+    const pmremGenerator = new THREE.PMREMGenerator(renderer);
+    pmremGenerator.compileEquirectangularShader();
+    const envRoom = new RoomEnvironment();
+    const envTexture = pmremGenerator.fromScene(envRoom, 0.04).texture;
+    scene.environment = envTexture;
+
+    // Direct Studio Lights
+    const ambientLight = new THREE.AmbientLight(0xfff8f0, 1.5);
     scene.add(ambientLight);
 
-    const mainLight = new THREE.DirectionalLight(0xffecd1, 2.0);
+    const mainLight = new THREE.DirectionalLight(0xfffaed, 2.5);
     mainLight.position.set(5, 8, 5);
     scene.add(mainLight);
 
-    const fillLight = new THREE.DirectionalLight(0xffc0cb, 1.0);
+    const fillLight = new THREE.DirectionalLight(0xffe4e1, 1.5);
     fillLight.position.set(-5, 3, -2);
     scene.add(fillLight);
 
+    const backLight = new THREE.DirectionalLight(0xffd700, 1.0);
+    backLight.position.set(0, -4, -4);
+    scene.add(backLight);
+
     // Candle warm point light (flickering glow)
     const candleLight = new THREE.PointLight(0xffaa44, 3, 10);
-    candleLight.position.set(0, 1.8, 0);
+    candleLight.position.set(0, 2.2, 0);
     scene.add(candleLight);
 
     // 5. Sparkle Particle Field Background
@@ -235,14 +248,19 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
         loadedMesh.position.sub(center); // Center pivot
         loadedMesh.scale.setScalar(targetScale);
 
-        // Enhance materials translucency/shadows
+        // Ensure proper PBR materials rendering
         loadedMesh.traverse((child) => {
           if ((child as THREE.Mesh).isMesh) {
             const mesh = child as THREE.Mesh;
             mesh.castShadow = true;
             mesh.receiveShadow = true;
             if (mesh.material) {
-              (mesh.material as THREE.Material).needsUpdate = true;
+              const mat = mesh.material as THREE.MeshStandardMaterial;
+              mat.needsUpdate = true;
+              // Set envMapIntensity for realistic reflections
+              if ('envMapIntensity' in mat) {
+                mat.envMapIntensity = 1.2;
+              }
             }
           }
         });
@@ -251,11 +269,10 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
       },
       undefined,
       (_err) => {
-        // Fallback gracefully if GLB file is not found at path
         setIsLoading(false);
         setIsGlbLoaded(false);
         setErrorMessage(
-          `Could not find GLB model at "${currentModelPath}". Using fallback 3D cake model. Place your cake.glb file in the public/ folder!`
+          `Could not find GLB model at "${currentModelPath}". Using fallback 3D cake model.`
         );
 
         proceduralMesh = createProceduralCake();
@@ -327,6 +344,9 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
+      pmremGenerator.dispose();
+      envRoom.dispose();
+      envTexture.dispose();
       renderer.dispose();
       geometry.dispose();
       particleMaterial.dispose();
