@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Camera, Upload, ExternalLink, Share2, Sparkles, Copy, CheckCircle, Image as ImageIcon, Heart } from 'lucide-react';
+import { birthdayConfig } from '../../config/birthdayConfig';
 
 interface PartyPhotoDumpProps {
   className?: string;
@@ -9,8 +10,8 @@ interface PartyPhotoDumpProps {
 export const PartyPhotoDump: React.FC<PartyPhotoDumpProps> = ({ className = '' }) => {
   const [copied, setCopied] = useState(false);
 
-  // Google Drive / Shared Photos Album Link (Pre-configured or customizable link)
-  const sharedAlbumUrl = "https://photos.google.com";
+  // Google Drive / Shared Photos Album Link from config
+  const sharedAlbumUrl = birthdayConfig.event.sharedAlbumUrl || "https://photos.google.com";
 
   const handleCopyLink = async () => {
     try {
