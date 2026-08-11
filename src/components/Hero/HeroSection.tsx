@@ -4,7 +4,6 @@ import { ArrowRight, Sparkles } from 'lucide-react';
 import { birthdayConfig } from '../../config/birthdayConfig';
 import { useConfetti } from '../../hooks/useConfetti';
 import { SkyClouds } from '../Decorations/SkyClouds';
-import { Cake3DBackground } from '../Decorations/Cake3DBackground';
 
 interface HeroSectionProps {
   onOpenInvitation: () => void;
@@ -25,9 +24,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenInvitation }) =>
 
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-24 pb-20 px-4 overflow-hidden">
-      {/* 3D GLB Cake Background Canvas Layer */}
-      <Cake3DBackground modelPath="/cake.glb" />
-
       {/* Background Drifting Sky Clouds */}
       <SkyClouds />
 
