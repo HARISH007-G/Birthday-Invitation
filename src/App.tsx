@@ -14,6 +14,7 @@ import { FirstsSection } from './components/Firsts/FirstsSection';
 import { ThenAndNow } from './components/ThenAndNow/ThenAndNow';
 import { FavoriteThings } from './components/FavoriteThings/FavoriteThings';
 import { FamilyGallery } from './components/FamilyGallery/FamilyGallery';
+import { PartyPhotoDump } from './components/FamilyGallery/PartyPhotoDump';
 import { EventDetails } from './components/EventDetails/EventDetails';
 import { CountdownSection } from './components/Countdown/CountdownSection';
 import { RSVPSection } from './components/RSVP/RSVPSection';
@@ -149,6 +150,9 @@ export function App() {
 
             {/* 11. Family Photo Collage */}
             <FamilyGallery />
+
+            {/* 📸 Guest Memory Drive & Party Photo Dump */}
+            <PartyPhotoDump />
 
             {/* 12. Event Details */}
             <EventDetails />
