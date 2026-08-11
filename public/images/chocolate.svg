@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" fill="none">
+  <defs>
+    <linearGradient id="chocGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#795548"/>
+      <stop offset="50%" stop-color="#4e342e"/>
+      <stop offset="100%" stop-color="#2d1b18"/>
+    </linearGradient>
+    <linearGradient id="goldFoil" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffd54f"/>
+      <stop offset="50%" stop-color="#fff8e1"/>
+      <stop offset="100%" stop-color="#ffb300"/>
+    </linearGradient>
+    <filter id="photoDropShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Chocolate Main Body -->
+  <g filter="url(#photoDropShadow)">
+    <rect x="25" y="20" width="70" height="80" rx="10" fill="url(#chocGrad)"/>
+    
+    <!-- Chocolate Blocks -->
+    <rect x="30" y="25" width="28" height="22" rx="4" fill="#6d4c41" stroke="#3e2723" stroke-width="1.5"/>
+    <rect x="62" y="25" width="28" height="22" rx="4" fill="#6d4c41" stroke="#3e2723" stroke-width="1.5"/>
+    <rect x="30" y="50" width="28" height="22" rx="4" fill="#6d4c41" stroke="#3e2723" stroke-width="1.5"/>
+    <rect x="62" y="50" width="28" height="22" rx="4" fill="#6d4c41" stroke="#3e2723" stroke-width="1.5"/>
+    
+    <!-- Torn Gold Foil Wrapper -->
+    <path d="M25 72 L95 72 L95 95 Q95 100 90 100 L30 100 Q25 100 25 95 Z" fill="url(#goldFoil)"/>
+    <path d="M25 72 L95 72 L90 77 L30 77 Z" fill="#ffffff" opacity="0.8"/>
+  </g>
+</svg>

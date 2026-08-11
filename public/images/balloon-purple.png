@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="140" height="220" viewBox="0 0 140 220" fill="none">
+  <defs>
+    <radialGradient id="balloonGlow_ba68c8" cx="35%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.65"/>
+      <stop offset="30%" stop-color="#f3e5f5"/>
+      <stop offset="100%" stop-color="#ba68c8"/>
+    </radialGradient>
+    <filter id="balloonShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000000" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+
+  <!-- Balloon Main Oval Body -->
+  <ellipse cx="70" cy="70" rx="55" ry="65" fill="url(#balloonGlow_ba68c8)" filter="url(#balloonShadow)" />
+
+  <!-- Soft Specular Reflection Highlight -->
+  <ellipse cx="48" cy="45" rx="16" ry="24" fill="#ffffff" opacity="0.45" transform="rotate(-25 48 45)"/>
+
+  <!-- Knot -->
+  <polygon points="62,133 78,133 70,143" fill="#ba68c8" />
+
+  <!-- Trailing String -->
+  <path d="M70 143 C60 165, 80 185, 68 215" stroke="#49362d" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.65" />
+</svg>

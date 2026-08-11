@@ -1,0 +1,568 @@
+@import "tailwindcss";
+
+/* ============================================================
+   1. DESIGN TOKENS — CSS CUSTOM PROPERTIES
+   Consistent spacing, radii, timing, and brand colors used
+   across all components for a cohesive visual language.
+   ============================================================ */
+@layer base {
+  :root {
+    /* Brand Colors */
+    --cream:    #fff8ee;
+    --sunshine: #f5c65d;
+    --peach:    #f3a187;
+    --sky:      #b9dde4;
+    --sage:     #e2f0d9;
+    --brown:    #49362d;
+    --pink:     #f5d6d0;
+    --gold:     #e8b84b;
+
+    /* Spacing Scale */
+    --space-xs:  0.5rem;   /*  8px */
+    --space-sm:  1rem;     /* 16px */
+    --space-md:  2rem;     /* 32px */
+    --space-lg:  4rem;     /* 64px */
+    --space-xl:  6rem;     /* 96px */
+    --space-2xl: 8rem;     /* 128px */
+
+    /* Border Radius */
+    --radius-sm:  0.75rem;
+    --radius-md:  1.5rem;
+    --radius-lg:  2.5rem;
+    --radius-full: 9999px;
+
+    /* Shadows */
+    --shadow-xs: 0 1px 2px rgba(73,54,45,0.06);
+    --shadow-sm: 0 2px 8px rgba(73,54,45,0.08), 0 1px 3px rgba(73,54,45,0.04);
+    --shadow-md: 0 4px 16px rgba(73,54,45,0.10), 0 2px 6px rgba(73,54,45,0.06);
+    --shadow-lg: 0 8px 32px rgba(73,54,45,0.12), 0 4px 12px rgba(73,54,45,0.08);
+    --shadow-xl: 0 16px 48px rgba(73,54,45,0.14), 0 6px 20px rgba(73,54,45,0.08);
+    --shadow-2xl: 0 24px 64px rgba(73,54,45,0.16), 0 8px 24px rgba(73,54,45,0.10);
+    --shadow-gold: 0 0 0 3px rgba(245,198,93,0.3), 0 4px 16px rgba(245,198,93,0.2);
+
+    /* Animation Easing */
+    --ease-premium: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-spring:  cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-in-expo: cubic-bezier(0.95, 0.05, 0.795, 0.035);
+    --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+
+    /* Timing */
+    --duration-fast:   150ms;
+    --duration-base:   250ms;
+    --duration-slow:   400ms;
+    --duration-slower: 600ms;
+  }
+
+  /* Smooth Scroll — Premium Feel */
+  html {
+    scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  body {
+    background-color: var(--cream);
+    color: var(--brown);
+    font-family: 'Nunito', sans-serif;
+    overflow-x: hidden;
+    line-height: 1.6;
+    min-height: 100dvh;
+    /* Subtle paper-grain texture for warmth */
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  }
+
+  /* Branded Text Selection */
+  ::selection {
+    background-color: rgba(245, 198, 93, 0.35);
+    color: var(--brown);
+  }
+
+  /* Focus Ring — Accessible + On-Brand */
+  :focus-visible {
+    outline: 2px solid var(--sunshine);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Headings — Consistent Line Height & Tracking */
+  h1, h2, h3, h4 {
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  /* Paragraph Rhythm */
+  p {
+    line-height: 1.7;
+  }
+}
+
+/* ============================================================
+   2. GLASSMORPHISM COMPONENTS
+   Premium layered shadows and refined backdrop blur.
+   ============================================================ */
+.glass-card {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  border: 1px solid rgba(245, 198, 93, 0.25);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.6) inset,
+    var(--shadow-lg);
+  transition: box-shadow var(--duration-slow) var(--ease-premium),
+              border-color var(--duration-slow) var(--ease-premium),
+              transform var(--duration-slow) var(--ease-premium);
+}
+
+.glass-card:hover {
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.8) inset,
+    var(--shadow-xl),
+    var(--shadow-gold);
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(20px) saturate(1.5);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.7) inset,
+    var(--shadow-md);
+}
+
+/* ============================================================
+   3. PREMIUM BUTTON MICRO-INTERACTION
+   Reusable class for all primary CTAs.
+   Uses transform only — 60fps guaranteed.
+   ============================================================ */
+.btn-premium {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  transition:
+    transform var(--duration-base) var(--ease-premium),
+    box-shadow var(--duration-base) var(--ease-premium),
+    background-color var(--duration-base) var(--ease-premium);
+  transform: translateY(0);
+  will-change: transform;
+}
+
+.btn-premium:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-xl);
+}
+
+.btn-premium:active {
+  transform: translateY(-1px);
+}
+
+/* ============================================================
+   4. SCROLL-DRIVEN ANIMATIONS
+   IntersectionObserver-powered reveal classes.
+   Applied via JS in App.tsx after mount.
+   All use transform + opacity only — no layout thrash.
+   ============================================================ */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Ready state — before reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity var(--duration-slower) var(--ease-out-expo),
+    transform var(--duration-slower) var(--ease-out-expo);
+  will-change: transform, opacity;
+}
+
+/* Triggered state — when in viewport */
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger delay helpers */
+.reveal-delay-1 { transition-delay: 80ms; }
+.reveal-delay-2 { transition-delay: 160ms; }
+.reveal-delay-3 { transition-delay: 240ms; }
+.reveal-delay-4 { transition-delay: 320ms; }
+.reveal-delay-5 { transition-delay: 400ms; }
+
+/* ============================================================
+   5. EXISTING KEYFRAMES — PRESERVED & ENHANCED
+   ============================================================ */
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%       { transform: translateY(-14px) rotate(2.5deg); }
+}
+
+@keyframes driftCloud {
+  0%   { transform: translateX(-150px); }
+  100% { transform: translateX(calc(100vw + 150px)); }
+}
+
+@keyframes rotateSun {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes candleFlame {
+  0%, 100% { transform: scale(1) rotate(-1deg); opacity: 1; }
+  50%       { transform: scale(1.15) rotate(2deg); opacity: 0.85; }
+}
+
+@keyframes swayFlag {
+  0%, 100% { transform: rotate(0deg); }
+  50%       { transform: rotate(4deg); }
+}
+
+@keyframes textShimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Enhanced pulse ring for hero photo */
+@keyframes pulseRing {
+  0%   { transform: scale(0.95); opacity: 0.6; }
+  50%  { transform: scale(1.08); opacity: 0.2; }
+  100% { transform: scale(0.95); opacity: 0.6; }
+}
+
+/* Shimmer sweep for Party Pass ticket */
+@keyframes shimmerSweep {
+  0%   { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(250%) skewX(-15deg); }
+}
+
+/* Scroll indicator bounce */
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(8px); }
+}
+
+/* Back to top fade in */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.9); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ============================================================
+   6. UTILITY ANIMATION CLASSES
+   ============================================================ */
+.animate-float-slow  { animation: floatSlow 6s ease-in-out infinite; }
+.animate-drift       { animation: driftCloud 35s linear infinite; }
+.animate-rotate-sun  { animation: rotateSun 30s linear infinite; }
+.animate-flame       { animation: candleFlame 1.5s ease-in-out infinite; }
+.animate-sway        { animation: swayFlag 3s ease-in-out infinite; }
+.animate-pulse-ring  { animation: pulseRing 3s ease-in-out infinite; }
+.animate-scroll-bounce { animation: scrollBounce 1.6s ease-in-out infinite; }
+.animate-shimmer-sweep { animation: shimmerSweep 2s ease-in-out infinite; }
+
+/* ============================================================
+   7. GOLD SHIMMER TEXT EFFECT — ENHANCED
+   ============================================================ */
+.gold-shimmer-text {
+  background: linear-gradient(
+    90deg,
+    #49362d 0%,
+    #c8921a 25%,
+    #f5c65d 40%,
+    #fffbe6 50%,
+    #f5c65d 60%,
+    #c8921a 75%,
+    #49362d 100%
+  );
+  background-size: 220% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: textShimmer 4.5s linear infinite;
+  will-change: background-position;
+}
+
+/* ============================================================
+   8. 3D FLIP CARD STYLES
+   ============================================================ */
+.perspective-1000    { perspective: 1200px; }
+.transform-style-3d  { transform-style: preserve-3d; }
+.backface-hidden     {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.rotate-y-180        { transform: rotateY(180deg); }
+
+/* ============================================================
+   9. SECTION HEADER — CONSISTENT OVERLINE STYLE
+   ============================================================ */
+.section-overline {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--peach);
+}
+
+.section-heading {
+  font-family: 'Playfair Display', serif;
+  font-weight: 800;
+  font-size: clamp(1.75rem, 4vw, 3.5rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--brown);
+  margin-top: 0.25rem;
+}
+
+/* ============================================================
+   10. CARD HOVER LIFT — UNIFIED MICRO-INTERACTION
+   ============================================================ */
+.card-hover {
+  transition:
+    transform var(--duration-slow) var(--ease-premium),
+    box-shadow var(--duration-slow) var(--ease-premium);
+  will-change: transform;
+}
+
+.card-hover:hover {
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: var(--shadow-xl), var(--shadow-gold);
+}
+
+/* ============================================================
+   11. FORM INPUTS — PREMIUM FOCUS RING
+   ============================================================ */
+.input-premium {
+  width: 100%;
+  padding: 0.875rem 1.25rem;
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  border: 2px solid #f0e8dc;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--brown);
+  box-shadow: var(--shadow-xs);
+  transition:
+    border-color var(--duration-base) var(--ease-premium),
+    box-shadow var(--duration-base) var(--ease-premium),
+    transform var(--duration-base) var(--ease-premium);
+}
+
+.input-premium:focus {
+  outline: none;
+  border-color: var(--sunshine);
+  box-shadow: var(--shadow-gold), var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+/* ============================================================
+   12. BACK-TO-TOP BUTTON
+   ============================================================ */
+#back-to-top {
+  position: fixed;
+  bottom: 5rem;    /* Sits above mobile browser chrome */
+  right: 1.25rem;
+  z-index: 50;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--sunshine), var(--peach));
+  color: white;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(16px) scale(0.9);
+  transition:
+    opacity var(--duration-slow) var(--ease-premium),
+    transform var(--duration-slow) var(--ease-spring),
+    box-shadow var(--duration-base) var(--ease-premium);
+  cursor: pointer;
+  border: 2px solid rgba(255,255,255,0.5);
+}
+
+@media (min-width: 768px) {
+  #back-to-top {
+    bottom: 2rem;
+    right: 2rem;
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.25rem;
+  }
+}
+
+#back-to-top.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+#back-to-top:hover {
+  box-shadow: var(--shadow-xl), var(--shadow-gold);
+  transform: translateY(-3px) scale(1.08);
+}
+
+/* ============================================================
+   13. SCROLL PROGRESS BAR
+   ============================================================ */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--sunshine), var(--peach), var(--sky));
+  z-index: 100;
+  transition: width 0.1s linear;
+  border-radius: 0 2px 2px 0;
+  box-shadow: 0 0 8px rgba(245, 198, 93, 0.6);
+}
+
+/* ============================================================
+   14. TOAST NOTIFICATION
+   ============================================================ */
+.toast {
+  position: fixed;
+  bottom: 5.5rem;
+  right: 2rem;
+  z-index: 60;
+  padding: 0.75rem 1.25rem;
+  background: var(--brown);
+  color: white;
+  font-weight: 700;
+  font-size: 0.8rem;
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-xl);
+  opacity: 0;
+  transform: translateY(12px) scale(0.92);
+  pointer-events: none;
+  transition:
+    opacity var(--duration-slow) var(--ease-premium),
+    transform var(--duration-slow) var(--ease-spring);
+}
+
+.toast.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+/* ============================================================
+   15. CUSTOM SCROLLBAR — REFINED
+   ============================================================ */
+::-webkit-scrollbar       { width: 8px; }
+::-webkit-scrollbar-track { background: #fef6e4; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--sunshine), var(--peach));
+  border-radius: 8px;
+  border: 2px solid #fef6e4;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--peach), var(--sunshine));
+}
+
+/* ============================================================
+   16. REDUCED MOTION SAFETY NET
+   Respects user accessibility preferences.
+   All animations are disabled for users who prefer less motion.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ============================================================
+   17. PRINT STYLESHEET
+   Ensures the party pass & key info prints cleanly.
+   ============================================================ */
+@media print {
+  body {
+    background: white !important;
+    background-image: none !important;
+    color: black !important;
+  }
+
+  .glass-card,
+  .glass-pill {
+    background: white !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+  }
+
+  /* Hide decorative elements */
+  #back-to-top,
+  #scroll-progress,
+  header,
+  .animate-float-slow,
+  .animate-drift {
+    display: none !important;
+  }
+
+  /* Ensure party pass section is visible */
+  #party-pass {
+    page-break-inside: avoid;
+  }
+}

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff3e0" />
+      <stop offset="100%" stop-color="#fff8ee" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#49362d" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="800" fill="url(#bgGrad)" />
+  <circle cx="120" cy="140" r="8" fill="#ff8a65" opacity="0.4"/>
+  <circle cx="700" cy="180" r="12" fill="#ff8a65" opacity="0.3"/>
+  <circle cx="160" cy="680" r="10" fill="#ff8a65" opacity="0.3"/>
+  <circle cx="660" cy="650" r="7" fill="#ff8a65" opacity="0.4"/>
+
+  <rect x="80" y="80" width="640" height="640" rx="36" fill="#ffffff" filter="url(#shadow)"/>
+  
+  <rect x="110" y="110" width="580" height="480" rx="24" fill="#fff3e0" opacity="0.35"/>
+  <rect x="110" y="110" width="580" height="480" rx="24" fill="none" stroke="#ff8a65" stroke-width="4" stroke-dasharray="12 12" opacity="0.6"/>
+
+  <g transform="translate(400, 310)">
+    <circle r="70" fill="#ffffff" filter="url(#shadow)"/>
+    <text x="0" y="24" font-family="'Comic Sans MS', 'Caveat', cursive, sans-serif" font-size="64" text-anchor="middle" fill="#ff8a65">🎂</text>
+  </g>
+
+  
+  <g transform="translate(140, 140)">
+    <rect width="110" height="46" rx="23" fill="#ff8a65"/>
+    <text x="55" y="30" font-family="sans-serif" font-weight="bold" font-size="20" fill="#ffffff" text-anchor="middle">MONTH 06</text>
+  </g>
+  
+
+  <text x="400" y="635" font-family="'Playfair Display', Georgia, serif" font-size="34" font-weight="bold" fill="#49362d" text-anchor="middle">Halfway to One</text>
+  <text x="400" y="675" font-family="'Nunito', sans-serif" font-size="22" font-weight="600" fill="#ff8a65" text-anchor="middle">February 2026</text>
+  
+  <polygon points="90,70 160,70 140,110 70,110" fill="#f5c65d" opacity="0.65"/>
+  <polygon points="710,70 640,70 660,110 730,110" fill="#f5c65d" opacity="0.65"/>
+</svg>

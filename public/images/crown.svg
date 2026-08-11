@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" fill="none">
+  <defs>
+    <linearGradient id="goldCrownGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff59d"/>
+      <stop offset="30%" stop-color="#fbc02d"/>
+      <stop offset="70%" stop-color="#f57f17"/>
+      <stop offset="100%" stop-color="#f5511e"/>
+    </linearGradient>
+    <filter id="crownDropShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#crownDropShadow)">
+    <path d="M18 82 L26 34 L46 58 L60 22 L74 58 L94 34 L102 82 Z" fill="url(#goldCrownGrad)"/>
+    <rect x="18" y="80" width="84" height="14" rx="5" fill="#f57f17"/>
+    <rect x="18" y="80" width="84" height="6" fill="#fff59d"/>
+
+    <!-- Sparkling Jewels -->
+    <circle cx="60" cy="22" r="5" fill="#e53935"/>
+    <circle cx="26" cy="34" r="4.5" fill="#0288d1"/>
+    <circle cx="94" cy="34" r="4.5" fill="#0288d1"/>
+
+    <circle cx="40" cy="87" r="3.5" fill="#ffffff"/>
+    <circle cx="60" cy="87" r="4" fill="#e53935"/>
+    <circle cx="80" cy="87" r="3.5" fill="#ffffff"/>
+  </g>
+</svg>
