@@ -80,7 +80,7 @@ export const GlobalBalloons: React.FC = () => {
     <div
       ref={containerRef}
       id="globalBalloons"
-      className="floating-balloons fixed inset-0 w-screen h-screen pointer-events-none z-0 overflow-hidden"
+      className="floating-balloons fixed inset-0 w-screen h-screen pointer-events-none z-20 overflow-hidden"
     >
       <div className="balloon-wrapper b1 absolute bottom-[-200px] left-[8%] md:left-[12%]" data-speed="1.1" data-sway="35">
         <img src="/images/balloon-red.svg" alt="" className="balloon-img w-12 md:w-16 h-auto block filter drop-shadow-lg" />
