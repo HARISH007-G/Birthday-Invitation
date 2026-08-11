@@ -8,13 +8,19 @@
   height: 100vh;
   min-height: 500px;
   z-index: 0;
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .cake-3d-container canvas {
   display: block;
   width: 100% !important;
   height: 100% !important;
+}
+
+.cake-loading {
+  color: #7b2148;
+  font-size: 16px;
+  white-space: nowrap;
 }
 
 /* ============================================================
