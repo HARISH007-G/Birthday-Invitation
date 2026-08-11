@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Navigation, ExternalLink } from 'lucide-react';
-
+import { Navigation } from 'lucide-react';
 import { birthdayConfig } from '../../config/birthdayConfig';
+import { TravelShortcuts } from './TravelShortcuts';
 
 export const LocationSection: React.FC = () => {
   const [routeFinished, setRouteFinished] = useState(false);
@@ -28,7 +28,7 @@ export const LocationSection: React.FC = () => {
         onViewportEnter={() => setTimeout(() => setRouteFinished(true), 2500)}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="relative bg-[#e2f0d9] rounded-[40px] p-6 md:p-10 shadow-2xl border-4 border-white overflow-hidden max-w-4xl mx-auto"
+        className="relative bg-[#e2f0d9] rounded-[40px] p-6 md:p-10 shadow-2xl border-4 border-white overflow-hidden max-w-4xl mx-auto mb-10"
       >
         <div className="relative w-full h-[360px] md:h-[420px] rounded-3xl bg-[#eef7ea] overflow-hidden border-2 border-[#afc6a4]/50 shadow-inner">
           <svg viewBox="0 0 800 450" className="w-full h-full" fill="none">
@@ -106,22 +106,10 @@ export const LocationSection: React.FC = () => {
             <span>Cemetry Road, Royapuram, Chennai - 600013 (Opp. R S R M Hospital)</span>
           </div>
         </div>
-
-
-        {/* Take Me to Party Button */}
-        <div className="mt-8 text-center">
-          <a
-            href={birthdayConfig.event.googleMapsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-premium inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-[#f5c65d] to-[#f3a187] hover:from-[#f3a187] hover:to-[#f5c65d] text-white font-bold text-base shadow-xl border-2 border-white/60"
-          >
-            <MapPin className="w-5 h-5 text-[#49362d]" />
-            <span>Take Me to the Party 🚗</span>
-            <ExternalLink className="w-4 h-4 ml-1" />
-          </a>
-        </div>
       </motion.div>
+
+      {/* Smart Travel & Cab Booking Shortcuts Panel */}
+      <TravelShortcuts />
     </section>
   );
 };

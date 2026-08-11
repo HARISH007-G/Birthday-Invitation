@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight, Sparkles, FileText } from 'lucide-react';
 import { birthdayConfig } from '../../config/birthdayConfig';
 import { useConfetti } from '../../hooks/useConfetti';
 import { SkyClouds } from '../Decorations/SkyClouds';
+import { PrintableInvitationModal } from '../InvitationCard/PrintableInvitationModal';
 
 interface HeroSectionProps {
   onOpenInvitation: () => void;
@@ -12,6 +13,7 @@ interface HeroSectionProps {
 export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenInvitation }) => {
   const { triggerHeroBurst } = useConfetti();
   const [isHovered, setIsHovered] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenClick = () => {
     triggerHeroBurst();
@@ -137,17 +139,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenInvitation }) =>
           <span>⏰ {birthdayConfig.event.time}</span>
         </motion.div>
 
-        {/* Interactive Invitation CTA Button */}
+        {/* Interactive CTA Buttons Row */}
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.9 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto"
         >
           <button
             onClick={handleOpenClick}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            className={`group relative inline-flex items-center gap-2 md:gap-3 px-6 md:px-8 py-3.5 md:py-4 rounded-full font-serif font-extrabold text-base md:text-lg text-[#49362d] shadow-xl border-2 border-white transition-all duration-300 transform ${
+            className={`group relative inline-flex items-center justify-center gap-2 md:gap-3 px-6 md:px-8 py-3.5 md:py-4 rounded-full font-serif font-extrabold text-base md:text-lg text-[#49362d] shadow-xl border-2 border-white transition-all duration-300 transform w-full sm:w-auto ${
               isHovered
                 ? '-translate-y-1 bg-[#f3a187] text-white shadow-2xl'
                 : 'bg-[#f5c65d] hover:bg-[#f3a187]'
@@ -156,7 +159,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenInvitation }) =>
             <span>Open the Invitation</span>
             <ArrowRight className={`w-5 h-5 transition-transform duration-300 ${isHovered ? 'translate-x-1.5' : ''}`} />
           </button>
+
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="inline-flex items-center justify-center gap-2 px-6 py-3.5 md:py-4 rounded-full font-serif font-extrabold text-sm md:text-base text-[#49362d] bg-white hover:bg-[#fff8ee] shadow-lg border-2 border-[#f5c65d]/50 transition-all transform hover:-translate-y-0.5 w-full sm:w-auto"
+          >
+            <FileText className="w-4 h-4 text-[#f3a187]" />
+            <span>Download Card / PDF 📄</span>
+          </button>
         </motion.div>
+
+        {/* Printable Invitation Modal */}
+        <PrintableInvitationModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
 
         {/* Scroll Down Indicator */}
         <motion.div
