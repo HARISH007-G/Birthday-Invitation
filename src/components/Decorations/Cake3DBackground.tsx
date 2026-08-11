@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
-import { Sparkles, Eye, EyeOff, RefreshCw, Upload } from 'lucide-react';
+import { Sparkles, Eye, EyeOff, RefreshCw, Upload, Maximize2, MoveVertical } from 'lucide-react';
 
 interface Cake3DBackgroundProps {
   modelPath?: string;
@@ -12,7 +12,7 @@ interface Cake3DBackgroundProps {
 
 export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
   modelPath = '/cake.glb',
-  opacity = 0.85,
+  opacity = 0.95,
   enableMouseInteraction = true,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -25,6 +25,8 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
   const [isVisible, setIsVisible] = useState(true);
   const [isRotating, setIsRotating] = useState(true);
   const [modelOpacity, setModelOpacity] = useState(opacity);
+  const [scaleMultiplier, setScaleMultiplier] = useState(1.4);
+  const [yOffset, setYOffset] = useState(-0.2);
   const [customPathInput, setCustomPathInput] = useState(modelPath);
   const [showControls, setShowControls] = useState(false);
 
@@ -40,14 +42,14 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
     // 1. Scene setup
     const scene = new THREE.Scene();
 
-    // 2. Camera setup
+    // 2. Camera setup - Positioned closer & centered for maximum visibility
     const camera = new THREE.PerspectiveCamera(
       45,
       window.innerWidth / window.innerHeight,
       0.1,
       1000
     );
-    camera.position.set(0, 1.2, 5.5);
+    camera.position.set(0, 0.3, 3.8);
     camera.lookAt(0, 0, 0);
 
     // 3. Renderer setup
@@ -60,7 +62,7 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.3;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
 
     // 4. Studio Environment Lighting (Critical for PBR Chocolate Cake materials!)
@@ -71,28 +73,28 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
     scene.environment = envTexture;
 
     // Direct Studio Lights
-    const ambientLight = new THREE.AmbientLight(0xfff8f0, 1.5);
+    const ambientLight = new THREE.AmbientLight(0xfff8f0, 2.0);
     scene.add(ambientLight);
 
-    const mainLight = new THREE.DirectionalLight(0xfffaed, 2.5);
+    const mainLight = new THREE.DirectionalLight(0xfffaed, 3.0);
     mainLight.position.set(5, 8, 5);
     scene.add(mainLight);
 
-    const fillLight = new THREE.DirectionalLight(0xffe4e1, 1.5);
+    const fillLight = new THREE.DirectionalLight(0xffe4e1, 2.0);
     fillLight.position.set(-5, 3, -2);
     scene.add(fillLight);
 
-    const backLight = new THREE.DirectionalLight(0xffd700, 1.0);
+    const backLight = new THREE.DirectionalLight(0xffd700, 1.5);
     backLight.position.set(0, -4, -4);
     scene.add(backLight);
 
     // Candle warm point light (flickering glow)
-    const candleLight = new THREE.PointLight(0xffaa44, 3, 10);
+    const candleLight = new THREE.PointLight(0xffaa44, 4, 12);
     candleLight.position.set(0, 2.2, 0);
     scene.add(candleLight);
 
     // 5. Sparkle Particle Field Background
-    const particleCount = 120;
+    const particleCount = 140;
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
     const colors = new Float32Array(particleCount * 3);
@@ -119,10 +121,10 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
     const particleMaterial = new THREE.PointsMaterial({
-      size: 0.08,
+      size: 0.09,
       vertexColors: true,
       transparent: true,
-      opacity: 0.7,
+      opacity: 0.75,
       blending: THREE.AdditiveBlending,
     });
 
@@ -140,7 +142,6 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
     const createProceduralCake = () => {
       const group = new THREE.Group();
 
-      // Tier Materials
       const tier1Mat = new THREE.MeshStandardMaterial({
         color: 0xfff0f5,
         roughness: 0.3,
@@ -168,7 +169,6 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
         color: 0xffaa00,
       });
 
-      // Bottom Tier
       const bottom = new THREE.Mesh(
         new THREE.CylinderGeometry(1.6, 1.6, 0.7, 32),
         tier1Mat
@@ -176,7 +176,6 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
       bottom.position.y = -0.65;
       group.add(bottom);
 
-      // Middle Tier
       const middle = new THREE.Mesh(
         new THREE.CylinderGeometry(1.2, 1.2, 0.6, 32),
         tier2Mat
@@ -184,7 +183,6 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
       middle.position.y = 0;
       group.add(middle);
 
-      // Top Tier
       const top = new THREE.Mesh(
         new THREE.CylinderGeometry(0.8, 0.8, 0.5, 32),
         tier3Mat
@@ -192,7 +190,6 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
       top.position.y = 0.55;
       group.add(top);
 
-      // Decorative Frosting Pearls around tiers
       for (let i = 0; i < 16; i++) {
         const angle = (i / 16) * Math.PI * 2;
         const pearl = new THREE.Mesh(
@@ -203,7 +200,6 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
         group.add(pearl);
       }
 
-      // Center Candle
       const candle = new THREE.Mesh(
         new THREE.CylinderGeometry(0.05, 0.05, 0.4, 16),
         candleMat
@@ -211,7 +207,6 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
       candle.position.y = 1.0;
       group.add(candle);
 
-      // Candle Flame
       const flame = new THREE.Mesh(
         new THREE.ConeGeometry(0.06, 0.18, 16),
         flameMat
@@ -243,10 +238,11 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
         const size = box.getSize(new THREE.Vector3());
 
         const maxDim = Math.max(size.x, size.y, size.z);
-        const targetScale = 2.4 / (maxDim || 1);
+        const baseScale = 2.8 / (maxDim || 1);
+        const finalScale = baseScale * scaleMultiplier;
 
         loadedMesh.position.sub(center); // Center pivot
-        loadedMesh.scale.setScalar(targetScale);
+        loadedMesh.scale.setScalar(finalScale);
 
         // Ensure proper PBR materials rendering
         loadedMesh.traverse((child) => {
@@ -257,9 +253,8 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
             if (mesh.material) {
               const mat = mesh.material as THREE.MeshStandardMaterial;
               mat.needsUpdate = true;
-              // Set envMapIntensity for realistic reflections
               if ('envMapIntensity' in mat) {
-                mat.envMapIntensity = 1.2;
+                mat.envMapIntensity = 1.5;
               }
             }
           }
@@ -317,8 +312,8 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
           cakeGroup.rotation.y += 0.008;
         }
 
-        // Floating motion
-        cakeGroup.position.y = Math.sin(elapsedTime * 1.5) * 0.15;
+        // Floating motion + user yOffset
+        cakeGroup.position.y = yOffset + Math.sin(elapsedTime * 1.5) * 0.12;
 
         // Interactive mouse tilt
         cakeGroup.rotation.x = mouseRef.current.y * 0.4;
@@ -326,7 +321,7 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
       }
 
       // Candle light subtle flicker
-      candleLight.intensity = 2.5 + Math.sin(elapsedTime * 10) * 0.5 + Math.cos(elapsedTime * 23) * 0.3;
+      candleLight.intensity = 3.0 + Math.sin(elapsedTime * 10) * 0.6 + Math.cos(elapsedTime * 23) * 0.4;
 
       // Animate background particles
       if (particleSystem) {
@@ -352,7 +347,7 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
       particleMaterial.dispose();
       scene.clear();
     };
-  }, [currentModelPath, isRotating, enableMouseInteraction]);
+  }, [currentModelPath, isRotating, enableMouseInteraction, scaleMultiplier, yOffset]);
 
   const handleApplyCustomPath = (e: React.FormEvent) => {
     e.preventDefault();
@@ -363,7 +358,7 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
 
   return (
     <>
-      {/* 3D WebGL Canvas Layer */}
+      {/* 3D WebGL Canvas Layer - zIndex set to 15 pointer-events-none so it floats ON TOP of background colors */}
       <div
         ref={containerRef}
         aria-hidden="true"
@@ -371,7 +366,7 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
           isVisible ? 'opacity-100' : 'opacity-0'
         }`}
         style={{
-          zIndex: 0,
+          zIndex: 15,
           opacity: isVisible ? modelOpacity : 0,
         }}
       >
@@ -457,13 +452,10 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
                   Load
                 </button>
               </div>
-              <p className="text-[10px] text-amber-700 italic">
-                Put your <code className="bg-amber-100 px-1 rounded">cake.glb</code> file inside the <code className="bg-amber-100 px-1 rounded">public/</code> directory!
-              </p>
             </form>
 
-            {/* Quick Controls */}
-            <div className="flex flex-col gap-2 pt-1 border-t border-amber-100">
+            {/* Controls Sliders */}
+            <div className="flex flex-col gap-2.5 pt-1 border-t border-amber-100">
               <div className="flex items-center justify-between">
                 <span className="font-medium text-amber-900">Visibility:</span>
                 <button
@@ -488,6 +480,45 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
                 </button>
               </div>
 
+              {/* Scale Slider */}
+              <div className="flex flex-col gap-1">
+                <div className="flex justify-between text-amber-900 font-medium items-center">
+                  <span className="flex items-center gap-1">
+                    <Maximize2 className="w-3 h-3 text-amber-600" /> Cake Size:
+                  </span>
+                  <span>{Math.round(scaleMultiplier * 100)}%</span>
+                </div>
+                <input
+                  type="range"
+                  min="0.5"
+                  max="3.0"
+                  step="0.1"
+                  value={scaleMultiplier}
+                  onChange={(e) => setScaleMultiplier(parseFloat(e.target.value))}
+                  className="w-full accent-amber-600 cursor-pointer"
+                />
+              </div>
+
+              {/* Vertical Position Slider */}
+              <div className="flex flex-col gap-1">
+                <div className="flex justify-between text-amber-900 font-medium items-center">
+                  <span className="flex items-center gap-1">
+                    <MoveVertical className="w-3 h-3 text-amber-600" /> Vertical Position:
+                  </span>
+                  <span>{yOffset > 0 ? `+${yOffset.toFixed(1)}` : yOffset.toFixed(1)}</span>
+                </div>
+                <input
+                  type="range"
+                  min="-1.5"
+                  max="1.5"
+                  step="0.1"
+                  value={yOffset}
+                  onChange={(e) => setYOffset(parseFloat(e.target.value))}
+                  className="w-full accent-amber-600 cursor-pointer"
+                />
+              </div>
+
+              {/* Opacity Slider */}
               <div className="flex flex-col gap-1">
                 <div className="flex justify-between text-amber-900 font-medium">
                   <span>Background Opacity:</span>
