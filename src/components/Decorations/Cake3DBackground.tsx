@@ -2,21 +2,15 @@ import { Suspense, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 
-const modelUrl = `${import.meta.env.BASE_URL}cake.glb`;
+// Vite build-time asset URL resolution for public/cake.glb
+const defaultModelUrl = new URL('../../../public/cake.glb', import.meta.url).href;
 
-function CakeModel() {
-  const { scene } = useGLTF(modelUrl);
+function CakeModel({ url }: { url: string }) {
+  console.log("CakeModel loading GLB from:", url);
+  const { scene } = useGLTF(url);
 
   useEffect(() => {
-    console.log("GLB loaded:", scene);
-    scene.traverse((object) => {
-      console.log(
-        object.type,
-        object.name,
-        "visible:",
-        object.visible
-      );
-    });
+    console.log("GLB loaded successfully:", scene);
   }, [scene]);
 
   return (
@@ -29,9 +23,8 @@ function CakeModel() {
 }
 
 export function Cake3DBackground({ modelPath }: { modelPath?: string }) {
-  const url = modelPath ? `${import.meta.env.BASE_URL}${modelPath.replace(/^\//, '')}` : modelUrl;
-  console.log("Cake3DBackground rendered");
-  console.log("Loading GLB from:", url);
+  const url = modelPath ? modelPath : defaultModelUrl;
+  console.log("Cake3DBackground rendered. GLB URL:", url);
 
   return (
     <div className="cake-3d-container">
@@ -42,7 +35,7 @@ export function Cake3DBackground({ modelPath }: { modelPath?: string }) {
         <directionalLight position={[5, 5, 5]} intensity={5} />
 
         <Suspense fallback={null}>
-          <CakeModel />
+          <CakeModel url={url} />
         </Suspense>
 
         <OrbitControls />
