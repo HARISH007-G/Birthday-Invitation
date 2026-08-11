@@ -2,13 +2,13 @@
 
 /* 3D GLB Background Container Styling */
 .cake-3d-container {
-  position: absolute;
+  position: fixed;
   inset: 0;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
-  min-height: 500px;
-  z-index: 0;
+  z-index: 9999;
   pointer-events: auto;
+  background: rgba(0, 0, 0, 0.15);
 }
 
 .cake-3d-container canvas {
