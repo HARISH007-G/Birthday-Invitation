@@ -51,6 +51,63 @@ export const PrintableInvitationModal: React.FC<PrintableInvitationModalProps> =
 
   const t = texts[language];
 
+  // Theme configuration definitions for both Live Preview & Canvas Rendering
+  const themeStyles = {
+    classic: {
+      cardBg: 'bg-gradient-to-br from-[#fff8ee] via-white to-[#fff3d1]',
+      borderColor: 'border-[#f5c65d]',
+      taglineBg: 'bg-[#f5c65d] text-[#49362d]',
+      nameColor: 'text-[#49362d] font-serif',
+      headingColor: 'text-[#f3a187]',
+      hostsColor: 'text-[#49362d]/70',
+      photoFrame: 'rounded-full border-4 border-[#f5c65d] shadow-lg p-2 bg-white',
+      detailsBg: 'bg-white/95 border-2 border-[#f5c65d]/40 text-[#49362d]',
+      accentText: 'text-[#f3a187]',
+      // Canvas colors
+      canvasPrimary: '#f5c65d',
+      canvasAccent: '#f3a187',
+      canvasBgStart: '#fff8ee',
+      canvasBgEnd: '#fff3d1',
+      canvasText: '#49362d',
+    },
+    modern: {
+      cardBg: 'bg-gradient-to-br from-[#f5c65d] via-[#f3a187] to-[#e85d04]',
+      borderColor: 'border-white',
+      taglineBg: 'bg-white text-[#e85d04] shadow-md',
+      nameColor: 'text-white font-sans drop-shadow-md',
+      headingColor: 'text-[#fff3d1]',
+      hostsColor: 'text-white/90',
+      photoFrame: 'rounded-2xl border-4 border-white shadow-2xl p-1.5 bg-white',
+      detailsBg: 'bg-white/95 border-2 border-white/80 text-[#49362d]',
+      accentText: 'text-[#e85d04]',
+      // Canvas colors
+      canvasPrimary: '#e85d04',
+      canvasAccent: '#f3a187',
+      canvasBgStart: '#f5c65d',
+      canvasBgEnd: '#e85d04',
+      canvasText: '#ffffff',
+    },
+    pastel: {
+      cardBg: 'bg-gradient-to-br from-[#e2f0d9] via-[#f3e5f5] to-[#dbebf2]',
+      borderColor: 'border-[#afc6a4]',
+      taglineBg: 'bg-[#afc6a4] text-white shadow-xs',
+      nameColor: 'text-[#49362d] font-serif',
+      headingColor: 'text-[#88a87a]',
+      hostsColor: 'text-[#49362d]/75',
+      photoFrame: 'rounded-[32px] border-4 border-[#afc6a4] shadow-md p-2 bg-white',
+      detailsBg: 'bg-white/90 border border-[#afc6a4]/50 text-[#49362d]',
+      accentText: 'text-[#88a87a]',
+      // Canvas colors
+      canvasPrimary: '#afc6a4',
+      canvasAccent: '#88a87a',
+      canvasBgStart: '#e2f0d9',
+      canvasBgEnd: '#dbebf2',
+      canvasText: '#49362d',
+    }
+  };
+
+  const currentTheme = themeStyles[template];
+
   // Canvas Generator for Image / PDF
   const handleDownload = (format: 'image' | 'pdf') => {
     setIsGenerating(true);
@@ -64,50 +121,25 @@ export const PrintableInvitationModal: React.FC<PrintableInvitationModalProps> =
       return;
     }
 
-    // 1. Background styling depending on template
-    if (template === 'classic') {
-      const grad = ctx.createLinearGradient(0, 0, 1080, 1350);
-      grad.addColorStop(0, '#fff8ee');
-      grad.addColorStop(0.5, '#ffffff');
-      grad.addColorStop(1, '#fff3d1');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 1080, 1350);
+    // 1. Background styling depending on selected template
+    const grad = ctx.createLinearGradient(0, 0, 1080, 1350);
+    grad.addColorStop(0, currentTheme.canvasBgStart);
+    grad.addColorStop(0.5, '#ffffff');
+    grad.addColorStop(1, currentTheme.canvasBgEnd);
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 1080, 1350);
 
-      // Gold Border
-      ctx.strokeStyle = '#f5c65d';
-      ctx.lineWidth = 24;
-      ctx.strokeRect(30, 30, 1020, 1290);
+    // Border
+    ctx.strokeStyle = currentTheme.canvasPrimary;
+    ctx.lineWidth = 24;
+    ctx.strokeRect(30, 30, 1020, 1290);
 
-      ctx.strokeStyle = '#f3a187';
-      ctx.lineWidth = 4;
-      ctx.strokeRect(48, 48, 984, 1254);
-    } else if (template === 'modern') {
-      const grad = ctx.createLinearGradient(0, 0, 1080, 1350);
-      grad.addColorStop(0, '#f5c65d');
-      grad.addColorStop(0.3, '#ffffff');
-      grad.addColorStop(1, '#f3a187');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 1080, 1350);
-
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 20;
-      ctx.strokeRect(30, 30, 1020, 1290);
-    } else {
-      // Pastel
-      const grad = ctx.createLinearGradient(0, 0, 1080, 1350);
-      grad.addColorStop(0, '#e2f0d9');
-      grad.addColorStop(0.5, '#ffffff');
-      grad.addColorStop(1, '#dbebf2');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 1080, 1350);
-
-      ctx.strokeStyle = '#afc6a4';
-      ctx.lineWidth = 18;
-      ctx.strokeRect(30, 30, 1020, 1290);
-    }
+    ctx.strokeStyle = currentTheme.canvasAccent;
+    ctx.lineWidth = 4;
+    ctx.strokeRect(48, 48, 984, 1254);
 
     // 2. Header Tagline Pill
-    ctx.fillStyle = template === 'classic' ? '#f5c65d' : template === 'modern' ? '#49362d' : '#afc6a4';
+    ctx.fillStyle = currentTheme.canvasPrimary;
     ctx.beginPath();
     ctx.roundRect(290, 80, 500, 50, 25);
     ctx.fill();
@@ -118,15 +150,15 @@ export const PrintableInvitationModal: React.FC<PrintableInvitationModalProps> =
     ctx.fillText(`✨ ${t.tagline} ✨`, 540, 113);
 
     // 3. Main Title
-    ctx.fillStyle = '#49362d';
+    ctx.fillStyle = template === 'modern' ? '#ffffff' : '#49362d';
     ctx.font = 'bold 54px serif';
     ctx.fillText(birthdayConfig.babyName.toUpperCase(), 540, 210);
 
-    ctx.fillStyle = '#f3a187';
+    ctx.fillStyle = currentTheme.canvasAccent;
     ctx.font = 'bold 36px sans-serif';
     ctx.fillText(t.invitationHeading, 540, 265);
 
-    ctx.fillStyle = '#666666';
+    ctx.fillStyle = template === 'modern' ? '#ffffff' : '#666666';
     ctx.font = 'italic 24px sans-serif';
     ctx.fillText(t.hostsLabel, 540, 310);
 
@@ -145,8 +177,8 @@ export const PrintableInvitationModal: React.FC<PrintableInvitationModalProps> =
       ctx.fill();
       ctx.shadowBlur = 0; // Reset shadow
 
-      ctx.strokeStyle = '#f5c65d';
-      ctx.lineWidth = 3;
+      ctx.strokeStyle = currentTheme.canvasPrimary;
+      ctx.lineWidth = 4;
       ctx.strokeRect(100, 740, 880, 360);
 
       // Info List
@@ -161,7 +193,7 @@ export const PrintableInvitationModal: React.FC<PrintableInvitationModalProps> =
       ctx.font = '22px sans-serif';
       ctx.fillText(t.addressLabel, 190, 965);
 
-      ctx.fillStyle = '#f3a187';
+      ctx.fillStyle = currentTheme.canvasAccent;
       ctx.font = 'bold 24px sans-serif';
       ctx.fillText(`🎨  ${t.dressCodeLabel}`, 140, 1040);
 
@@ -172,12 +204,12 @@ export const PrintableInvitationModal: React.FC<PrintableInvitationModalProps> =
 
       const finishCanvas = () => {
         // Footer Note
-        ctx.fillStyle = '#49362d';
+        ctx.fillStyle = template === 'modern' ? '#ffffff' : '#49362d';
         ctx.font = 'bold 22px sans-serif';
         ctx.textAlign = 'center';
         ctx.fillText(t.footerNote, 540, 1160);
 
-        ctx.fillStyle = '#888888';
+        ctx.fillStyle = template === 'modern' ? '#fff3d1' : '#888888';
         ctx.font = '18px sans-serif';
         ctx.fillText('RSVP: Suganya & Yogarajan • Phone: +91 9884948318', 540, 1200);
 
@@ -185,7 +217,7 @@ export const PrintableInvitationModal: React.FC<PrintableInvitationModalProps> =
         const dataUrl = canvas.toDataURL('image/png');
         const a = document.createElement('a');
         a.href = dataUrl;
-        a.download = `Hanvika-1st-Birthday-Invitation-${language.toUpperCase()}.${format === 'pdf' ? 'pdf' : 'png'}`;
+        a.download = `Hanvika-1st-Birthday-${template.toUpperCase()}-${language.toUpperCase()}.${format === 'pdf' ? 'pdf' : 'png'}`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -216,7 +248,7 @@ export const PrintableInvitationModal: React.FC<PrintableInvitationModalProps> =
       ctx.restore();
 
       // Circular Ring
-      ctx.strokeStyle = '#f5c65d';
+      ctx.strokeStyle = currentTheme.canvasPrimary;
       ctx.lineWidth = 12;
       ctx.beginPath();
       ctx.arc(540, 520, 180, 0, Math.PI * 2);
@@ -281,7 +313,7 @@ export const PrintableInvitationModal: React.FC<PrintableInvitationModalProps> =
                     onClick={() => setTemplate(t)}
                     className={`flex-1 py-2 px-2 rounded-xl text-xs font-extrabold capitalize border transition-all ${
                       template === t
-                        ? 'bg-[#f5c65d] text-[#49362d] border-white shadow-xs scale-105'
+                        ? 'bg-[#f5c65d] text-[#49362d] border-white shadow-sm scale-105 ring-2 ring-[#f3a187]'
                         : 'bg-white text-[#49362d]/70 border-gray-200 hover:bg-gray-50'
                     }`}
                   >
@@ -302,7 +334,7 @@ export const PrintableInvitationModal: React.FC<PrintableInvitationModalProps> =
                   onClick={() => setLanguage('en')}
                   className={`flex-1 py-2 rounded-xl text-xs font-extrabold border transition-all ${
                     language === 'en'
-                      ? 'bg-[#f3a187] text-white border-white shadow-xs scale-105'
+                      ? 'bg-[#f3a187] text-white border-white shadow-sm scale-105'
                       : 'bg-white text-[#49362d]/70 border-gray-200 hover:bg-gray-50'
                   }`}
                 >
@@ -312,7 +344,7 @@ export const PrintableInvitationModal: React.FC<PrintableInvitationModalProps> =
                   onClick={() => setLanguage('ta')}
                   className={`flex-1 py-2 rounded-xl text-xs font-extrabold border transition-all ${
                     language === 'ta'
-                      ? 'bg-[#f3a187] text-white border-white shadow-xs scale-105'
+                      ? 'bg-[#f3a187] text-white border-white shadow-sm scale-105'
                       : 'bg-white text-[#49362d]/70 border-gray-200 hover:bg-gray-50'
                   }`}
                 >
@@ -322,34 +354,28 @@ export const PrintableInvitationModal: React.FC<PrintableInvitationModalProps> =
             </div>
           </div>
 
-          {/* LIVE DYNAMIC CARD PREVIEW */}
+          {/* DYNAMIC LIVE CARD PREVIEW (Fully responds to Classic / Modern / Pastel themes!) */}
           <div
-            className={`relative rounded-3xl p-6 md:p-8 text-center border-4 shadow-xl mb-6 overflow-hidden transition-colors duration-300 ${
-              template === 'classic'
-                ? 'bg-gradient-to-br from-[#fff8ee] via-white to-[#fff3d1] border-[#f5c65d]'
-                : template === 'modern'
-                ? 'bg-gradient-to-br from-[#f5c65d]/20 via-white to-[#f3a187]/20 border-[#f3a187]'
-                : 'bg-gradient-to-br from-[#e2f0d9]/30 via-white to-[#dbebf2]/30 border-[#afc6a4]'
-            }`}
+            className={`relative rounded-3xl p-6 md:p-8 text-center border-4 shadow-xl mb-6 overflow-hidden transition-all duration-300 ${currentTheme.cardBg} ${currentTheme.borderColor}`}
           >
             {/* Tagline Crest */}
-            <div className="inline-block px-4 py-1 rounded-full bg-[#f5c65d] text-[#49362d] text-[11px] font-black uppercase tracking-wider mb-3 shadow-xs">
+            <div className={`inline-block px-4 py-1 rounded-full text-[11px] font-black uppercase tracking-wider mb-3 shadow-xs ${currentTheme.taglineBg}`}>
               {t.tagline}
             </div>
 
-            <h4 className="font-serif font-black text-2xl md:text-3xl text-[#49362d]">
+            <h4 className={`text-2xl md:text-3xl font-black ${currentTheme.nameColor}`}>
               {birthdayConfig.babyName}
             </h4>
-            <p className="font-handwriting text-lg font-bold text-[#f3a187] mt-0.5">
+            <p className={`text-lg font-bold mt-0.5 ${currentTheme.headingColor}`}>
               {t.invitationHeading}
             </p>
-            <p className="text-xs font-medium text-[#49362d]/70 mt-1 italic">
+            <p className={`text-xs font-medium mt-1 italic ${currentTheme.hostsColor}`}>
               {t.hostsLabel}
             </p>
 
             {/* Baby Hero Photo Frame */}
             <div className="my-5 flex justify-center">
-              <div className="w-28 h-28 md:w-36 md:h-36 rounded-full p-2 bg-white shadow-lg border-4 border-[#f5c65d] overflow-hidden">
+              <div className={`w-28 h-28 md:w-36 md:h-36 overflow-hidden ${currentTheme.photoFrame}`}>
                 <img
                   src={birthdayConfig.images.hero}
                   alt={birthdayConfig.babyName}
@@ -359,14 +385,14 @@ export const PrintableInvitationModal: React.FC<PrintableInvitationModalProps> =
             </div>
 
             {/* Event Highlights Card */}
-            <div className="bg-white/95 backdrop-blur-xs p-4 rounded-2xl border border-gray-200 text-left text-xs font-bold text-[#49362d] space-y-2 max-w-md mx-auto shadow-xs">
+            <div className={`p-4 rounded-2xl text-left text-xs font-bold space-y-2 max-w-md mx-auto shadow-xs ${currentTheme.detailsBg}`}>
               <div>🗓️ {t.dateLabel}</div>
               <div>⏰ {t.timeLabel}</div>
               <div>📍 {t.venueLabel}, {t.addressLabel}</div>
-              <div className="text-[#f3a187]">🎨 {t.dressCodeLabel}</div>
+              <div className={currentTheme.accentText}>🎨 {t.dressCodeLabel}</div>
             </div>
 
-            <p className="text-xs font-bold text-[#49362d]/80 mt-4 italic">
+            <p className={`text-xs font-bold mt-4 italic ${template === 'modern' ? 'text-white' : 'text-[#49362d]/80'}`}>
               “{t.footerNote}”
             </p>
           </div>
