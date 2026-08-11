@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { BirthdayLoader } from './components/BirthdayLoader/BirthdayLoader';
 import { FloatingDecorations } from './components/FloatingDecorations/FloatingDecorations';
-import { Cake3DBackground } from './components/Decorations/Cake3DBackground';
 import { GlobalBalloons } from './components/FloatingDecorations/GlobalBalloons';
 import { ImageTrail } from './components/Decorations/ImageTrail';
 import { PartyBanner } from './components/Decorations/PartyBanner';
@@ -98,9 +97,6 @@ export function App() {
         <BirthdayLoader onComplete={() => setIsLoading(false)} />
       ) : (
         <>
-          {/* 3D GLB Birthday Cake Background Scene */}
-          <Cake3DBackground modelPath="/cake.glb" opacity={0.85} />
-
           {/* Reusable Parallax Floating Decorations & Balloons */}
           <FloatingDecorations />
           <GlobalBalloons />

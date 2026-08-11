@@ -1,36 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
-import { Sparkles, Eye, EyeOff, RefreshCw, Upload, Maximize2, MoveVertical } from 'lucide-react';
 
 interface Cake3DBackgroundProps {
   modelPath?: string;
-  opacity?: number;
-  enableMouseInteraction?: boolean;
 }
 
 export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
   modelPath = '/cake.glb',
-  opacity = 0.95,
-  enableMouseInteraction = true,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  const [currentModelPath, setCurrentModelPath] = useState(modelPath);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isGlbLoaded, setIsGlbLoaded] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isVisible, setIsVisible] = useState(true);
-  const [isRotating, setIsRotating] = useState(true);
-  const [modelOpacity, setModelOpacity] = useState(opacity);
-  const [scaleMultiplier, setScaleMultiplier] = useState(1.4);
-  const [yOffset, setYOffset] = useState(-0.2);
-  const [customPathInput, setCustomPathInput] = useState(modelPath);
-  const [showControls, setShowControls] = useState(false);
-
-  // Mouse tracking
   const mouseRef = useRef({ x: 0, y: 0, targetX: 0, targetY: 0 });
 
   useEffect(() => {
@@ -42,14 +23,14 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
     // 1. Scene setup
     const scene = new THREE.Scene();
 
-    // 2. Camera setup - Positioned closer & centered for maximum visibility
+    // 2. Camera setup - Positioned for soft background perspective
     const camera = new THREE.PerspectiveCamera(
       45,
       window.innerWidth / window.innerHeight,
       0.1,
       1000
     );
-    camera.position.set(0, 0.3, 3.8);
+    camera.position.set(0, 0.4, 4.5);
     camera.lookAt(0, 0, 0);
 
     // 3. Renderer setup
@@ -62,39 +43,35 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.3;
+    renderer.toneMappingExposure = 1.2;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-    // 4. Studio Environment Lighting (Critical for PBR Chocolate Cake materials!)
+    // 4. Studio Environment Lighting (PBR Reflection mapping)
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
     pmremGenerator.compileEquirectangularShader();
     const envRoom = new RoomEnvironment();
     const envTexture = pmremGenerator.fromScene(envRoom, 0.04).texture;
     scene.environment = envTexture;
 
-    // Direct Studio Lights
+    // Studio Lights
     const ambientLight = new THREE.AmbientLight(0xfff8f0, 2.0);
     scene.add(ambientLight);
 
-    const mainLight = new THREE.DirectionalLight(0xfffaed, 3.0);
+    const mainLight = new THREE.DirectionalLight(0xfffaed, 2.8);
     mainLight.position.set(5, 8, 5);
     scene.add(mainLight);
 
-    const fillLight = new THREE.DirectionalLight(0xffe4e1, 2.0);
+    const fillLight = new THREE.DirectionalLight(0xffe4e1, 1.8);
     fillLight.position.set(-5, 3, -2);
     scene.add(fillLight);
 
-    const backLight = new THREE.DirectionalLight(0xffd700, 1.5);
-    backLight.position.set(0, -4, -4);
-    scene.add(backLight);
-
     // Candle warm point light (flickering glow)
-    const candleLight = new THREE.PointLight(0xffaa44, 4, 12);
-    candleLight.position.set(0, 2.2, 0);
+    const candleLight = new THREE.PointLight(0xffaa44, 3.5, 12);
+    candleLight.position.set(0, 2.0, 0);
     scene.add(candleLight);
 
-    // 5. Sparkle Particle Field Background
-    const particleCount = 140;
+    // 5. Subtle Gold/Pink Particle Field
+    const particleCount = 100;
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
     const colors = new Float32Array(particleCount * 3);
@@ -102,7 +79,6 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
     const palette = [
       new THREE.Color(0xffd700), // Gold
       new THREE.Color(0xffb6c1), // Pink
-      new THREE.Color(0x87cefa), // Light Blue
       new THREE.Color(0xffffff), // White
     ];
 
@@ -121,10 +97,10 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
     const particleMaterial = new THREE.PointsMaterial({
-      size: 0.09,
+      size: 0.08,
       vertexColors: true,
       transparent: true,
-      opacity: 0.75,
+      opacity: 0.6,
       blending: THREE.AdditiveBlending,
     });
 
@@ -136,100 +112,12 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
     scene.add(cakeGroup);
 
     let loadedMesh: THREE.Object3D | null = null;
-    let proceduralMesh: THREE.Group | null = null;
-
-    // Helper: Build Procedural 3D Cake Fallback if GLB isn't present
-    const createProceduralCake = () => {
-      const group = new THREE.Group();
-
-      const tier1Mat = new THREE.MeshStandardMaterial({
-        color: 0xfff0f5,
-        roughness: 0.3,
-        metalness: 0.1,
-      });
-      const tier2Mat = new THREE.MeshStandardMaterial({
-        color: 0xffb6c1,
-        roughness: 0.3,
-        metalness: 0.1,
-      });
-      const tier3Mat = new THREE.MeshStandardMaterial({
-        color: 0xffdab9,
-        roughness: 0.3,
-        metalness: 0.1,
-      });
-      const frostingMat = new THREE.MeshStandardMaterial({
-        color: 0xffffff,
-        roughness: 0.2,
-      });
-      const candleMat = new THREE.MeshStandardMaterial({
-        color: 0xff69b4,
-        roughness: 0.4,
-      });
-      const flameMat = new THREE.MeshBasicMaterial({
-        color: 0xffaa00,
-      });
-
-      const bottom = new THREE.Mesh(
-        new THREE.CylinderGeometry(1.6, 1.6, 0.7, 32),
-        tier1Mat
-      );
-      bottom.position.y = -0.65;
-      group.add(bottom);
-
-      const middle = new THREE.Mesh(
-        new THREE.CylinderGeometry(1.2, 1.2, 0.6, 32),
-        tier2Mat
-      );
-      middle.position.y = 0;
-      group.add(middle);
-
-      const top = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.8, 0.8, 0.5, 32),
-        tier3Mat
-      );
-      top.position.y = 0.55;
-      group.add(top);
-
-      for (let i = 0; i < 16; i++) {
-        const angle = (i / 16) * Math.PI * 2;
-        const pearl = new THREE.Mesh(
-          new THREE.SphereGeometry(0.08, 16, 16),
-          frostingMat
-        );
-        pearl.position.set(Math.cos(angle) * 1.22, 0.3, Math.sin(angle) * 1.22);
-        group.add(pearl);
-      }
-
-      const candle = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.05, 0.05, 0.4, 16),
-        candleMat
-      );
-      candle.position.y = 1.0;
-      group.add(candle);
-
-      const flame = new THREE.Mesh(
-        new THREE.ConeGeometry(0.06, 0.18, 16),
-        flameMat
-      );
-      flame.position.y = 1.28;
-      group.add(flame);
-
-      group.scale.set(1.1, 1.1, 1.1);
-      return group;
-    };
 
     // Load GLB file using GLTFLoader
     const loader = new GLTFLoader();
-    setIsLoading(true);
-    setErrorMessage(null);
-
     loader.load(
-      currentModelPath,
+      modelPath,
       (gltf) => {
-        setIsLoading(false);
-        setIsGlbLoaded(true);
-        setErrorMessage(null);
-
         loadedMesh = gltf.scene;
 
         // Auto-center and normalize scale of custom GLB model
@@ -238,11 +126,10 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
         const size = box.getSize(new THREE.Vector3());
 
         const maxDim = Math.max(size.x, size.y, size.z);
-        const baseScale = 2.8 / (maxDim || 1);
-        const finalScale = baseScale * scaleMultiplier;
+        const targetScale = 2.8 / (maxDim || 1);
 
-        loadedMesh.position.sub(center); // Center pivot
-        loadedMesh.scale.setScalar(finalScale);
+        loadedMesh.position.sub(center);
+        loadedMesh.scale.setScalar(targetScale);
 
         // Ensure proper PBR materials rendering
         loadedMesh.traverse((child) => {
@@ -254,7 +141,7 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
               const mat = mesh.material as THREE.MeshStandardMaterial;
               mat.needsUpdate = true;
               if ('envMapIntensity' in mat) {
-                mat.envMapIntensity = 1.5;
+                mat.envMapIntensity = 1.3;
               }
             }
           }
@@ -263,23 +150,15 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
         cakeGroup.add(loadedMesh);
       },
       undefined,
-      (_err) => {
-        setIsLoading(false);
-        setIsGlbLoaded(false);
-        setErrorMessage(
-          `Could not find GLB model at "${currentModelPath}". Using fallback 3D cake model.`
-        );
-
-        proceduralMesh = createProceduralCake();
-        cakeGroup.add(proceduralMesh);
+      (err) => {
+        console.warn('Could not load cake GLB model:', err);
       }
     );
 
     // Mouse movement listener
     const handleMouseMove = (event: MouseEvent) => {
-      if (!enableMouseInteraction) return;
-      mouseRef.current.targetX = (event.clientX / window.innerWidth - 0.5) * 0.8;
-      mouseRef.current.targetY = (event.clientY / window.innerHeight - 0.5) * 0.5;
+      mouseRef.current.targetX = (event.clientX / window.innerWidth - 0.5) * 0.6;
+      mouseRef.current.targetY = (event.clientY / window.innerHeight - 0.5) * 0.4;
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -306,27 +185,19 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
       mouseRef.current.x += (mouseRef.current.targetX - mouseRef.current.x) * 0.05;
       mouseRef.current.y += (mouseRef.current.targetY - mouseRef.current.y) * 0.05;
 
-      // Rotate and float cake
+      // Slow rotation + gentle float
       if (cakeGroup) {
-        if (isRotating) {
-          cakeGroup.rotation.y += 0.008;
-        }
-
-        // Floating motion + user yOffset
-        cakeGroup.position.y = yOffset + Math.sin(elapsedTime * 1.5) * 0.12;
-
-        // Interactive mouse tilt
-        cakeGroup.rotation.x = mouseRef.current.y * 0.4;
-        cakeGroup.rotation.z = -mouseRef.current.x * 0.2;
+        cakeGroup.rotation.y += 0.006;
+        cakeGroup.position.y = Math.sin(elapsedTime * 1.4) * 0.1;
+        cakeGroup.rotation.x = mouseRef.current.y * 0.3;
+        cakeGroup.rotation.z = -mouseRef.current.x * 0.15;
       }
 
       // Candle light subtle flicker
-      candleLight.intensity = 3.0 + Math.sin(elapsedTime * 10) * 0.6 + Math.cos(elapsedTime * 23) * 0.4;
+      candleLight.intensity = 3.0 + Math.sin(elapsedTime * 10) * 0.5;
 
-      // Animate background particles
       if (particleSystem) {
-        particleSystem.rotation.y = elapsedTime * 0.03;
-        particleSystem.rotation.x = Math.sin(elapsedTime * 0.02) * 0.1;
+        particleSystem.rotation.y = elapsedTime * 0.02;
       }
 
       renderer.render(scene, camera);
@@ -347,197 +218,16 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
       particleMaterial.dispose();
       scene.clear();
     };
-  }, [currentModelPath, isRotating, enableMouseInteraction, scaleMultiplier, yOffset]);
-
-  const handleApplyCustomPath = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (customPathInput.trim()) {
-      setCurrentModelPath(customPathInput.trim());
-    }
-  };
+  }, [modelPath]);
 
   return (
-    <>
-      {/* 3D WebGL Canvas Layer - zIndex set to 15 pointer-events-none so it floats ON TOP of background colors */}
-      <div
-        ref={containerRef}
-        aria-hidden="true"
-        className={`fixed inset-0 pointer-events-none transition-opacity duration-700 ease-in-out ${
-          isVisible ? 'opacity-100' : 'opacity-0'
-        }`}
-        style={{
-          zIndex: 15,
-          opacity: isVisible ? modelOpacity : 0,
-        }}
-      >
-        <canvas ref={canvasRef} className="w-full h-full block" />
-      </div>
-
-      {/* Floating 3D Cake Background Controls & Status Badge */}
-      <div className="fixed bottom-4 left-4 z-50 flex flex-col gap-2 pointer-events-auto">
-        {/* Toggle Widget Button */}
-        <button
-          onClick={() => setShowControls(!showControls)}
-          className="flex items-center gap-2 bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-full shadow-lg border border-amber-200 hover:border-amber-400 text-xs font-semibold text-amber-900 transition-all hover:scale-105"
-        >
-          <Sparkles className="w-4 h-4 text-amber-500 animate-spin-slow" />
-          <span>3D Cake Background</span>
-          <span
-            className={`w-2 h-2 rounded-full ${
-              isGlbLoaded ? 'bg-emerald-500' : 'bg-amber-400'
-            }`}
-          />
-        </button>
-
-        {/* Extended Settings Modal Popover */}
-        {showControls && (
-          <div className="w-80 bg-white/95 backdrop-blur-xl p-4 rounded-2xl shadow-2xl border border-amber-200 text-amber-950 text-xs flex flex-col gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <div className="flex items-center justify-between border-b border-amber-100 pb-2">
-              <div className="flex items-center gap-1.5 font-bold text-sm text-amber-900">
-                <Sparkles className="w-4 h-4 text-amber-600" />
-                3D Cake Background Setup
-              </div>
-              <button
-                onClick={() => setShowControls(false)}
-                className="text-gray-400 hover:text-gray-600 font-bold text-sm"
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* Model Status */}
-            <div className="p-2.5 rounded-xl bg-amber-50/80 border border-amber-200/60 flex flex-col gap-1">
-              <div className="flex items-center justify-between font-medium text-amber-900">
-                <span>Model Status:</span>
-                {isLoading ? (
-                  <span className="text-amber-600 font-semibold animate-pulse">
-                    Loading GLB...
-                  </span>
-                ) : isGlbLoaded ? (
-                  <span className="text-emerald-600 font-bold">
-                    ✓ Custom .GLB Active
-                  </span>
-                ) : (
-                  <span className="text-amber-700 font-bold">
-                    ★ 3D Procedural Active
-                  </span>
-                )}
-              </div>
-              {errorMessage && (
-                <p className="text-[10px] text-amber-800 leading-tight mt-1">
-                  {errorMessage}
-                </p>
-              )}
-            </div>
-
-            {/* Path Form */}
-            <form onSubmit={handleApplyCustomPath} className="flex flex-col gap-1.5">
-              <label className="font-semibold text-amber-900 flex items-center gap-1">
-                <Upload className="w-3.5 h-3.5 text-amber-600" />
-                GLB Model File Path:
-              </label>
-              <div className="flex gap-1.5">
-                <input
-                  type="text"
-                  value={customPathInput}
-                  onChange={(e) => setCustomPathInput(e.target.value)}
-                  placeholder="/cake.glb"
-                  className="flex-1 bg-amber-50/50 border border-amber-200 rounded-lg px-2.5 py-1.5 text-xs text-amber-950 focus:outline-none focus:ring-2 focus:ring-amber-400"
-                />
-                <button
-                  type="submit"
-                  className="bg-amber-600 hover:bg-amber-700 text-white font-medium px-3 py-1.5 rounded-lg text-xs transition-colors flex items-center gap-1"
-                >
-                  <RefreshCw className="w-3 h-3" />
-                  Load
-                </button>
-              </div>
-            </form>
-
-            {/* Controls Sliders */}
-            <div className="flex flex-col gap-2.5 pt-1 border-t border-amber-100">
-              <div className="flex items-center justify-between">
-                <span className="font-medium text-amber-900">Visibility:</span>
-                <button
-                  onClick={() => setIsVisible(!isVisible)}
-                  className="p-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 transition-colors"
-                >
-                  {isVisible ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-                </button>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span className="font-medium text-amber-900">Auto Rotation:</span>
-                <button
-                  onClick={() => setIsRotating(!isRotating)}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors ${
-                    isRotating
-                      ? 'bg-emerald-100 text-emerald-800'
-                      : 'bg-gray-100 text-gray-700'
-                  }`}
-                >
-                  {isRotating ? 'Rotating On' : 'Paused'}
-                </button>
-              </div>
-
-              {/* Scale Slider */}
-              <div className="flex flex-col gap-1">
-                <div className="flex justify-between text-amber-900 font-medium items-center">
-                  <span className="flex items-center gap-1">
-                    <Maximize2 className="w-3 h-3 text-amber-600" /> Cake Size:
-                  </span>
-                  <span>{Math.round(scaleMultiplier * 100)}%</span>
-                </div>
-                <input
-                  type="range"
-                  min="0.5"
-                  max="3.0"
-                  step="0.1"
-                  value={scaleMultiplier}
-                  onChange={(e) => setScaleMultiplier(parseFloat(e.target.value))}
-                  className="w-full accent-amber-600 cursor-pointer"
-                />
-              </div>
-
-              {/* Vertical Position Slider */}
-              <div className="flex flex-col gap-1">
-                <div className="flex justify-between text-amber-900 font-medium items-center">
-                  <span className="flex items-center gap-1">
-                    <MoveVertical className="w-3 h-3 text-amber-600" /> Vertical Position:
-                  </span>
-                  <span>{yOffset > 0 ? `+${yOffset.toFixed(1)}` : yOffset.toFixed(1)}</span>
-                </div>
-                <input
-                  type="range"
-                  min="-1.5"
-                  max="1.5"
-                  step="0.1"
-                  value={yOffset}
-                  onChange={(e) => setYOffset(parseFloat(e.target.value))}
-                  className="w-full accent-amber-600 cursor-pointer"
-                />
-              </div>
-
-              {/* Opacity Slider */}
-              <div className="flex flex-col gap-1">
-                <div className="flex justify-between text-amber-900 font-medium">
-                  <span>Background Opacity:</span>
-                  <span>{Math.round(modelOpacity * 100)}%</span>
-                </div>
-                <input
-                  type="range"
-                  min="0.1"
-                  max="1.0"
-                  step="0.05"
-                  value={modelOpacity}
-                  onChange={(e) => setModelOpacity(parseFloat(e.target.value))}
-                  className="w-full accent-amber-600 cursor-pointer"
-                />
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    </>
+    <div
+      ref={containerRef}
+      aria-hidden="true"
+      className="absolute inset-0 pointer-events-none overflow-hidden"
+      style={{ zIndex: 0, opacity: 0.7 }}
+    >
+      <canvas ref={canvasRef} className="w-full h-full block opacity-70" />
+    </div>
   );
 };
