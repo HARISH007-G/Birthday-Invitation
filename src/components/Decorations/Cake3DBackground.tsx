@@ -23,7 +23,7 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
     // 1. Scene setup
     const scene = new THREE.Scene();
 
-    // 2. Camera setup - Positioned to look directly at the cake center
+    // 2. Camera setup - Centered directly on the cake
     const camera = new THREE.PerspectiveCamera(
       45,
       window.innerWidth / window.innerHeight,
@@ -53,28 +53,28 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
     const envTexture = pmremGenerator.fromScene(envRoom, 0.04).texture;
     scene.environment = envTexture;
 
-    // Studio Lights
-    const ambientLight = new THREE.AmbientLight(0xfff8f0, 2.2);
+    // Direct Studio Lights
+    const ambientLight = new THREE.AmbientLight(0xfff8f0, 2.5);
     scene.add(ambientLight);
 
-    const mainLight = new THREE.DirectionalLight(0xfffaed, 3.2);
+    const mainLight = new THREE.DirectionalLight(0xfffaed, 3.5);
     mainLight.position.set(5, 8, 5);
     scene.add(mainLight);
 
-    const fillLight = new THREE.DirectionalLight(0xffe4e1, 2.2);
+    const fillLight = new THREE.DirectionalLight(0xffe4e1, 2.5);
     fillLight.position.set(-5, 3, -2);
     scene.add(fillLight);
 
-    const backLight = new THREE.DirectionalLight(0xffd700, 1.5);
+    const backLight = new THREE.DirectionalLight(0xffd700, 1.8);
     backLight.position.set(0, -4, -4);
     scene.add(backLight);
 
     // Candle warm point light (flickering glow)
-    const candleLight = new THREE.PointLight(0xffaa44, 4.0, 12);
+    const candleLight = new THREE.PointLight(0xffaa44, 4.5, 12);
     candleLight.position.set(0, 2.0, 0);
     scene.add(candleLight);
 
-    // 5. Subtle Gold/Pink Particle Field
+    // 5. Gold & Pink Floating Particle Field
     const particleCount = 120;
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
@@ -104,7 +104,7 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
       size: 0.08,
       vertexColors: true,
       transparent: true,
-      opacity: 0.65,
+      opacity: 0.7,
       blending: THREE.AdditiveBlending,
     });
 
@@ -122,15 +122,13 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
       (gltf) => {
         const modelScene = gltf.scene;
 
-        // CRITICAL FIX: Hide Blender background studio planes & cameras (Plane, Plane.001, etc.)
-        // so we measure and scale strictly the actual 3D Cake mesh!
+        // CRITICAL FIX: Detach & remove Blender studio background planes (Plane, Plane.001, etc.)
+        // so THREE.Box3 measures ONLY the actual 3D Cake mesh!
+        const toRemove: THREE.Object3D[] = [];
         modelScene.traverse((child) => {
-          const name = child.name || '';
-          if (
-            name.toLowerCase().startsWith('plane') ||
-            name.toLowerCase().startsWith('dof')
-          ) {
-            child.visible = false;
+          const name = (child.name || '').toLowerCase();
+          if (name.startsWith('plane') || name.startsWith('dof')) {
+            toRemove.push(child);
           } else if ((child as THREE.Mesh).isMesh) {
             const mesh = child as THREE.Mesh;
             mesh.castShadow = true;
@@ -145,14 +143,21 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
           }
         });
 
-        // Compute Bounding Box ONLY on the visible Cake mesh
+        // Completely detach unwanted floor planes from scene graph
+        toRemove.forEach((obj) => {
+          if (obj.parent) {
+            obj.parent.remove(obj);
+          }
+        });
+
+        // Compute Bounding Box strictly on the isolated Cake mesh
         const box = new THREE.Box3().setFromObject(modelScene);
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
 
         const maxDim = Math.max(size.x, size.y, size.z);
-        // Scale cake to 2.6 units in 3D space so it is large & clearly visible!
-        const targetScale = 2.6 / (maxDim || 1);
+        // Scale cake to 2.8 units in 3D space
+        const targetScale = 2.8 / (maxDim || 1);
 
         modelScene.position.sub(center); // Center pivot exactly on the cake
         modelScene.scale.setScalar(targetScale);
@@ -237,7 +242,7 @@ export const Cake3DBackground: React.FC<Cake3DBackgroundProps> = ({
       className="absolute inset-0 pointer-events-none overflow-hidden"
       style={{ zIndex: 0 }}
     >
-      <canvas ref={canvasRef} className="w-full h-full block opacity-85" />
+      <canvas ref={canvasRef} className="w-full h-full block opacity-90" />
     </div>
   );
 };
