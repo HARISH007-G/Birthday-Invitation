@@ -62,12 +62,7 @@ export const ThenAndNow: React.FC = () => {
               className="w-full h-full object-cover"
               style={{ objectPosition: birthdayConfig.images.birthdayObjectPosition || 'center' }}
             />
-            <div className="absolute top-6 right-6 px-4 py-2 rounded-full bg-[#f5c65d] text-[#49362d] font-bold text-xs shadow-md border border-white flex items-center gap-1.5 z-10">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>ONE YEAR LATER (OCT 2026)</span>
-            </div>
           </div>
-
 
           {/* THEN PHOTO (Clipped Layer with smooth clip-path, zero zoom/stretch!) */}
           <div
@@ -80,21 +75,27 @@ export const ThenAndNow: React.FC = () => {
               className="w-full h-full object-cover"
               style={{ objectPosition: birthdayConfig.images.newbornObjectPosition || 'center 20%' }}
             />
-            <div className="absolute top-6 left-6 px-4 py-2 rounded-full bg-[#f3a187] text-white font-bold text-xs shadow-md border border-white flex items-center gap-1.5 z-10">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>AT THE BEGINNING (OCT 2025)</span>
-            </div>
           </div>
 
+          {/* THEN Photo Title Card (Top Left - Newborn Photo Badge) */}
+          <div className="absolute top-3 left-3 sm:top-6 sm:left-6 px-2.5 py-1 sm:px-4 sm:py-2 rounded-full bg-[#f3a187] text-white font-bold text-[10px] sm:text-xs shadow-md border border-white flex items-center gap-1 sm:gap-1.5 z-20 pointer-events-none max-w-[48%] xs:max-w-none">
+            <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+            <span className="truncate whitespace-nowrap">AT THE BEGINNING (OCT 2025)</span>
+          </div>
 
+          {/* NOW Photo Title Card (Top Right - 1 Year Photo Badge) */}
+          <div className="absolute top-3 right-3 sm:top-6 sm:right-6 px-2.5 py-1 sm:px-4 sm:py-2 rounded-full bg-[#f5c65d] text-[#49362d] font-bold text-[10px] sm:text-xs shadow-md border border-white flex items-center gap-1 sm:gap-1.5 z-20 pointer-events-none max-w-[48%] xs:max-w-none">
+            <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+            <span className="truncate whitespace-nowrap">ONE YEAR LATER (OCT 2026)</span>
+          </div>
 
           {/* Draggable Divider Handle Line */}
           <div
-            className="absolute top-0 bottom-0 w-1 bg-white shadow-2xl -translate-x-1/2 pointer-events-none z-20"
+            className="absolute top-0 bottom-0 w-1 bg-white shadow-2xl -translate-x-1/2 pointer-events-none z-30"
             style={{ left: `${sliderPosition}%` }}
           >
-            <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-white shadow-2xl border-4 border-[#f5c65d] flex items-center justify-center text-[#49362d]">
-              <MoveHorizontal className="w-5 h-5 animate-pulse" />
+            <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white shadow-2xl border-4 border-[#f5c65d] flex items-center justify-center text-[#49362d]">
+              <MoveHorizontal className="w-4 h-4 sm:w-5 sm:h-5 animate-pulse" />
             </div>
           </div>
         </div>

@@ -20,7 +20,7 @@ export const FloatingDecorations: React.FC = () => {
   }
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-10 overflow-hidden">
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
       {/* LAYER 1: Background distant elements (35% Opacity, Slow movement) */}
       <div className="absolute inset-0 opacity-35">
         {/* Top Left Clouds */}

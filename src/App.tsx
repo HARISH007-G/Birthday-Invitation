@@ -110,7 +110,7 @@ export function App() {
           {/* Navigation Bar */}
           <FloatingNavbar />
 
-          <main>
+          <main className="relative z-10">
             {/* 2. Hero Section */}
             <HeroSection onOpenInvitation={handleOpenInvitation} />
 
