@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { Calendar, Sparkles } from 'lucide-react';
 import { useCountdown } from '../../hooks/useCountdown';
 import { birthdayConfig } from '../../config/birthdayConfig';
 import { useConfetti } from '../../hooks/useConfetti';
@@ -8,6 +9,33 @@ import { CakeSVG } from '../FloatingDecorations/DecorationsSVG';
 export const CountdownSection: React.FC = () => {
   const timeLeft = useCountdown(birthdayConfig.event.isoDate);
   const { triggerMilestoneCelebration } = useConfetti();
+
+  const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Y+S+Hanvika's+1st+Birthday+Party&dates=20261014T123000Z/20261014T163000Z&details=Join+us+in+celebrating+Hanvika's+1st+Birthday!+Cake+cutting+at+7:00+PM.&location=${encodeURIComponent(birthdayConfig.event.venueName + ', ' + birthdayConfig.event.locationAddress)}`;
+
+  const handleDownloadIcs = () => {
+    const icsContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Hanvika Birthday//EN',
+      'BEGIN:VEVENT',
+      'SUMMARY:Y S Hanvika 1st Birthday Party 🎂',
+      'DESCRIPTION:Join us in celebrating Y S Hanvika\'s 1st Birthday! Cake cutting at 7:00 PM.',
+      'LOCATION:Kalaignar Thirumana Maligai, Royapuram, Chennai',
+      'DTSTART:20261014T123000Z',
+      'DTEND:20261014T163000Z',
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n');
+
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'Hanvika-1st-Birthday.ics');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   useEffect(() => {
     if (timeLeft.isExpired) {
@@ -86,6 +114,26 @@ export const CountdownSection: React.FC = () => {
             ))}
           </div>
         )}
+
+        {/* Quick Add to Calendar Action Row */}
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+          <a
+            href={googleCalendarUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#f5c65d] hover:bg-[#f3a187] text-[#49362d] font-extrabold text-xs shadow-md border border-white transition-all transform hover:scale-105"
+          >
+            <Calendar className="w-4 h-4" />
+            <span>Add to Google Calendar 🗓️</span>
+          </a>
+          <button
+            onClick={handleDownloadIcs}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white hover:bg-[#fff8ee] text-[#49362d] font-extrabold text-xs shadow-md border border-[#f5c65d]/50 transition-all transform hover:scale-105"
+          >
+            <Sparkles className="w-4 h-4 text-[#f3a187]" />
+            <span>Download Apple / iCal (.ics) 🍏</span>
+          </button>
+        </div>
       </motion.div>
     </section>
   );

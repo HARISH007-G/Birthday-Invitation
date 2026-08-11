@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Send, CheckCircle2 } from 'lucide-react';
+import { Heart, Send, CheckCircle2, Sparkles } from 'lucide-react';
 import { birthdayConfig } from '../../config/birthdayConfig';
 
 interface WishMessage {
@@ -9,7 +9,17 @@ interface WishMessage {
   message: string;
   date: string;
   bg: string;
+  badge?: string;
 }
+
+const STICKER_BADGES = [
+  { label: '👑 Princess Hanvika' },
+  { label: '💖 Little Sunshine' },
+  { label: '🌟 Superstar' },
+  { label: '🍼 Baby Angel' },
+  { label: '🎉 Party Animal' },
+  { label: '🎂 Sweetheart' },
+];
 
 export const GuestWishes: React.FC = () => {
   const [wishes, setWishes] = useState<WishMessage[]>(() => {
@@ -22,14 +32,15 @@ export const GuestWishes: React.FC = () => {
       }
     }
     return [
-      { id: '1', name: 'Grandma & Grandpa', message: 'Happy 1st Birthday our little sunshine! May your life be filled with infinite smiles and laughter!', date: 'Just now', bg: '#fff3d1' },
-      { id: '2', name: 'Aunt Priya', message: 'Can’t believe you are one already! Sending you endless cuddles and sweetest wishes!', date: 'Today', bg: '#f5d6d0' },
-      { id: '3', name: 'Uncle Vikram', message: 'Happy Birthday tiny miracle! Looking forward to cake cutting and playtime!', date: 'Today', bg: '#dbebf2' },
+      { id: '1', name: 'Grandma & Grandpa', message: 'Happy 1st Birthday our little sunshine! May your life be filled with infinite smiles and laughter!', date: 'Just now', bg: '#fff3d1', badge: '👑 Princess Hanvika' },
+      { id: '2', name: 'Aunt Priya', message: 'Can’t believe you are one already! Sending you endless cuddles and sweetest wishes!', date: 'Today', bg: '#f5d6d0', badge: '💖 Little Sunshine' },
+      { id: '3', name: 'Uncle Vikram', message: 'Happy Birthday tiny miracle! Looking forward to cake cutting and playtime!', date: 'Today', bg: '#dbebf2', badge: '🌟 Superstar' },
     ];
   });
 
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
+  const [selectedBadge, setSelectedBadge] = useState(STICKER_BADGES[0].label);
   const [isSending, setIsSending] = useState(false);
   const [isSubmittedSuccess, setIsSubmittedSuccess] = useState(false);
 
@@ -49,6 +60,7 @@ export const GuestWishes: React.FC = () => {
 
     const addedName = name.trim();
     const addedMessage = message.trim();
+    const badge = selectedBadge;
 
     const newWish: WishMessage = {
       id: Date.now().toString(),
@@ -56,6 +68,7 @@ export const GuestWishes: React.FC = () => {
       message: addedMessage,
       date: 'Just now',
       bg: colors[Math.floor(Math.random() * colors.length)],
+      badge,
     };
 
     const updated = [newWish, ...wishes];
@@ -80,6 +93,7 @@ export const GuestWishes: React.FC = () => {
           to_email: emailTo,
           "Message": `Dear Suganya & Yogarajan (Amma & Appa), ${addedName} has left a beautiful birthday wish for little Y S Hanvika!`,
           "Guest / Family Name": `👤 ${addedName}`,
+          "Sticker Badge": `🏷️ ${badge}`,
           "Personal Birthday Wish": `“${addedMessage}”`,
           "Submission Time": new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
           "Event": `Y S Hanvika 1st Birthday Celebration`,
@@ -108,7 +122,7 @@ export const GuestWishes: React.FC = () => {
           Guest Wishes & Love Notes
         </h2>
         <p className="text-[#49362d]/75 font-medium mt-2 text-sm md:text-base">
-          Leave a sweet birthday message for Hanvika to cherish forever — your wish will be pinned here & delivered to Hanvika and her family!
+          Leave a sweet birthday message for Hanvika to cherish forever — choose a badge & pin your wish here!
         </p>
       </div>
 
@@ -128,6 +142,31 @@ export const GuestWishes: React.FC = () => {
               className="w-full px-4 py-3 rounded-2xl bg-white border border-gray-200 focus:border-[#f5c65d] focus:outline-hidden text-sm font-bold text-[#49362d]"
             />
           </div>
+
+          {/* STICKER BADGE PICKER */}
+          <div>
+            <label className="block text-xs font-extrabold uppercase tracking-wider text-[#49362d] mb-1.5 flex items-center gap-1">
+              <Sparkles className="w-3.5 h-3.5 text-[#f5c65d]" />
+              <span>Pick a Sticker Badge for your Wish *</span>
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {STICKER_BADGES.map((b) => (
+                <button
+                  key={b.label}
+                  type="button"
+                  onClick={() => setSelectedBadge(b.label)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-extrabold border transition-all ${
+                    selectedBadge === b.label
+                      ? 'bg-[#f5c65d] text-[#49362d] border-white shadow-sm scale-105 ring-2 ring-[#f3a187]/50'
+                      : 'bg-white/80 text-[#49362d]/80 border-gray-200 hover:bg-white'
+                  }`}
+                >
+                  {b.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div>
             <label className="block text-xs font-extrabold uppercase tracking-wider text-[#49362d] mb-1.5">
               Your Birthday Wish or Message for Hanvika *
@@ -195,7 +234,14 @@ export const GuestWishes: React.FC = () => {
               📌
             </div>
 
-            <div>
+            {/* Selected Sticker Badge */}
+            {wish.badge && (
+              <div className="absolute -top-3.5 right-4 px-3 py-1 rounded-full bg-white text-[#49362d] text-[10px] font-black shadow-md border border-[#f5c65d]/50 flex items-center gap-1">
+                <span>{wish.badge}</span>
+              </div>
+            )}
+
+            <div className="mt-2">
               <p className="text-sm font-medium text-[#49362d] leading-relaxed italic mb-4">
                 “{wish.message}”
               </p>

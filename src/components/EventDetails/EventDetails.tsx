@@ -24,6 +24,31 @@ export const EventDetails: React.FC = () => {
     setTimeout(() => setCopied(false), 2200);
   };
 
+  const handleDownloadIcs = () => {
+    const icsContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Hanvika Birthday//EN',
+      'BEGIN:VEVENT',
+      'SUMMARY:Y S Hanvika 1st Birthday Party 🎂',
+      'DESCRIPTION:Join us in celebrating Y S Hanvika\'s 1st Birthday! Cake cutting at 7:00 PM.',
+      'LOCATION:Kalaignar Thirumana Maligai, Royapuram, Chennai',
+      'DTSTART:20261014T123000Z',
+      'DTEND:20261014T163000Z',
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n');
+
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'Hanvika-1st-Birthday.ics');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <section id="event-details" className="relative py-20 px-4 max-w-6xl mx-auto overflow-hidden">
       <div className="text-center max-w-2xl mx-auto mb-16">
@@ -161,7 +186,7 @@ export const EventDetails: React.FC = () => {
       </div>
 
       {/* Action Buttons Row */}
-      <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
+      <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
         <a
           href={birthdayConfig.event.googleMapsUrl}
           target="_blank"
@@ -180,8 +205,16 @@ export const EventDetails: React.FC = () => {
           className="btn-premium inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-[#f5c65d] to-[#f3a187] text-white font-bold text-sm shadow-md border border-white/30"
         >
           <Calendar className="w-4 h-4" />
-          <span>Add to Google Calendar 🗓️</span>
+          <span>Google Calendar 🗓️</span>
         </a>
+
+        <button
+          onClick={handleDownloadIcs}
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white border-2 border-[#f5c65d]/50 hover:bg-[#fff3d1] text-[#49362d] font-bold text-sm shadow-md transition-all transform hover:-translate-y-0.5"
+        >
+          <Sparkles className="w-4 h-4 text-[#f3a187]" />
+          <span>Apple / iCal (.ics) 🍏</span>
+        </button>
 
         <button
           onClick={handleCopyAddress}
@@ -196,7 +229,7 @@ export const EventDetails: React.FC = () => {
           {copied ? (
             <><CheckCircle className="w-4 h-4 text-[#afc6a4]" /><span>Address Copied! ✓</span></>
           ) : (
-            <><Copy className="w-4 h-4 text-[#f3a187]" /><span>Copy Venue Address 📍</span></>
+            <><Copy className="w-4 h-4 text-[#f3a187]" /><span>Copy Address 📍</span></>
           )}
         </button>
       </div>

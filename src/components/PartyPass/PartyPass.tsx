@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Ticket, Sparkles, MapPin, Calendar, Clock, Download, QrCode } from 'lucide-react';
+import { Ticket, Sparkles, MapPin, Calendar, Clock, Download, QrCode, CheckCircle } from 'lucide-react';
 import { birthdayConfig } from '../../config/birthdayConfig';
 import { useConfetti } from '../../hooks/useConfetti';
 
 export const PartyPass: React.FC = () => {
   const [guestName, setGuestName] = useState('');
   const [passGenerated, setPassGenerated] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [isDownloaded, setIsDownloaded] = useState(false);
   const { triggerHeroBurst } = useConfetti();
 
   const mapsUrl = birthdayConfig.event.googleMapsUrl;
@@ -20,11 +22,27 @@ export const PartyPass: React.FC = () => {
   };
 
   const handleDownloadPassImage = () => {
+    setIsDownloading(true);
     const canvas = document.createElement('canvas');
     canvas.width = 650;
     canvas.height = 460;
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) {
+      setIsDownloading(false);
+      return;
+    }
+
+    const finishDownload = (dataUrl: string) => {
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = `Hanvika-Party-Pass-${guestName.replace(/\s+/g, '-')}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setIsDownloading(false);
+      setIsDownloaded(true);
+      setTimeout(() => setIsDownloaded(false), 3000);
+    };
 
     // Background Gradient
     const grad = ctx.createLinearGradient(0, 0, 650, 460);
@@ -95,14 +113,7 @@ export const PartyPass: React.FC = () => {
       ctx.font = 'bold 14px sans-serif';
       ctx.fillText('Hosts: Suganya & Yogarajan • Show this pass at the venue entrance!', 325, 415);
 
-      // Trigger Download
-      const dataUrl = canvas.toDataURL('image/png');
-      const a = document.createElement('a');
-      a.href = dataUrl;
-      a.download = `Hanvika-Party-Pass-${guestName.replace(/\s+/g, '-')}.png`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      finishDownload(canvas.toDataURL('image/png'));
     };
 
     // Fallback if image fails crossOrigin load
@@ -112,13 +123,7 @@ export const PartyPass: React.FC = () => {
       ctx.textAlign = 'center';
       ctx.fillText('Hosts: Suganya & Yogarajan • Show this pass at the venue entrance!', 325, 415);
 
-      const dataUrl = canvas.toDataURL('image/png');
-      const a = document.createElement('a');
-      a.href = dataUrl;
-      a.download = `Hanvika-Party-Pass-${guestName.replace(/\s+/g, '-')}.png`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      finishDownload(canvas.toDataURL('image/png'));
     };
   };
 
@@ -233,10 +238,20 @@ export const PartyPass: React.FC = () => {
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={handleDownloadPassImage}
-                  className="flex-1 py-3.5 rounded-full bg-[#49362d] hover:bg-[#f3a187] text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 transform hover:scale-105"
+                  disabled={isDownloading}
+                  className={`flex-1 py-3.5 rounded-full font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 transform hover:scale-105 ${
+                    isDownloaded
+                      ? 'bg-[#e2f0d9] text-[#49362d] border border-[#afc6a4]'
+                      : 'bg-[#49362d] hover:bg-[#f3a187] text-white'
+                  }`}
                 >
-                  <Download className="w-4 h-4" />
-                  <span>Download Pass Image 🖼️</span>
+                  {isDownloaded ? (
+                    <><CheckCircle className="w-4 h-4 text-[#afc6a4]" /><span>Pass Downloaded! ✓</span></>
+                  ) : isDownloading ? (
+                    <><Download className="w-4 h-4 animate-bounce" /><span>Downloading Pass... ⏳</span></>
+                  ) : (
+                    <><Download className="w-4 h-4" /><span>Download Pass Image 🖼️</span></>
+                  )}
                 </button>
                 <button
                   onClick={() => setPassGenerated(false)}
