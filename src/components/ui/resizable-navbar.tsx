@@ -6,11 +6,12 @@ import {
   useScroll,
   useMotionValueEvent,
 } from "framer-motion";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 export interface NavbarProps {
   children: React.ReactNode;
   className?: string;
+  isOpen?: boolean;
 }
 
 export interface NavBodyProps {
@@ -46,23 +47,61 @@ export interface MobileNavMenuProps {
   onClose: () => void;
 }
 
-export const Navbar = ({ children, className }: NavbarProps) => {
+export const Navbar = ({ children, className, isOpen = false }: NavbarProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
   const [visible, setVisible] = useState<boolean>(false);
+  const [showNavbar, setShowNavbar] = useState<boolean>(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    if (isOpen) {
+      setShowNavbar(true);
+    }
+  }, [isOpen]);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
+    // 1. Detect whether we should enter the compact resizable pill mode
     if (latest > 80) {
       setVisible(true);
     } else {
       setVisible(false);
     }
+
+    // 2. Smart Auto-Hide logic:
+    // Scroll Down past 100px -> hide completely so it doesn't obstruct content
+    // Scroll Up -> reveal instantly for effortless navigation
+    const diff = latest - lastScrollY.current;
+
+    if (isOpen) {
+      setShowNavbar(true);
+    } else if (latest <= 80) {
+      setShowNavbar(true);
+    } else if (diff > 4 && latest > 100) {
+      setShowNavbar(false);
+    } else if (diff < -4) {
+      setShowNavbar(true);
+    }
+
+    lastScrollY.current = latest;
   });
 
   return (
     <motion.div
       ref={ref}
-      className={cn("fixed inset-x-0 top-3 z-40 w-full px-3 md:px-6 transition-all duration-300", className)}
+      animate={{
+        y: showNavbar ? 0 : -120,
+        opacity: showNavbar ? 1 : 0,
+      }}
+      transition={{
+        duration: 0.35,
+        ease: [0.16, 1, 0.3, 1],
+      }}
+      className={cn(
+        "fixed inset-x-0 top-3 z-40 w-full px-3 md:px-6",
+        showNavbar ? "pointer-events-auto" : "pointer-events-none",
+        className,
+      )}
     >
       {React.Children.map(children, (child) =>
         React.isValidElement(child)

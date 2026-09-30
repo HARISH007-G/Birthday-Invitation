@@ -43,7 +43,7 @@ export const FloatingNavbar = () => {
 
   return (
     <header className="relative w-full">
-      <Navbar>
+      <Navbar isOpen={isMobileMenuOpen}>
         {/* Desktop Navigation */}
         <NavBody>
           <NavbarLogo />
