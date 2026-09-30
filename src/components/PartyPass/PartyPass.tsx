@@ -1,41 +1,149 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Ticket, Sparkles, MapPin, Calendar, Clock, Download, QrCode, CheckCircle } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Ticket, Sparkles, Download, CheckCircle, RotateCcw } from 'lucide-react';
 import { birthdayConfig } from '../../config/birthdayConfig';
 import { useConfetti } from '../../hooks/useConfetti';
+import { AdmitOneTicket, playShutterSound, ticketClipPath, TICKET_GEOMETRY } from './AdmitOneTicket';
 
 export const PartyPass: React.FC = () => {
-  const [guestName, setGuestName] = useState('');
+  const [guestName, setGuestName] = useState('Guest of Honor');
+  const [inputName, setInputName] = useState('');
   const [passGenerated, setPassGenerated] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isDownloaded, setIsDownloaded] = useState(false);
+  const [ticketWidth, setTicketWidth] = useState(640);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const { triggerHeroBurst } = useConfetti();
 
   const mapsUrl = birthdayConfig.event.googleMapsUrl;
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=4&data=${encodeURIComponent(mapsUrl)}`;
 
+  // Responsive Ticket Width Calculation
+  useEffect(() => {
+    const updateWidth = () => {
+      if (containerRef.current) {
+        const availableWidth = containerRef.current.clientWidth - 32;
+        // Limit between 320px (mobile) and 680px (desktop)
+        const targetWidth = Math.max(300, Math.min(availableWidth, 680));
+        setTicketWidth(targetWidth);
+      }
+    };
+
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []);
+
   const handleGeneratePass = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!guestName.trim()) return;
+    if (!inputName.trim()) return;
+    setGuestName(inputName.trim());
     setPassGenerated(true);
+    playShutterSound({ volume: 0.4 });
     triggerHeroBurst();
   };
 
   const handleDownloadPassImage = () => {
     setIsDownloading(true);
+    playShutterSound({ volume: 0.3 });
+
     const canvas = document.createElement('canvas');
-    canvas.width = 650;
-    canvas.height = 460;
+    canvas.width = 1112; // 741 * 1.5
+    canvas.height = 638;  // 425 * 1.5
     const ctx = canvas.getContext('2d');
     if (!ctx) {
       setIsDownloading(false);
       return;
     }
 
-    const finishDownload = (dataUrl: string) => {
+    const w = canvas.width;
+    const h = canvas.height;
+
+    // Draw Ticket Silhouette Clip Path
+    const clipPathString = ticketClipPath(w, h, TICKET_GEOMETRY);
+    const p = new Path2D(clipPathString);
+    ctx.save();
+    ctx.clip(p);
+
+    // Warm Gold-Peach Sunset Background Gradient
+    const grad = ctx.createLinearGradient(0, 0, w, h);
+    grad.addColorStop(0, '#fff3d1');
+    grad.addColorStop(0.35, '#f5c65d');
+    grad.addColorStop(0.7, '#f3a187');
+    grad.addColorStop(1, '#e8886d');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, w, h);
+
+    // Inner Border
+    ctx.strokeStyle = '#f5c65d';
+    ctx.lineWidth = 10;
+    ctx.stroke(p);
+
+    // Perforation Line
+    const perfX = (562 / 741) * w;
+    ctx.strokeStyle = 'rgba(73, 54, 45, 0.35)';
+    ctx.lineWidth = 4;
+    ctx.setLineDash([12, 10]);
+    ctx.beginPath();
+    ctx.moveTo(perfX, 0);
+    ctx.lineTo(perfX, h);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Watermark on Stub
+    ctx.save();
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+    ctx.font = '900 130px sans-serif';
+    ctx.translate(perfX + (w - perfX) / 2 + 10, h / 2);
+    ctx.rotate(Math.PI / 2);
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('2026', 0, 0);
+    ctx.restore();
+
+    // Stub Vertical Text
+    ctx.save();
+    ctx.fillStyle = '#49362d';
+    ctx.font = '800 36px sans-serif';
+    ctx.translate(perfX + (w - perfX) / 2 - 35, h / 2);
+    ctx.rotate(Math.PI / 2);
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('OFFICIAL VIP PASS', 0, 0);
+    ctx.restore();
+
+    // Main Text
+    ctx.fillStyle = '#49362d';
+    ctx.textAlign = 'left';
+
+    // Presenter
+    ctx.font = '800 24px sans-serif';
+    ctx.fillText('SUGANYA & YOGARAJAN PRESENT', 80, 90);
+
+    // Event
+    ctx.font = '900 32px serif';
+    ctx.fillText("Y S HANVIKA'S 1ST BIRTHDAY", 80, 130);
+
+    // Guest Name
+    ctx.font = '900 64px serif';
+    ctx.fillText(guestName.toUpperCase(), 80, 240);
+
+    // Venue & Date
+    ctx.font = '800 24px sans-serif';
+    ctx.fillText('KALAIGNAR MALIGAI, ROYAPURAM · OCT 14 · 6:00 PM', 80, 480);
+    ctx.font = '600 18px sans-serif';
+    ctx.fillStyle = 'rgba(73, 54, 45, 0.8)';
+    ctx.fillText('Dress Code: Pastel Colors · Cake Cutting: 7:00 PM', 80, 515);
+
+    // Draw QR Code
+    const qrImg = new Image();
+    qrImg.crossOrigin = 'anonymous';
+    qrImg.src = qrCodeUrl;
+
+    const finishCanvas = () => {
+      ctx.restore();
       const a = document.createElement('a');
-      a.href = dataUrl;
-      a.download = `Hanvika-Party-Pass-${guestName.replace(/\s+/g, '-')}.png`;
+      a.href = canvas.toDataURL('image/png');
+      a.download = `Hanvika-VIP-Pass-${guestName.replace(/\s+/g, '-')}.png`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -44,225 +152,117 @@ export const PartyPass: React.FC = () => {
       setTimeout(() => setIsDownloaded(false), 3000);
     };
 
-    // Background Gradient
-    const grad = ctx.createLinearGradient(0, 0, 650, 460);
-    grad.addColorStop(0, '#fff3d1');
-    grad.addColorStop(0.5, '#ffffff');
-    grad.addColorStop(1, '#f5d6d0');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, 650, 460);
-
-    // Border
-    ctx.strokeStyle = '#f5c65d';
-    ctx.lineWidth = 12;
-    ctx.strokeRect(10, 10, 630, 440);
-
-    // Header Badge
-    ctx.fillStyle = '#f5c65d';
-    ctx.beginPath();
-    ctx.roundRect(175, 25, 300, 36, 18);
-    ctx.fill();
-
-    ctx.fillStyle = '#49362d';
-    ctx.font = 'bold 16px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('✨ OFFICIAL VIP PARTY PASS ✨', 325, 48);
-
-    // Title
-    ctx.font = 'bold 28px serif';
-    ctx.fillText("Y S HANVIKA'S 1ST BIRTHDAY", 325, 110);
-
-    // Guest Name
-    ctx.fillStyle = '#f3a187';
-    ctx.font = 'bold 22px cursive, sans-serif';
-    ctx.fillText(`Guest of Honor: ${guestName}`, 325, 145);
-
-    // Event Info Box Left
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(40, 175, 400, 170);
-    ctx.strokeStyle = '#f5c65d';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(40, 175, 400, 170);
-
-    ctx.fillStyle = '#49362d';
-    ctx.font = 'bold 16px sans-serif';
-    ctx.textAlign = 'left';
-    ctx.fillText('🗓️ Date: Wednesday, 14 October 2026', 60, 215);
-    ctx.fillText('⏰ Time: 6:00 PM Onwards', 60, 250);
-    ctx.fillText('🎂 Cake Cutting: 7:00 PM', 60, 285);
-    ctx.fillText('📍 Venue: Kalaignar Thirumana Maligai', 60, 320);
-
-    // Draw QR Code Image Right
-    const qrImg = new Image();
-    qrImg.crossOrigin = 'anonymous';
-    qrImg.src = qrCodeUrl;
     qrImg.onload = () => {
       ctx.fillStyle = '#ffffff';
-      ctx.fillRect(460, 175, 150, 170);
-      ctx.strokeRect(460, 175, 150, 170);
-
-      ctx.drawImage(qrImg, 470, 185, 130, 130);
-
-      ctx.fillStyle = '#49362d';
-      ctx.font = 'bold 11px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('Scan for Location 📍', 535, 332);
-
-      // Footer
-      ctx.fillStyle = '#777777';
-      ctx.font = 'bold 14px sans-serif';
-      ctx.fillText('Hosts: Suganya & Yogarajan • Show this pass at the venue entrance!', 325, 415);
-
-      finishDownload(canvas.toDataURL('image/png'));
+      ctx.fillRect(perfX - 170, 270, 140, 140);
+      ctx.drawImage(qrImg, perfX - 165, 275, 130, 130);
+      finishCanvas();
     };
-
-    // Fallback if image fails crossOrigin load
-    qrImg.onerror = () => {
-      ctx.fillStyle = '#777777';
-      ctx.font = 'bold 14px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('Hosts: Suganya & Yogarajan • Show this pass at the venue entrance!', 325, 415);
-
-      finishDownload(canvas.toDataURL('image/png'));
-    };
+    qrImg.onerror = finishCanvas;
   };
 
   return (
-    <section id="party-pass" className="relative py-20 px-4 max-w-4xl mx-auto overflow-hidden">
-      <div className="text-center max-w-2xl mx-auto mb-12">
+    <section id="party-pass" className="relative py-20 px-4 max-w-5xl mx-auto overflow-hidden">
+      {/* Background Soft Glow */}
+      <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-40">
+        <div className="w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-[#f5c65d]/20 via-[#f3a187]/20 to-[#b9dde4]/20 blur-3xl" />
+      </div>
+
+      {/* Header */}
+      <div className="text-center max-w-2xl mx-auto mb-10">
         <span className="text-xs font-bold uppercase tracking-widest text-[#f3a187]">
-          Exclusive Digital Pass
+          Exclusive Digital VIP Badge
         </span>
         <h2 className="text-3xl md:text-5xl font-extrabold font-serif text-[#49362d] mt-1">
-          Get Your Party Pass
+          Admit One Party Pass
         </h2>
         <p className="text-[#49362d]/80 font-medium mt-2 text-sm md:text-base">
-          Type your name below to get your personalized digital VIP party badge with venue location QR code!
+          Personalize your official birthday VIP ticket with interactive 3D tilt, realistic lighting glare, and vintage perforation notches!
         </p>
       </div>
 
-      <div className="glass-card rounded-[36px] p-6 md:p-10 border-4 border-[#fff3d1] shadow-2xl relative max-w-xl mx-auto">
-        {!passGenerated ? (
-          <form onSubmit={handleGeneratePass} className="space-y-4 text-center">
-            <div>
-              <label className="block text-xs font-extrabold uppercase tracking-wider text-[#49362d] mb-2">
-                Enter Your Name / Family Name
-              </label>
-              <input
-                type="text"
-                required
-                placeholder="e.g. Uncle Ramesh & Family"
-                value={guestName}
-                onChange={(e) => setGuestName(e.target.value)}
-                className="w-full px-5 py-3.5 rounded-2xl bg-white border-2 border-gray-100 focus:border-[#f5c65d] focus:outline-hidden text-sm font-bold text-[#49362d] text-center shadow-xs"
-              />
-            </div>
+      <div
+        ref={containerRef}
+        className="glass-card rounded-[36px] md:rounded-[44px] p-6 sm:p-10 border-4 border-white shadow-2xl relative max-w-3xl mx-auto flex flex-col items-center"
+      >
+        {/* Name Input Bar */}
+        <form onSubmit={handleGeneratePass} className="w-full max-w-md mb-8">
+          <label className="block text-xs font-extrabold uppercase tracking-wider text-[#49362d] mb-2 text-center">
+            {passGenerated ? "Personalize Another Guest Name" : "Enter Your Name / Family Name"}
+          </label>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <input
+              type="text"
+              required
+              placeholder="e.g. Ramesh & Family"
+              value={inputName}
+              onChange={(e) => setInputName(e.target.value)}
+              className="flex-1 px-5 py-3.5 rounded-2xl bg-white border-2 border-gray-100 focus:border-[#f5c65d] focus:outline-hidden text-sm font-bold text-[#49362d] text-center sm:text-left shadow-xs"
+            />
             <button
               type="submit"
-              className="w-full py-4 rounded-full bg-[#f5c65d] hover:bg-[#f3a187] text-[#49362d] font-bold text-base shadow-lg transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+              className="px-6 py-3.5 rounded-2xl bg-[#f5c65d] hover:bg-[#f3a187] text-[#49362d] hover:text-white font-extrabold text-sm shadow-md transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
             >
-              <Ticket className="w-5 h-5" />
-              <span>Generate My Digital Party Pass 🎟️</span>
+              <Ticket className="w-4 h-4" />
+              <span>{passGenerated ? "Update Pass" : "Generate Pass"}</span>
             </button>
-          </form>
-        ) : (
-          <AnimatePresence>
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: 'spring', damping: 20 }}
-              className="space-y-6"
+          </div>
+        </form>
+
+        {/* 3D TILT ADMIT-ONE TICKET SHOWCASE */}
+        <div className="flex flex-col items-center justify-center w-full my-2">
+          <AdmitOneTicket
+            name={passGenerated ? guestName : (inputName.trim() || "GUEST OF HONOR")}
+            presenter="SUGANYA & YOGARAJAN PRESENT"
+            event="HANVIKA'S 1ST BIRTHDAY"
+            venue="KALAIGNAR MALIGAI, ROYAPURAM"
+            dates="OCTOBER 14 · 6:00 PM"
+            stubText="VIP PASS"
+            watermark="2026"
+            width={ticketWidth}
+          />
+
+          <span className="text-[11px] font-bold text-[#49362d]/60 mt-4 flex items-center gap-1.5 text-center">
+            <Sparkles className="w-3.5 h-3.5 text-[#f5c65d] animate-pulse" />
+            <span>Hover or touch the ticket to experience 3D tilt with real-time specular light glare!</span>
+          </span>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex flex-wrap items-center justify-center gap-3 mt-8 w-full max-w-md">
+          <button
+            onClick={handleDownloadPassImage}
+            disabled={isDownloading}
+            className={`flex-1 py-3.5 px-6 rounded-full font-extrabold text-sm shadow-lg transition-all flex items-center justify-center gap-2 transform hover:scale-105 active:scale-95 ${
+              isDownloaded
+                ? 'bg-[#e2f0d9] text-[#49362d] border border-[#afc6a4]'
+                : 'bg-[#49362d] hover:bg-[#f3a187] text-white'
+            }`}
+          >
+            {isDownloaded ? (
+              <><CheckCircle className="w-4 h-4 text-[#afc6a4]" /><span>Pass Downloaded! ✓</span></>
+            ) : isDownloading ? (
+              <><Download className="w-4 h-4 animate-bounce" /><span>Generating Ticket... ⏳</span></>
+            ) : (
+              <><Download className="w-4 h-4" /><span>Download VIP Ticket 🖼️</span></>
+            )}
+          </button>
+
+          {passGenerated && (
+            <button
+              onClick={() => {
+                setPassGenerated(false);
+                setInputName('');
+                setGuestName('Guest of Honor');
+              }}
+              className="py-3.5 px-5 rounded-full bg-white hover:bg-gray-100 text-[#49362d] font-bold text-sm border border-gray-200 shadow-xs flex items-center gap-1.5 transition-all"
+              title="Reset Pass"
             >
-              {/* ILLUSTRATED DIGITAL PARTY PASS TICKET */}
-              <div
-                id="digitalPartyPassCard"
-                className="relative bg-gradient-to-br from-[#fff3d1] via-white to-[#f5d6d0] rounded-3xl p-6 shadow-2xl border-4 border-[#f5c65d] overflow-hidden text-center"
-              >
-                {/* Gold Crest */}
-                <div className="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-[#f5c65d] text-[#49362d] text-xs font-extrabold shadow-sm mb-3">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>OFFICIAL VIP PARTY PASS</span>
-                </div>
-
-                <h3 className="font-serif font-black text-2xl md:text-3xl text-[#49362d]">
-                  Y S HANVIKA’S 1ST BIRTHDAY
-                </h3>
-                <p className="font-handwriting text-xl font-bold text-[#f3a187] mt-0.5">
-                  Guest of Honor: {guestName}
-                </p>
-
-                {/* Event Highlights & Scannable QR Code Layout */}
-                <div className="flex flex-col sm:flex-row items-center gap-4 my-5 bg-white/90 backdrop-blur-xs p-4 rounded-2xl border border-[#f5c65d]/40 shadow-xs">
-                  <div className="flex-1 text-left space-y-2 text-xs font-bold text-[#49362d]">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-[#f5c65d]" />
-                      <span>Wednesday, 14 Oct 2026</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-[#f3a187]" />
-                      <span>6:00 PM (Cake cutting 7:00 PM)</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-[#29b6f6]" />
-                      <span>Kalaignar Thirumana Maligai, Royapuram</span>
-                    </div>
-                  </div>
-
-                  {/* Scannable Location QR Code */}
-                  <div className="flex flex-col items-center bg-white p-2 rounded-xl border border-gray-200 shadow-sm shrink-0">
-                    {/* QR MUST be square with NO border-radius — corners are finder patterns */}
-                    <div className="w-28 h-28 flex items-center justify-center bg-white overflow-hidden">
-                      <img
-                        src={qrCodeUrl}
-                        alt="Google Maps QR Code — Scan to navigate to venue"
-                        className="w-full h-full object-contain"
-                        style={{ borderRadius: 0 }}
-                        draggable={false}
-                      />
-                    </div>
-                    <span className="text-[10px] font-extrabold text-[#49362d] mt-1.5 flex items-center gap-1">
-                      <QrCode className="w-3 h-3 text-[#f3a187]" />
-                      <span>Scan for Location</span>
-                    </span>
-                  </div>
-                </div>
-
-                {/* Stub Footer */}
-                <div className="pt-3 border-t-2 border-dashed border-[#49362d]/20 flex items-center justify-between text-[11px] font-extrabold text-[#49362d]/70">
-                  <span>Host: Suganya & Yogarajan</span>
-                  <span>Pass ID: #YSH-{Math.floor(1000 + Math.random() * 9000)}</span>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3">
-                <button
-                  onClick={handleDownloadPassImage}
-                  disabled={isDownloading}
-                  className={`flex-1 py-3.5 rounded-full font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 transform hover:scale-105 ${
-                    isDownloaded
-                      ? 'bg-[#e2f0d9] text-[#49362d] border border-[#afc6a4]'
-                      : 'bg-[#49362d] hover:bg-[#f3a187] text-white'
-                  }`}
-                >
-                  {isDownloaded ? (
-                    <><CheckCircle className="w-4 h-4 text-[#afc6a4]" /><span>Pass Downloaded! ✓</span></>
-                  ) : isDownloading ? (
-                    <><Download className="w-4 h-4 animate-bounce" /><span>Downloading Pass... ⏳</span></>
-                  ) : (
-                    <><Download className="w-4 h-4" /><span>Download Pass Image 🖼️</span></>
-                  )}
-                </button>
-                <button
-                  onClick={() => setPassGenerated(false)}
-                  className="py-3.5 px-6 rounded-full bg-white hover:bg-gray-100 text-[#49362d] font-bold text-sm border border-gray-200"
-                >
-                  Create Another Pass
-                </button>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        )}
+              <RotateCcw className="w-4 h-4 text-[#f3a187]" />
+              <span>Reset</span>
+            </button>
+          )}
+        </div>
       </div>
     </section>
   );
