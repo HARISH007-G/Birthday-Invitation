@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Send, CheckCircle2, Sparkles } from 'lucide-react';
+import { Heart, CheckCircle2, Sparkles } from 'lucide-react';
 import { birthdayConfig } from '../../config/birthdayConfig';
+import { AnimatedSendButton } from '../ui/AnimatedSendButton';
 
 interface WishMessage {
   id: string;
@@ -181,23 +182,15 @@ export const GuestWishes: React.FC = () => {
             />
           </div>
 
-          <button
+          <AnimatedSendButton
             type="submit"
             disabled={isSending}
-            className="btn-premium w-full py-3.5 rounded-full bg-gradient-to-r from-[#f5c65d] to-[#f3a187] hover:from-[#f3a187] hover:to-[#f5c65d] text-white font-extrabold text-sm shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-          >
-            {isSending ? (
-              <>
-                <Send className="w-4 h-4 animate-spin" />
-                <span>Sending Wish to Hanvika... 💌</span>
-              </>
-            ) : (
-              <>
-                <Send className="w-4 h-4" />
-                <span>Send Wish to Hanvika 🎈</span>
-              </>
-            )}
-          </button>
+            isSending={isSending}
+            isSent={isSubmittedSuccess}
+            defaultText="Send Wish to Hanvika 🎈"
+            sentText="Wish Sent! ❤️"
+            fullWidth
+          />
 
           {/* Success Banner */}
           <AnimatePresence>

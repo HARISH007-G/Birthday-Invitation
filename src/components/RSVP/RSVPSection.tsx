@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Sparkles, MessageCircle, CheckCircle2, Heart } from 'lucide-react';
+import { Sparkles, MessageCircle, CheckCircle2, Heart } from 'lucide-react';
 import { birthdayConfig } from '../../config/birthdayConfig';
 import { useConfetti } from '../../hooks/useConfetti';
+import { AnimatedSendButton } from '../ui/AnimatedSendButton';
 
 export interface RSVPFormData {
   guestName: string;
@@ -203,14 +204,15 @@ export const RSVPSection: React.FC = () => {
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 pt-2">
-                <button
+                <AnimatedSendButton
                   type="submit"
                   disabled={isSendingEmail}
-                  className="flex-1 min-h-[48px] py-4 rounded-full bg-[#f5c65d] hover:bg-[#f3a187] text-[#49362d] font-bold text-base shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 disabled:opacity-50"
-                >
-                  <Send className="w-5 h-5 shrink-0" />
-                  <span>{isSendingEmail ? 'Sending Email Notification... ✉️' : 'Confirm Presence ✨'}</span>
-                </button>
+                  isSending={isSendingEmail}
+                  isSent={isSubmitted}
+                  defaultText="Confirm Presence ✨"
+                  sentText="Presence Confirmed! 💖"
+                  className="flex-1"
+                />
 
 
                 <button
