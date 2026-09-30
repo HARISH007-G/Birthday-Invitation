@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   Navbar,
   NavBody,
@@ -10,8 +9,9 @@ import {
   MobileNavToggle,
   MobileNavMenu,
 } from "@/components/ui/resizable-navbar";
+import { useState } from "react";
 
-export const FloatingNavbar = () => {
+export default function NavbarDemo() {
   const navItems = [
     {
       name: "Story",
@@ -42,7 +42,7 @@ export const FloatingNavbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="relative w-full">
+    <div className="relative w-full">
       <Navbar>
         {/* Desktop Navigation */}
         <NavBody>
@@ -116,8 +116,6 @@ export const FloatingNavbar = () => {
           </MobileNavMenu>
         </MobileNav>
       </Navbar>
-    </header>
+    </div>
   );
-};
-
-export default FloatingNavbar;
+}
