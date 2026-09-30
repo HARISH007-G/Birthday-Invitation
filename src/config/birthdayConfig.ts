@@ -221,7 +221,7 @@ export const birthdayConfig = {
 
   familyPhotos: [
     { id: "fam1", title: "My Favorite People", caption: "Surrounded by love every single day", image: "/images/family-01.jpg", rotation: "-2deg" },
-    { id: "fam2", title: "Always Surrounded by Love", caption: "Sweet moments with Amma & Appa", image: "/images/family-02.jpg", rotation: "3deg" },
+    { id: "fam2", title: "Always Surrounded by Love", caption: "Sweet moments with loving uncle, sister & granddaughters", image: "/images/family-02.jpg", rotation: "3deg" },
     { id: "fam3", title: "Our Little Family", caption: "Suganya, Yogarajan & Y S Hanvika", image: "/images/family-03.jpg", rotation: "-4deg" },
     { id: "fam4", title: "The Happiest Cuddles", caption: "Laughter, hugs and warm bear cuddles", image: "/images/family-04.jpg", rotation: "2deg" },
   ] as FamilyPhoto[],
