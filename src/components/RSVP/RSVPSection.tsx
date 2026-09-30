@@ -132,7 +132,7 @@ export const RSVPSection: React.FC = () => {
                   placeholder="e.g. Ramesh & Family"
                   value={formData.guestName}
                   onChange={(e) => setFormData({ ...formData, guestName: e.target.value })}
-                  className="w-full px-5 py-3.5 rounded-2xl bg-white border-2 border-gray-100 focus:border-[#f5c65d] focus:outline-hidden text-sm font-bold text-[#49362d] shadow-xs transition-colors"
+                  className="w-full px-5 py-3.5 rounded-2xl bg-white border-2 border-gray-100 focus:border-[#f5c65d] focus:outline-hidden text-base sm:text-sm font-bold text-[#49362d] shadow-xs transition-colors"
                 />
               </div>
 
@@ -176,7 +176,7 @@ export const RSVPSection: React.FC = () => {
                   <select
                     value={formData.guestCount}
                     onChange={(e) => setFormData({ ...formData, guestCount: parseInt(e.target.value) })}
-                    className="w-full px-5 py-3.5 rounded-2xl bg-white border-2 border-gray-100 focus:border-[#f5c65d] focus:outline-hidden text-sm font-bold text-[#49362d] shadow-xs"
+                    className="w-full px-5 py-3.5 rounded-2xl bg-white border-2 border-gray-100 focus:border-[#f5c65d] focus:outline-hidden text-base sm:text-sm font-bold text-[#49362d] shadow-xs"
                   >
                     {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
                       <option key={num} value={num}>
@@ -197,7 +197,7 @@ export const RSVPSection: React.FC = () => {
                   placeholder="Write a warm note for Hanvika..."
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                  className="w-full px-5 py-3.5 rounded-2xl bg-white border-2 border-gray-100 focus:border-[#f5c65d] focus:outline-hidden text-sm font-medium text-[#49362d] shadow-xs resize-none"
+                  className="w-full px-5 py-3.5 rounded-2xl bg-white border-2 border-gray-100 focus:border-[#f5c65d] focus:outline-hidden text-base sm:text-sm font-medium text-[#49362d] shadow-xs resize-none"
                 />
               </div>
 
@@ -206,9 +206,9 @@ export const RSVPSection: React.FC = () => {
                 <button
                   type="submit"
                   disabled={isSendingEmail}
-                  className="flex-1 py-4 rounded-full bg-[#f5c65d] hover:bg-[#f3a187] text-[#49362d] font-bold text-base shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="flex-1 min-h-[48px] py-4 rounded-full bg-[#f5c65d] hover:bg-[#f3a187] text-[#49362d] font-bold text-base shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                  <Send className="w-5 h-5" />
+                  <Send className="w-5 h-5 shrink-0" />
                   <span>{isSendingEmail ? 'Sending Email Notification... ✉️' : 'Confirm Presence ✨'}</span>
                 </button>
 
@@ -233,7 +233,7 @@ export const RSVPSection: React.FC = () => {
             transition={{ duration: 0.6, type: 'spring' }}
             className="relative max-w-xl mx-auto"
           >
-            <div className="bg-[#fff3d1] rounded-[40px] p-8 md:p-12 text-center border-4 border-[#f5c65d] shadow-2xl relative overflow-hidden">
+            <div className="bg-[#fff3d1] rounded-3xl sm:rounded-[40px] p-5 sm:p-8 md:p-12 text-center border-4 border-[#f5c65d] shadow-2xl relative overflow-hidden">
               <div className="w-16 h-16 rounded-full bg-[#f5c65d] text-white mx-auto flex items-center justify-center mb-6 shadow-md">
                 <CheckCircle2 className="w-10 h-10" />
               </div>
@@ -256,16 +256,16 @@ export const RSVPSection: React.FC = () => {
                 <Heart className="w-5 h-5 text-[#f3a187] fill-current" />
               </p>
 
-              <div className="mt-8 pt-6 border-t border-[#f5c65d]/40 flex justify-center gap-4">
+              <div className="mt-8 pt-6 border-t border-[#f5c65d]/40 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
                 <button
                   onClick={() => setIsSubmitted(false)}
-                  className="text-xs font-bold text-[#49362d]/70 underline hover:text-[#f3a187]"
+                  className="min-h-[44px] text-xs font-bold text-[#49362d]/70 underline hover:text-[#f3a187]"
                 >
                   Update your response
                 </button>
                 <button
                   onClick={handleWhatsAppRSVP}
-                  className="text-xs font-bold text-[#25D366] underline hover:text-[#1ebd59] flex items-center gap-1"
+                  className="min-h-[44px] text-xs font-bold text-[#25D366] underline hover:text-[#1ebd59] flex items-center justify-center gap-1"
                 >
                   <MessageCircle className="w-3.5 h-3.5" />
                   <span>Send copy to Amma & Appa on WhatsApp</span>

@@ -5,13 +5,13 @@ import { FlowerSVG, TeddySVG } from '../FloatingDecorations/DecorationsSVG';
 
 export const WelcomeSection: React.FC = () => {
   return (
-    <section id="welcome" className="relative py-20 px-4 max-w-4xl mx-auto overflow-hidden">
+    <section id="welcome" className="relative py-12 md:py-20 px-3 sm:px-4 max-w-4xl mx-auto overflow-hidden">
       <motion.div
         initial={{ y: 50, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}
         viewport={{ once: true, margin: '-50px' }}
         transition={{ duration: 0.8 }}
-        className="relative bg-white/95 backdrop-blur-md rounded-[40px] p-8 md:p-14 shadow-2xl border-4 border-[#fff3d1] text-center"
+        className="relative bg-white/95 backdrop-blur-md rounded-[40px] p-5 sm:p-8 md:p-14 shadow-2xl border-4 border-[#fff3d1] text-center"
       >
         {/* Decorative Top Sun SVG */}
         <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 bg-[#fff3d1] rounded-full p-2 border-4 border-white shadow-md flex items-center justify-center">
@@ -25,7 +25,7 @@ export const WelcomeSection: React.FC = () => {
           <span className="text-xs font-bold uppercase tracking-widest text-[#f3a187]">
             Warm Welcome
           </span>
-          <h2 className="text-3xl md:text-5xl font-extrabold font-serif text-[#49362d] mt-1">
+          <h2 className="text-2xl sm:text-3xl md:text-5xl font-extrabold font-serif text-[#49362d] mt-1">
             Our Sunshine’s Story
           </h2>
         </div>
@@ -33,7 +33,7 @@ export const WelcomeSection: React.FC = () => {
         {/* Message Content */}
         <div className="space-y-4 text-base md:text-lg text-[#49362d]/85 leading-relaxed max-w-2xl mx-auto font-medium">
           <p>{birthdayConfig.welcomeMessage.p1}</p>
-          <p className="font-bold text-[#f3a187] text-xl font-handwriting">
+          <p className="font-bold text-[#f3a187] text-lg sm:text-xl md:text-2xl font-handwriting">
             {birthdayConfig.welcomeMessage.p2}
           </p>
         </div>

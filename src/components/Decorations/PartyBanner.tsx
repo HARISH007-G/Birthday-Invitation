@@ -17,8 +17,8 @@ export const PartyBanner: React.FC = () => {
   ];
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-30 pointer-events-none overflow-hidden h-12 flex items-start justify-between px-2">
-      <svg viewBox="0 0 1200 60" className="w-full h-full" fill="none" preserveAspectRatio="none">
+    <div className="hidden sm:flex fixed top-0 left-0 right-0 z-30 pointer-events-none overflow-hidden h-10 md:h-12 items-start justify-between px-2">
+      <svg viewBox="0 0 1200 60" className="w-full h-full" fill="none" preserveAspectRatio="xMidYMin slice">
         {/* Rope string */}
         <path d="M 0,5 Q 600,45 1200,5" stroke="#49362d" strokeWidth="2" strokeDasharray="4 2" opacity="0.3" />
 

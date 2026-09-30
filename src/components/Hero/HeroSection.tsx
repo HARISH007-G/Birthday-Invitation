@@ -31,7 +31,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenInvitation }) =>
 
       {/* Sun Ray Gradient Glow Backdrop */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-        <div className="w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-[#f5c65d]/20 via-[#f3a187]/20 to-transparent blur-3xl" />
+        <div className="w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] md:w-[600px] md:h-[600px] rounded-full bg-gradient-to-tr from-[#f5c65d]/20 via-[#f3a187]/20 to-transparent blur-3xl" />
       </div>
 
       <div className="relative z-20 max-w-4xl mx-auto text-center flex flex-col items-center">
@@ -177,7 +177,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenInvitation }) =>
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 1.2 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-[#49362d]/50"
+          className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-[#49362d]/50"
           aria-hidden="true"
         >
           <span className="text-[10px] font-bold uppercase tracking-widest">Scroll</span>

@@ -74,8 +74,8 @@ export const FloatingDecorations: React.FC = () => {
         </div>
       </div>
 
-      {/* LAYER 3: Foreground Crisp Elements (100% Opacity) */}
-      <div className="absolute inset-0">
+      {/* LAYER 3: Foreground Crisp Elements (100% Opacity) — Shown on desktop margins */}
+      <div className="hidden md:block absolute inset-0">
         {/* Floating Pastel Balloons */}
         <div className="absolute top-[12%] right-[2.5%] animate-float-slow" style={{ animationDuration: '6s' }}>
           <BalloonSVG color="#f5c65d" className="w-14 h-20 drop-shadow-soft" />

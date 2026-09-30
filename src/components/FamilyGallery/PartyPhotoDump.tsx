@@ -40,16 +40,16 @@ export const PartyPhotoDump: React.FC<PartyPhotoDumpProps> = ({ className = '' }
   ];
 
   return (
-    <section id="photo-dump" className={`relative py-20 px-4 max-w-6xl mx-auto overflow-hidden ${className}`}>
+    <section id="photo-dump" className={`relative py-12 md:py-20 px-3 sm:px-4 max-w-6xl mx-auto overflow-hidden ${className}`}>
       {/* Background Glow */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-40">
-        <div className="w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-[#f5c65d]/20 via-[#f3a187]/20 to-[#b9dde4]/20 blur-3xl" />
+        <div className="w-[280px] h-[280px] sm:w-[450px] sm:h-[450px] md:w-[600px] md:h-[600px] rounded-full bg-gradient-to-tr from-[#f5c65d]/20 via-[#f3a187]/20 to-[#b9dde4]/20 blur-2xl md:blur-3xl" />
       </div>
 
       <div className="text-center max-w-2xl mx-auto mb-12">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#fff3d1] border border-[#f5c65d]/50 shadow-sm mb-3">
-          <Camera className="w-4 h-4 text-[#f3a187] animate-bounce" />
-          <span className="text-xs font-black uppercase tracking-widest text-[#49362d]">
+        <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-[#fff3d1] border border-[#f5c65d]/50 shadow-sm mb-3 max-w-full">
+          <Camera className="w-4 h-4 text-[#f3a187] animate-bounce shrink-0" />
+          <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider sm:tracking-widest text-[#49362d] truncate">
             Guest Memory Drive & Photo Dump
           </span>
         </div>
@@ -62,7 +62,7 @@ export const PartyPhotoDump: React.FC<PartyPhotoDumpProps> = ({ className = '' }
       </div>
 
       {/* Main Glassmorphic Photo Dump Card */}
-      <div className="glass-card rounded-[40px] p-6 md:p-10 border-4 border-[#fff3d1] shadow-2xl relative max-w-4xl mx-auto">
+      <div className="glass-card rounded-2xl sm:rounded-3xl md:rounded-[40px] p-4 sm:p-6 md:p-10 border-2 md:border-4 border-[#fff3d1] shadow-2xl relative max-w-4xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
 
           {/* Left Column: Information & Actions (7 Cols) */}
@@ -105,27 +105,27 @@ export const PartyPhotoDump: React.FC<PartyPhotoDumpProps> = ({ className = '' }
             </div>
 
             {/* Sub Utility Actions */}
-            <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-gray-100">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 pt-4 border-t border-gray-100">
               <button
                 onClick={handleCopyLink}
-                className={`px-4 py-2 rounded-full font-bold text-xs shadow-xs border transition-all flex items-center gap-1.5 ${
+                className={`w-full sm:w-auto min-h-[44px] justify-center px-4 py-2 rounded-full font-bold text-xs shadow-xs border transition-all flex items-center gap-1.5 ${
                   copied
                     ? 'bg-[#e2f0d9] border-[#afc6a4] text-[#49362d]'
                     : 'bg-white border-gray-200 text-[#49362d] hover:bg-[#fff8ee]'
                 }`}
               >
                 {copied ? (
-                  <><CheckCircle className="w-3.5 h-3.5 text-[#afc6a4]" /><span>Album Link Copied! ✓</span></>
+                  <><CheckCircle className="w-3.5 h-3.5 text-[#afc6a4] shrink-0" /><span>Album Link Copied! ✓</span></>
                 ) : (
-                  <><Copy className="w-3.5 h-3.5 text-[#f3a187]" /><span>Copy Album Link 📋</span></>
+                  <><Copy className="w-3.5 h-3.5 text-[#f3a187] shrink-0" /><span>Copy Album Link 📋</span></>
                 )}
               </button>
 
               <button
                 onClick={handleShareWhatsApp}
-                className="px-4 py-2 rounded-full bg-[#25D366] text-white font-bold text-xs shadow-xs border border-white flex items-center gap-1.5 hover:bg-[#1eb853] transition-all"
+                className="w-full sm:w-auto min-h-[44px] justify-center px-4 py-2 rounded-full bg-[#25D366] text-white font-bold text-xs shadow-xs border border-white flex items-center gap-1.5 hover:bg-[#1eb853] transition-all"
               >
-                <Share2 className="w-3.5 h-3.5" />
+                <Share2 className="w-3.5 h-3.5 shrink-0" />
                 <span>Share Album on WhatsApp 📲</span>
               </button>
             </div>
@@ -133,7 +133,7 @@ export const PartyPhotoDump: React.FC<PartyPhotoDumpProps> = ({ className = '' }
 
           {/* Right Column: Stacked Polaroid Memory Preview (5 Cols) */}
           <div className="lg:col-span-5 relative flex justify-center py-6">
-            <div className="relative w-64 h-72">
+            <div className="relative w-52 h-64 sm:w-64 sm:h-72">
               {samplePhotos.map((photo, i) => (
                 <motion.div
                   key={i}
@@ -145,9 +145,9 @@ export const PartyPhotoDump: React.FC<PartyPhotoDumpProps> = ({ className = '' }
                     left: `${i * 10}px`,
                     zIndex: 10 + i
                   }}
-                  className="absolute w-56 p-3 rounded-2xl bg-white shadow-xl border-2 border-gray-100 flex flex-col items-center select-none"
+                  className="absolute w-48 sm:w-56 p-2.5 sm:p-3 rounded-2xl bg-white shadow-xl border-2 border-gray-100 flex flex-col items-center select-none"
                 >
-                  <div className="w-full h-44 rounded-xl overflow-hidden shadow-inner mb-2 bg-[#fff8ee]">
+                  <div className="w-full h-36 sm:h-44 rounded-xl overflow-hidden shadow-inner mb-2 bg-[#fff8ee]">
                     <img
                       src={photo.image}
                       alt={photo.title}

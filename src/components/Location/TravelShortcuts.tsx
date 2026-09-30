@@ -43,12 +43,12 @@ export const TravelShortcuts: React.FC<TravelShortcutsProps> = ({ className = ''
   };
 
   return (
-    <div className={`glass-card rounded-[32px] p-6 md:p-8 border-2 border-white shadow-xl max-w-4xl mx-auto ${className}`}>
+    <div className={`glass-card rounded-[32px] p-4 sm:p-6 md:p-8 border-2 border-white shadow-xl max-w-4xl mx-auto ${className}`}>
       {/* Header */}
       <div className="text-center mb-6">
-        <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#fff3d1] border border-[#f5c65d]/40 text-[#49362d] text-xs font-black uppercase tracking-wider">
-          <Car className="w-3.5 h-3.5 text-[#f3a187]" />
-          <span>Smart Travel & Directions Shortcut</span>
+        <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#fff3d1] border border-[#f5c65d]/40 text-[#49362d] text-[10px] sm:text-xs font-black uppercase tracking-wide sm:tracking-wider">
+          <Car className="w-3.5 h-3.5 text-[#f3a187] shrink-0" />
+          <span className="truncate">Smart Travel & Directions Shortcut</span>
         </span>
         <h3 className="text-xl md:text-2xl font-extrabold font-serif text-[#49362d] mt-2">
           Easily Navigate or Book a Ride to the Venue 🚗
@@ -67,7 +67,7 @@ export const TravelShortcuts: React.FC<TravelShortcutsProps> = ({ className = ''
           rel="noopener noreferrer"
           className="p-3.5 rounded-2xl bg-gradient-to-r from-[#29b6f6] to-[#0288d1] text-white font-extrabold text-xs shadow-md border border-white/30 flex items-center justify-center gap-2 hover:shadow-lg transition-all transform hover:-translate-y-0.5"
         >
-          <Navigation className="w-4 h-4" />
+          <Navigation className="w-4 h-4 shrink-0" />
           <span>Google Maps 🗺️</span>
         </a>
 
@@ -78,7 +78,7 @@ export const TravelShortcuts: React.FC<TravelShortcutsProps> = ({ className = ''
           rel="noopener noreferrer"
           className="p-3.5 rounded-2xl bg-white text-[#49362d] font-extrabold text-xs shadow-md border border-gray-200 flex items-center justify-center gap-2 hover:bg-gray-50 transition-all transform hover:-translate-y-0.5"
         >
-          <Compass className="w-4 h-4 text-[#f3a187]" />
+          <Compass className="w-4 h-4 text-[#f3a187] shrink-0" />
           <span>Apple Maps 🍎</span>
         </a>
 
@@ -89,7 +89,7 @@ export const TravelShortcuts: React.FC<TravelShortcutsProps> = ({ className = ''
           rel="noopener noreferrer"
           className="p-3.5 rounded-2xl bg-[#000000] text-white font-extrabold text-xs shadow-md border border-white/20 flex items-center justify-center gap-2 hover:bg-gray-900 transition-all transform hover:-translate-y-0.5"
         >
-          <Car className="w-4 h-4 text-[#f5c65d]" />
+          <Car className="w-4 h-4 text-[#f5c65d] shrink-0" />
           <span>Book Uber 🚕</span>
         </a>
 
@@ -100,33 +100,33 @@ export const TravelShortcuts: React.FC<TravelShortcutsProps> = ({ className = ''
           rel="noopener noreferrer"
           className="p-3.5 rounded-2xl bg-[#8bc34a] text-[#1b5e20] font-extrabold text-xs shadow-md border border-white/30 flex items-center justify-center gap-2 hover:bg-[#7cb342] transition-all transform hover:-translate-y-0.5"
         >
-          <Car className="w-4 h-4 text-[#1b5e20]" />
+          <Car className="w-4 h-4 text-[#1b5e20] shrink-0" />
           <span>Book Ola 🚖</span>
         </a>
       </div>
 
       {/* Utility Actions Row */}
-      <div className="flex flex-wrap items-center justify-center gap-3 pt-4 border-t border-gray-100">
+      <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-center gap-3 pt-4 border-t border-gray-100">
         <button
           onClick={handleCopyAddress}
-          className={`px-5 py-2.5 rounded-full font-bold text-xs shadow-sm border transition-all flex items-center gap-1.5 ${
+          className={`w-full sm:w-auto justify-center min-h-[44px] px-5 py-2.5 rounded-full font-bold text-xs shadow-sm border transition-all flex items-center gap-1.5 ${
             copied
               ? 'bg-[#e2f0d9] border-[#afc6a4] text-[#49362d]'
               : 'bg-white border-gray-200 text-[#49362d] hover:bg-[#fff8ee]'
           }`}
         >
           {copied ? (
-            <><CheckCircle className="w-3.5 h-3.5 text-[#afc6a4]" /><span>Address Copied! ✓</span></>
+            <><CheckCircle className="w-3.5 h-3.5 text-[#afc6a4] shrink-0" /><span>Address Copied! ✓</span></>
           ) : (
-            <><Copy className="w-3.5 h-3.5 text-[#f3a187]" /><span>Copy Address 📋</span></>
+            <><Copy className="w-3.5 h-3.5 text-[#f3a187] shrink-0" /><span>Copy Address 📋</span></>
           )}
         </button>
 
         <button
           onClick={handleShareWhatsApp}
-          className="px-5 py-2.5 rounded-full bg-[#25D366] text-white font-bold text-xs shadow-sm border border-white flex items-center gap-1.5 hover:bg-[#1eb853] transition-all"
+          className="w-full sm:w-auto justify-center min-h-[44px] px-5 py-2.5 rounded-full bg-[#25D366] text-white font-bold text-xs shadow-sm border border-white flex items-center gap-1.5 hover:bg-[#1eb853] transition-all"
         >
-          <Share2 className="w-3.5 h-3.5" />
+          <Share2 className="w-3.5 h-3.5 shrink-0" />
           <span>Share Venue on WhatsApp 📲</span>
         </button>
       </div>

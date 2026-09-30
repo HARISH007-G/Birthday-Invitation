@@ -11,7 +11,9 @@ export const PartyPass: React.FC = () => {
   const [passGenerated, setPassGenerated] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isDownloaded, setIsDownloaded] = useState(false);
-  const [ticketWidth, setTicketWidth] = useState(640);
+  const [ticketWidth, setTicketWidth] = useState(() =>
+  typeof window !== 'undefined' ? Math.min(window.innerWidth - 48, 640) : 320
+);
   const [passId, setPassId] = useState('#YSH-2026');
   const containerRef = useRef<HTMLDivElement | null>(null);
   const { triggerHeroBurst } = useConfetti();
@@ -23,9 +25,9 @@ export const PartyPass: React.FC = () => {
   useEffect(() => {
     const updateWidth = () => {
       if (containerRef.current) {
-        const availableWidth = containerRef.current.clientWidth - 32;
+        const availableWidth = containerRef.current.clientWidth - 16;
         // Limit between 320px (mobile) and 680px (desktop)
-        const targetWidth = Math.max(300, Math.min(availableWidth, 680));
+        const targetWidth = Math.max(260, Math.min(availableWidth, 680));
         setTicketWidth(targetWidth);
       }
     };
@@ -213,7 +215,7 @@ export const PartyPass: React.FC = () => {
 
       <div
         ref={containerRef}
-        className="glass-card rounded-[36px] md:rounded-[44px] p-6 sm:p-10 border-4 border-white shadow-2xl relative max-w-3xl mx-auto flex flex-col items-center"
+        className="glass-card rounded-2xl sm:rounded-[36px] md:rounded-[44px] p-3.5 sm:p-8 md:p-10 border-2 sm:border-4 border-white shadow-2xl relative max-w-3xl mx-auto flex flex-col items-center"
       >
         <AnimatePresence mode="wait">
           {!passGenerated ? (
@@ -246,7 +248,7 @@ export const PartyPass: React.FC = () => {
                   placeholder="e.g. Uncle Ramesh & Family"
                   value={inputName}
                   onChange={(e) => setInputName(e.target.value)}
-                  className="w-full px-5 py-4 rounded-2xl bg-white border-2 border-gray-100 focus:border-[#f5c65d] focus:outline-hidden text-sm sm:text-base font-bold text-[#49362d] text-center shadow-xs"
+                  className="w-full px-5 py-4 rounded-2xl bg-white border-2 border-gray-100 focus:border-[#f5c65d] focus:outline-hidden text-base font-bold text-[#49362d] text-center shadow-xs"
                 />
               </div>
 
@@ -269,9 +271,9 @@ export const PartyPass: React.FC = () => {
               className="flex flex-col items-center justify-center w-full"
             >
               {/* Top Success Badge */}
-              <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#e2f0d9] border border-[#afc6a4] text-[#49362d] text-xs font-black shadow-xs mb-6">
-                <CheckCircle className="w-4 h-4 text-[#afc6a4]" />
-                <span>VIP PASS VERIFIED & GENERATED FOR: {guestName.toUpperCase()}</span>
+              <div className="inline-flex flex-wrap items-center justify-center text-center gap-1.5 px-3 py-1.5 rounded-xl sm:rounded-full bg-[#e2f0d9] border border-[#afc6a4] text-[#49362d] text-[10px] sm:text-xs font-black shadow-xs mb-6 max-w-full">
+                <CheckCircle className="w-3.5 h-3.5 text-[#afc6a4] shrink-0" />
+                <span className="break-words">VIP PASS VERIFIED & GENERATED FOR: {guestName.toUpperCase()}</span>
               </div>
 
               {/* 3D TILT ADMIT-ONE TICKET SHOWCASE WITH ALL DETAILS & QR */}
@@ -291,18 +293,18 @@ export const PartyPass: React.FC = () => {
                   width={ticketWidth}
                 />
 
-                <span className="text-[11px] font-bold text-[#49362d]/65 mt-4 flex items-center gap-1.5 text-center">
-                  <Sparkles className="w-3.5 h-3.5 text-[#f5c65d] animate-pulse" />
+                <span className="text-[11px] font-bold text-[#49362d]/65 mt-4 flex items-center justify-center gap-1.5 text-center">
+                  <Sparkles className="w-3.5 h-3.5 text-[#f5c65d] animate-pulse shrink-0" />
                   <span>Hover or drag the ticket to experience 3D tilt with real-time specular light glare!</span>
                 </span>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-wrap items-center justify-center gap-3 mt-8 w-full max-w-md">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 mt-6 sm:mt-8 w-full max-w-md">
                 <button
                   onClick={handleDownloadPassImage}
                   disabled={isDownloading}
-                  className={`flex-1 py-3.5 px-6 rounded-full font-extrabold text-sm shadow-lg transition-all flex items-center justify-center gap-2 transform hover:scale-105 active:scale-95 ${
+                  className={`w-full sm:flex-1 min-h-[44px] py-3.5 px-6 rounded-full font-extrabold text-sm shadow-lg transition-all flex items-center justify-center gap-2 transform hover:scale-105 active:scale-95 ${
                     isDownloaded
                       ? 'bg-[#e2f0d9] text-[#49362d] border border-[#afc6a4]'
                       : 'bg-[#49362d] hover:bg-[#f3a187] text-white'
@@ -322,7 +324,7 @@ export const PartyPass: React.FC = () => {
                     setPassGenerated(false);
                     setInputName('');
                   }}
-                  className="py-3.5 px-5 rounded-full bg-white hover:bg-gray-100 text-[#49362d] font-bold text-sm border border-gray-200 shadow-xs flex items-center gap-1.5 transition-all"
+                  className="w-full sm:w-auto min-h-[44px] justify-center py-3.5 px-5 rounded-full bg-white hover:bg-gray-100 text-[#49362d] font-bold text-sm border border-gray-200 shadow-xs flex items-center gap-1.5 transition-all"
                   title="Personalize for Another Family Member"
                 >
                   <RotateCcw className="w-4 h-4 text-[#f3a187]" />

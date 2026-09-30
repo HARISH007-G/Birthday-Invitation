@@ -47,7 +47,7 @@ export const ThenAndNow: React.FC = () => {
         className="relative max-w-3xl mx-auto rounded-[36px] overflow-hidden shadow-2xl border-4 border-white bg-white select-none"
       >
         <div
-          className="relative w-full h-[280px] sm:h-[360px] md:h-[500px] cursor-ew-resize overflow-hidden"
+          className="relative w-full h-[280px] sm:h-[360px] md:h-[500px] cursor-ew-resize overflow-hidden touch-none select-none"
           onMouseDown={() => setIsDragging(true)}
           onMouseUp={() => setIsDragging(false)}
           onMouseLeave={() => setIsDragging(false)}
@@ -78,15 +78,15 @@ export const ThenAndNow: React.FC = () => {
           </div>
 
           {/* THEN Photo Title Card (Top Left - Newborn Photo Badge) */}
-          <div className="absolute top-3 left-3 sm:top-6 sm:left-6 px-2.5 py-1 sm:px-4 sm:py-2 rounded-full bg-[#f3a187] text-white font-bold text-[10px] sm:text-xs shadow-md border border-white flex items-center gap-1 sm:gap-1.5 z-20 pointer-events-none max-w-[48%] xs:max-w-none">
+          <div className="absolute top-3 left-3 sm:top-6 sm:left-6 px-2.5 py-1 sm:px-4 sm:py-2 rounded-full bg-[#f3a187] text-white font-bold text-[10px] sm:text-xs shadow-md border border-white flex items-center gap-1 sm:gap-1.5 z-20 pointer-events-none max-w-[48%] sm:max-w-none">
             <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
-            <span className="truncate whitespace-nowrap">AT THE BEGINNING (OCT 2025)</span>
+            <span className="truncate whitespace-nowrap"><span className="sm:hidden">THEN</span><span className="hidden sm:inline">AT THE BEGINNING (OCT 2025)</span></span>
           </div>
 
           {/* NOW Photo Title Card (Top Right - 1 Year Photo Badge) */}
-          <div className="absolute top-3 right-3 sm:top-6 sm:right-6 px-2.5 py-1 sm:px-4 sm:py-2 rounded-full bg-[#f5c65d] text-[#49362d] font-bold text-[10px] sm:text-xs shadow-md border border-white flex items-center gap-1 sm:gap-1.5 z-20 pointer-events-none max-w-[48%] xs:max-w-none">
+          <div className="absolute top-3 right-3 sm:top-6 sm:right-6 px-2.5 py-1 sm:px-4 sm:py-2 rounded-full bg-[#f5c65d] text-[#49362d] font-bold text-[10px] sm:text-xs shadow-md border border-white flex items-center gap-1 sm:gap-1.5 z-20 pointer-events-none max-w-[48%] sm:max-w-none">
             <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
-            <span className="truncate whitespace-nowrap">ONE YEAR LATER (OCT 2026)</span>
+            <span className="truncate whitespace-nowrap"><span className="sm:hidden">NOW</span><span className="hidden sm:inline">ONE YEAR LATER (OCT 2026)</span></span>
           </div>
 
           {/* Draggable Divider Handle Line */}
@@ -94,7 +94,7 @@ export const ThenAndNow: React.FC = () => {
             className="absolute top-0 bottom-0 w-1 bg-white shadow-2xl -translate-x-1/2 pointer-events-none z-30"
             style={{ left: `${sliderPosition}%` }}
           >
-            <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white shadow-2xl border-4 border-[#f5c65d] flex items-center justify-center text-[#49362d]">
+            <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white shadow-2xl border-4 border-[#f5c65d] flex items-center justify-center text-[#49362d]">
               <MoveHorizontal className="w-4 h-4 sm:w-5 sm:h-5 animate-pulse" />
             </div>
           </div>
@@ -102,8 +102,8 @@ export const ThenAndNow: React.FC = () => {
 
         {/* Drag Helper Pill */}
         <div className="bg-[#fff8ee] py-3 text-center border-t border-[#f5c65d]/30">
-          <span className="text-xs font-extrabold uppercase tracking-widest text-[#49362d]/70 flex items-center justify-center gap-2">
-            <MoveHorizontal className="w-4 h-4 text-[#f3a187]" />
+          <span className="text-[10px] sm:text-xs font-extrabold uppercase tracking-wider sm:tracking-widest px-3 text-[#49362d]/70 flex items-center justify-center gap-2">
+            <MoveHorizontal className="w-4 h-4 text-[#f3a187] shrink-0" />
             Drag or swipe slider left and right to compare!
           </span>
         </div>
@@ -112,7 +112,7 @@ export const ThenAndNow: React.FC = () => {
       {/* Comparison Text Bullet Highlights */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto mt-10">
         {/* Then Column */}
-        <div className="glass-card rounded-2xl p-6 border-l-4 border-[#f3a187]">
+        <div className="glass-card rounded-2xl p-4 sm:p-6 border-l-4 border-[#f3a187]">
           <h3 className="font-serif font-bold text-lg text-[#49362d] mb-3 flex items-center gap-2">
             <span>🍼</span> AT THE BEGINNING
           </h3>
@@ -124,7 +124,7 @@ export const ThenAndNow: React.FC = () => {
         </div>
 
         {/* Now Column */}
-        <div className="glass-card rounded-2xl p-6 border-l-4 border-[#f5c65d]">
+        <div className="glass-card rounded-2xl p-4 sm:p-6 border-l-4 border-[#f5c65d]">
           <h3 className="font-serif font-bold text-lg text-[#49362d] mb-3 flex items-center gap-2">
             <span>👑</span> ONE YEAR LATER
           </h3>

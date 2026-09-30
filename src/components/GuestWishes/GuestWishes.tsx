@@ -139,7 +139,7 @@ export const GuestWishes: React.FC = () => {
               placeholder="Your Name / Family Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-3 rounded-2xl bg-white border border-gray-200 focus:border-[#f5c65d] focus:outline-hidden text-sm font-bold text-[#49362d]"
+              className="w-full px-4 py-3 rounded-2xl bg-white border border-gray-200 focus:border-[#f5c65d] focus:outline-hidden text-base sm:text-sm font-bold text-[#49362d]"
             />
           </div>
 
@@ -155,7 +155,7 @@ export const GuestWishes: React.FC = () => {
                   key={b.label}
                   type="button"
                   onClick={() => setSelectedBadge(b.label)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-extrabold border transition-all ${
+                  className={`min-h-[44px] px-3 py-2.5 rounded-full text-xs font-extrabold border transition-all ${
                     selectedBadge === b.label
                       ? 'bg-[#f5c65d] text-[#49362d] border-white shadow-sm scale-105 ring-2 ring-[#f3a187]/50'
                       : 'bg-white/80 text-[#49362d]/80 border-gray-200 hover:bg-white'
@@ -177,7 +177,7 @@ export const GuestWishes: React.FC = () => {
               placeholder="Write a sweet birthday wish for Hanvika..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="w-full px-4 py-3 rounded-2xl bg-white border border-gray-200 focus:border-[#f5c65d] focus:outline-hidden text-sm font-medium text-[#49362d] resize-none"
+              className="w-full px-4 py-3 rounded-2xl bg-white border border-gray-200 focus:border-[#f5c65d] focus:outline-hidden text-base sm:text-sm font-medium text-[#49362d] resize-none"
             />
           </div>
 
@@ -236,13 +236,13 @@ export const GuestWishes: React.FC = () => {
 
             {/* Selected Sticker Badge */}
             {wish.badge && (
-              <div className="absolute -top-3.5 right-4 px-3 py-1 rounded-full bg-white text-[#49362d] text-[10px] font-black shadow-md border border-[#f5c65d]/50 flex items-center gap-1">
-                <span>{wish.badge}</span>
+              <div className="absolute -top-3.5 right-4 px-3 py-1 rounded-full bg-white text-[#49362d] text-[10px] font-black shadow-md border border-[#f5c65d]/50 flex items-center gap-1 max-w-[60%]">
+                <span className="truncate">{wish.badge}</span>
               </div>
             )}
 
             <div className="mt-2">
-              <p className="text-sm font-medium text-[#49362d] leading-relaxed italic mb-4">
+              <p className="text-sm font-medium text-[#49362d] leading-relaxed italic mb-4 break-words">
                 “{wish.message}”
               </p>
             </div>

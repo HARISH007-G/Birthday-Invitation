@@ -35,7 +35,7 @@ export const HangingGallery: React.FC = () => {
         <div className="absolute top-4 left-0 right-0 h-1 bg-[#49362d]/20 rounded-full shadow-xs" />
 
         {/* Grid of Hanging Photos */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-8">
           {birthdayConfig.hangingPhotos.map((photo: HangingPhoto, index: number) => (
             <motion.div
               key={photo.id}
@@ -45,11 +45,11 @@ export const HangingGallery: React.FC = () => {
               whileHover={{ rotate: 0, scale: 1.04, y: -6, zIndex: 20 }}
               transition={{ duration: 0.4, delay: index * 0.1 }}
               onClick={() => handlePhotoClick(photo)}
-              className="relative bg-white p-4 pb-6 rounded-2xl shadow-xl border border-gray-100 cursor-pointer group select-none animate-swing"
+              className="relative bg-white p-2.5 pb-4 sm:p-4 sm:pb-6 rounded-xl sm:rounded-2xl shadow-xl border border-gray-100 cursor-pointer group select-none md:animate-swing"
               style={{ animationDuration: `${4.5 + index * 0.5}s` }}
             >
               {/* Clothespin Clip Graphic */}
-              <div className="absolute -top-5 left-1/2 -translate-x-1/2 w-4 h-8 bg-[#f5c65d] rounded-t-sm shadow-md border border-[#49362d]/30 z-10 flex flex-col justify-between p-0.5">
+              <div className="absolute -top-4 sm:-top-5 left-1/2 -translate-x-1/2 w-3.5 sm:w-4 h-7 sm:h-8 bg-[#f5c65d] rounded-t-sm shadow-md border border-[#49362d]/30 z-10 flex flex-col justify-between p-0.5">
                 <div className="w-full h-1 bg-[#49362d]/40 rounded-full" />
                 <div className="w-full h-1 bg-[#49362d]/40 rounded-full" />
               </div>
@@ -64,7 +64,7 @@ export const HangingGallery: React.FC = () => {
                 />
 
                 {/* Hover Overlay Icon */}
-                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity hidden sm:flex items-center justify-center text-white">
                   <div className="p-3 rounded-full bg-white/30 backdrop-blur-md">
                     <Maximize2 className="w-6 h-6" />
                   </div>
@@ -73,10 +73,10 @@ export const HangingGallery: React.FC = () => {
 
               {/* Caption */}
               <div className="text-center px-1">
-                <h3 className="font-serif font-bold text-base text-[#49362d]">
+                <h3 className="font-serif font-bold text-xs sm:text-sm md:text-base text-[#49362d] line-clamp-1">
                   {photo.title}
                 </h3>
-                <p className="font-handwriting text-base font-bold text-[#f3a187] mt-0.5 flex items-center justify-center gap-1">
+                <p className="font-handwriting text-[11px] sm:text-xs md:text-sm font-bold text-[#f3a187] mt-0.5 flex items-center justify-center gap-1 line-clamp-1 sm:line-clamp-2">
                   <Sparkles className="w-3 h-3" />
                   <span>{photo.caption}</span>
                 </p>

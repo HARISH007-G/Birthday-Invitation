@@ -63,7 +63,7 @@ export const FloatingNavbar = () => {
           <MobileNavHeader>
             <NavbarLogo />
             <div className="flex items-center gap-2">
-              <NavbarButton href="#rsvp" variant="primary" className="text-[11px] px-3 py-1">
+              <NavbarButton href="#rsvp" variant="primary" className="text-xs px-3.5 py-1.5 min-h-[38px] flex items-center justify-center">
                 RSVP 💖
               </NavbarButton>
               <MobileNavToggle
@@ -89,7 +89,7 @@ export const FloatingNavbar = () => {
                   key={`mobile-link-${idx}`}
                   href={item.link}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="px-3.5 py-2.5 rounded-2xl bg-[#fff8ee] hover:bg-[#fff3d1] text-xs font-black text-[#49362d] border border-[#f5c65d]/30 transition-all text-center"
+                  className="px-3.5 py-2.5 min-h-[44px] flex items-center justify-center rounded-2xl bg-[#fff8ee] hover:bg-[#fff3d1] text-xs font-black text-[#49362d] border border-[#f5c65d]/30 transition-all text-center active:scale-95"
                 >
                   <span>{item.name}</span>
                 </a>
@@ -100,7 +100,7 @@ export const FloatingNavbar = () => {
                 href="#party-pass"
                 onClick={() => setIsMobileMenuOpen(false)}
                 variant="secondary"
-                className="w-full py-2.5"
+                className="w-full py-2.5 min-h-[44px] flex items-center justify-center"
               >
                 Get VIP Party Pass 🎟️
               </NavbarButton>
@@ -108,7 +108,7 @@ export const FloatingNavbar = () => {
                 href="#rsvp"
                 onClick={() => setIsMobileMenuOpen(false)}
                 variant="primary"
-                className="w-full py-2.5"
+                className="w-full py-2.5 min-h-[44px] flex items-center justify-center"
               >
                 Confirm RSVP Attendance 💖
               </NavbarButton>

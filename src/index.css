@@ -59,14 +59,13 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden;
   }
 
   body {
     background-color: var(--cream);
     color: var(--brown);
     font-family: 'Nunito', sans-serif;
-    overflow-x: hidden;
+    overflow-x: clip; /* Modern clipping without breaking sticky or momentum scrolling */
     line-height: 1.6;
     min-height: 100dvh;
     /* Subtle paper-grain texture for warmth */
@@ -132,6 +131,18 @@
     var(--shadow-md);
 }
 
+/* Mobile GPU optimization: reduce blur intensity */
+@media (max-width: 768px) {
+  .glass-card {
+    backdrop-filter: blur(8px) saturate(1.2);
+    -webkit-backdrop-filter: blur(8px) saturate(1.2);
+  }
+  .glass-pill {
+    backdrop-filter: blur(10px) saturate(1.2);
+    -webkit-backdrop-filter: blur(10px) saturate(1.2);
+  }
+}
+
 /* ============================================================
    3. PREMIUM BUTTON MICRO-INTERACTION
    Reusable class for all primary CTAs.
@@ -162,6 +173,14 @@
 
 .btn-premium:active {
   transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .btn-premium {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+    min-height: 44px;
+  }
 }
 
 /* ============================================================
@@ -247,7 +266,7 @@
 
 @keyframes driftCloud {
   0%   { transform: translateX(-150px); }
-  100% { transform: translateX(calc(100vw + 150px)); }
+  100% { transform: translateX(calc(100% + 200px)); }
 }
 
 @keyframes rotateSun {
@@ -355,11 +374,13 @@
 .section-heading {
   font-family: 'Playfair Display', serif;
   font-weight: 800;
-  font-size: clamp(1.75rem, 4vw, 3.5rem);
-  line-height: 1.12;
+  font-size: clamp(1.4rem, 5.5vw, 3.5rem);
+  line-height: 1.15;
   letter-spacing: -0.02em;
   color: var(--brown);
   margin-top: 0.25rem;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 /* ============================================================
@@ -377,6 +398,17 @@
   box-shadow: var(--shadow-xl), var(--shadow-gold);
 }
 
+@media (hover: none) {
+  .card-hover:hover {
+    transform: none;
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+.card-hover:active {
+  transform: translateY(-2px) scale(0.99);
+}
+
 /* ============================================================
    11. FORM INPUTS — PREMIUM FOCUS RING
    ============================================================ */
@@ -386,10 +418,11 @@
   border-radius: var(--radius-md);
   background: #ffffff;
   border: 2px solid #f0e8dc;
-  font-size: 0.875rem;
+  font-size: 1rem; /* 16px prevents iOS Safari auto-zoom on focus */
   font-weight: 600;
   color: var(--brown);
   box-shadow: var(--shadow-xs);
+  min-height: 44px;
   transition:
     border-color var(--duration-base) var(--ease-premium),
     box-shadow var(--duration-base) var(--ease-premium),
@@ -408,11 +441,13 @@
    ============================================================ */
 #back-to-top {
   position: fixed;
-  bottom: 5rem;    /* Sits above mobile browser chrome */
-  right: 1.25rem;
+  bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+  right: calc(1rem + env(safe-area-inset-right, 0px));
   z-index: 50;
   width: 2.75rem;
   height: 2.75rem;
+  min-width: 44px;
+  min-height: 44px;
   border-radius: var(--radius-full);
   background: linear-gradient(135deg, var(--sunshine), var(--peach));
   color: white;
@@ -474,7 +509,7 @@
    ============================================================ */
 .toast {
   position: fixed;
-  bottom: 5.5rem;
+  bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
   right: 2rem;
   z-index: 60;
   padding: 0.75rem 1.25rem;
@@ -487,9 +522,20 @@
   opacity: 0;
   transform: translateY(12px) scale(0.92);
   pointer-events: none;
+  max-width: calc(100vw - 2rem);
   transition:
     opacity var(--duration-slow) var(--ease-premium),
     transform var(--duration-slow) var(--ease-spring);
+}
+
+@media (max-width: 640px) {
+  .toast {
+    left: 1rem;
+    right: 1rem;
+    bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+    text-align: center;
+    justify-content: center;
+  }
 }
 
 .toast.visible {
@@ -501,15 +547,17 @@
 /* ============================================================
    15. CUSTOM SCROLLBAR — REFINED
    ============================================================ */
-::-webkit-scrollbar       { width: 8px; }
-::-webkit-scrollbar-track { background: #fef6e4; }
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--sunshine), var(--peach));
-  border-radius: 8px;
-  border: 2px solid #fef6e4;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, var(--peach), var(--sunshine));
+@media (pointer: fine) {
+  ::-webkit-scrollbar       { width: 8px; }
+  ::-webkit-scrollbar-track { background: #fef6e4; }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--sunshine), var(--peach));
+    border-radius: 8px;
+    border: 2px solid #fef6e4;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--peach), var(--sunshine));
+  }
 }
 
 /* ============================================================

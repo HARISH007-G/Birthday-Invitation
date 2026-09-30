@@ -41,30 +41,30 @@ export const BirthdayLoader: React.FC<BirthdayLoaderProps> = ({ onComplete }) =>
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 1.05 }}
           transition={{ duration: 0.4 }}
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#fff8ee] text-[#49362d] p-6 select-none"
+          className="fixed inset-0 min-h-[100dvh] z-[100] flex flex-col items-center justify-center bg-[#fff8ee] text-[#49362d] p-4 sm:p-6 select-none overflow-y-auto"
         >
           {/* Background twinkle stars */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             <motion.div
               animate={{ opacity: [0.3, 0.8, 0.3] }}
               transition={{ repeat: Infinity, duration: 2 }}
-              className="absolute top-1/4 left-1/5"
+              className="absolute top-1/4 left-4 sm:left-1/5"
             >
-              <StarSVG color="#f5c65d" className="w-8 h-8" />
+              <StarSVG color="#f5c65d" className="w-6 h-6 sm:w-8 sm:h-8" />
             </motion.div>
             <motion.div
               animate={{ opacity: [0.4, 0.9, 0.4] }}
               transition={{ repeat: Infinity, duration: 2.5, delay: 0.5 }}
-              className="absolute top-1/3 right-1/5"
+              className="absolute top-1/3 right-4 sm:right-1/5"
             >
-              <StarSVG color="#f3a187" className="w-10 h-10" />
+              <StarSVG color="#f3a187" className="w-7 h-7 sm:w-10 sm:h-10" />
             </motion.div>
             <motion.div
               animate={{ opacity: [0.2, 0.7, 0.2] }}
               transition={{ repeat: Infinity, duration: 1.8, delay: 1 }}
-              className="absolute bottom-1/4 left-1/4"
+              className="absolute bottom-1/4 left-6 sm:left-1/4"
             >
-              <StarSVG color="#b9dde4" className="w-6 h-6" />
+              <StarSVG color="#b9dde4" className="w-5 h-5 sm:w-6 sm:h-6" />
             </motion.div>
           </div>
 
@@ -104,6 +104,7 @@ export const BirthdayLoader: React.FC<BirthdayLoaderProps> = ({ onComplete }) =>
                   d="M50 2 C54 8 52 14 50 15 C48 14 46 8 50 2 Z"
                   fill="#f5c65d"
                   className="animate-flame"
+                  style={{ transformOrigin: '50px 15px', transformBox: 'fill-box' }}
                 />
               </g>
             </svg>
@@ -119,10 +120,10 @@ export const BirthdayLoader: React.FC<BirthdayLoaderProps> = ({ onComplete }) =>
             <p className="text-sm font-bold uppercase tracking-widest text-[#f3a187]">
               Welcome to
             </p>
-            <h1 className="text-3xl md:text-4xl font-extrabold font-serif text-[#49362d]">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold font-serif text-[#49362d]">
               {birthdayConfig.babyName}’s
             </h1>
-            <p className="text-xl font-handwriting text-[#f5c65d] text-2xl font-bold">
+            <p className="font-handwriting text-[#f5c65d] text-xl sm:text-2xl font-bold">
               First Birthday Celebration
             </p>
           </motion.div>
@@ -134,7 +135,7 @@ export const BirthdayLoader: React.FC<BirthdayLoaderProps> = ({ onComplete }) =>
             </span>
             <button
               onClick={handleSkip}
-              className="px-6 py-2.5 bg-[#f5c65d] hover:bg-[#f3a187] text-[#49362d] font-bold text-sm rounded-full shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0"
+              className="min-h-[44px] px-6 py-3 bg-[#f5c65d] hover:bg-[#f3a187] active:scale-95 text-[#49362d] font-bold text-sm rounded-full shadow-md hover:shadow-lg transition-all duration-200 transform active:translate-y-0"
             >
               Let’s Celebrate! ✨
             </button>

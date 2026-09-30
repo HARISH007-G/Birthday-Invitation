@@ -44,9 +44,10 @@ export function App() {
     const backTopEl  = document.getElementById('back-to-top');
 
     const onScroll = () => {
-      const scrollTop  = window.scrollY;
-      const docHeight  = document.documentElement.scrollHeight - window.innerHeight;
-      const progress   = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      const scrollTop  = Math.max(0, window.scrollY);
+      const viewportHeight = document.documentElement.clientHeight || window.innerHeight;
+      const docHeight  = document.documentElement.scrollHeight - viewportHeight;
+      const progress   = docHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)) : 0;
 
       if (progressEl) progressEl.style.width = `${progress}%`;
 
@@ -74,7 +75,7 @@ export function App() {
           }
         });
       },
-      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0.05, rootMargin: '0px 0px -20px 0px' }
     );
 
     // Observe all .reveal elements
@@ -85,11 +86,12 @@ export function App() {
   }, [isLoading]);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: prefersReduced ? 'auto' : 'smooth' });
   };
 
   return (
-    <div ref={mainRef} className="relative min-h-screen bg-[#fff8ee] text-[#49362d] overflow-x-hidden">
+    <div ref={mainRef} className="relative min-h-[100dvh] bg-[#fff8ee] text-[#49362d] overflow-x-hidden">
       {/* Scroll Progress Bar */}
       <div id="scroll-progress" aria-hidden="true" />
 

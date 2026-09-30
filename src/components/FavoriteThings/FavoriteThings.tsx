@@ -19,7 +19,7 @@ export const FavoriteThings: React.FC = () => {
   };
 
   return (
-    <section id="favorites" className="relative py-20 px-4 max-w-6xl mx-auto overflow-hidden">
+    <section id="favorites" className="relative py-12 md:py-20 px-3 sm:px-4 max-w-6xl mx-auto overflow-hidden">
       <div className="text-center max-w-2xl mx-auto mb-14">
         <span className="text-xs font-bold uppercase tracking-widest text-[#f3a187]">
           Hanvika’s Favorites
@@ -32,7 +32,7 @@ export const FavoriteThings: React.FC = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 md:gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
         {birthdayConfig.favoriteThings.map((fav: FavoriteThing, index: number) => (
           <motion.div
             key={fav.category}
@@ -42,7 +42,7 @@ export const FavoriteThings: React.FC = () => {
             transition={{ duration: 0.5, delay: index * 0.1 }}
             whileHover={{ y: -6, scale: 1.02 }}
             style={{ backgroundColor: fav.bg }}
-            className="rounded-3xl p-5 md:p-6 shadow-lg border-2 border-white flex flex-col items-center text-center justify-between min-h-[180px]"
+            className="rounded-3xl p-3 sm:p-5 md:p-6 shadow-lg border-2 border-white flex flex-col items-center text-center justify-between min-h-[150px] sm:min-h-[180px]"
           >
             <div className="w-14 h-14 rounded-2xl bg-white shadow-md flex items-center justify-center mb-4 transform hover:rotate-6 transition-transform">
               {getIcon(fav.icon)}

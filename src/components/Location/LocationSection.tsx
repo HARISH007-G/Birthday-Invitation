@@ -8,7 +8,7 @@ export const LocationSection: React.FC = () => {
   const [routeFinished, setRouteFinished] = useState(false);
 
   return (
-    <section className="relative py-20 px-4 max-w-6xl mx-auto overflow-hidden">
+    <section className="relative py-12 sm:py-16 md:py-20 px-3 sm:px-4 max-w-6xl mx-auto overflow-hidden">
       <div className="text-center max-w-2xl mx-auto mb-14">
         <span className="text-xs font-bold uppercase tracking-widest text-[#f3a187]">
           Map & Route
@@ -28,7 +28,7 @@ export const LocationSection: React.FC = () => {
         onViewportEnter={() => setTimeout(() => setRouteFinished(true), 2500)}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="relative bg-[#e2f0d9] rounded-[40px] p-6 md:p-10 shadow-2xl border-4 border-white overflow-hidden max-w-4xl mx-auto mb-10"
+        className="relative bg-[#e2f0d9] rounded-3xl sm:rounded-[40px] p-3 sm:p-6 md:p-10 shadow-2xl border-2 sm:border-4 border-white overflow-hidden max-w-4xl mx-auto mb-10"
       >
         <div className="relative w-full h-[360px] md:h-[420px] rounded-3xl bg-[#eef7ea] overflow-hidden border-2 border-[#afc6a4]/50 shadow-inner">
           <svg viewBox="0 0 800 450" className="w-full h-full" fill="none">
@@ -101,8 +101,8 @@ export const LocationSection: React.FC = () => {
           </svg>
 
           {/* Map Overlay Badge */}
-          <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full border border-[#f5c65d]/40 shadow-sm text-xs font-bold text-[#49362d] flex items-center gap-1.5">
-            <Navigation className="w-3.5 h-3.5 text-[#f3a187]" />
+          <div className="absolute bottom-4 left-3 right-3 sm:right-auto sm:left-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full border border-[#f5c65d]/40 shadow-sm text-xs font-bold text-[#49362d] flex items-center gap-1.5 break-words">
+            <Navigation className="w-3.5 h-3.5 text-[#f3a187] shrink-0" />
             <span>Cemetry Road, Royapuram, Chennai - 600013 (Opp. R S R M Hospital)</span>
           </div>
         </div>

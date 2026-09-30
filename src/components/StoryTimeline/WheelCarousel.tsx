@@ -338,7 +338,7 @@ export function WheelCarousel({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: reduceMotion ? 0 : 0.7, ease: [0.16, 1, 0.3, 1] }}
       className={cn(
-        "flex min-h-[380px] sm:min-h-[440px] md:min-h-[480px] w-full items-center justify-center overflow-hidden",
+        "flex min-h-[290px] sm:min-h-[380px] md:min-h-[440px] w-full items-center justify-center overflow-hidden",
         className,
       )}
       style={{ backgroundColor: palette.background }}
@@ -355,7 +355,7 @@ export function WheelCarousel({
         }
         tabIndex={0}
         className={cn(
-          "flex h-full w-full touch-none select-none items-stretch overflow-hidden outline-none",
+          "flex h-full w-full select-none items-stretch overflow-hidden outline-none touch-pan-y",
           photoSide === "right" && "flex-row-reverse",
           isDragging ? "cursor-grabbing" : "cursor-grab",
         )}
@@ -401,14 +401,14 @@ export function WheelCarousel({
 
             {/* Top Celebration Badge for major milestones */}
             {selectedItem?.sparkleLevel === "large" && (
-              <div className="absolute top-2.5 right-2.5 bg-gradient-to-r from-[#f5c65d] to-[#f3a187] text-white text-[9px] sm:text-xs font-black px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full shadow-lg border border-white animate-pulse z-10">
+              <div className="absolute top-1.5 right-1.5 sm:top-2.5 sm:right-2.5 bg-gradient-to-r from-[#f5c65d] to-[#f3a187] text-white text-[8px] sm:text-xs font-black px-2 py-0.5 sm:px-3 sm:py-1 rounded-full shadow-lg border border-white animate-pulse z-10">
                 MILESTONE! 🎉
               </div>
             )}
 
             {/* Bottom Month Pill Badge */}
             {selectedItem?.month && (
-              <div className="absolute bottom-2.5 left-2.5 bg-[#49362d]/85 backdrop-blur-md text-white text-[9px] sm:text-xs font-black px-2.5 py-1 rounded-full shadow-md z-10 flex items-center gap-1 border border-white/30">
+              <div className="absolute bottom-1.5 left-1.5 sm:bottom-2.5 sm:left-2.5 bg-[#49362d]/85 backdrop-blur-md text-white text-[8px] sm:text-xs font-black px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full shadow-md z-10 flex items-center gap-1 border border-white/30">
                 <span className="text-[#f5c65d]">✨</span>
                 <span>Month {selectedItem.month}</span>
               </div>
@@ -426,10 +426,10 @@ export function WheelCarousel({
               aria-hidden="true"
               className="absolute top-1/2 z-10 -translate-y-1/2 rounded-full shadow-md flex items-center justify-center border-2 border-white ring-2 ring-[#f5c65d]/50"
               style={{
-                left: `calc(${apexInset}% - ${markerGap}px)`,
+                left: `max(2px, calc(${apexInset}% - ${markerGap}px))`,
                 width: markerSize,
                 height: markerSize,
-                marginLeft: -markerSize,
+                marginLeft: `-${markerSize / 2}px`,
                 backgroundColor: palette.marker,
               }}
             >
@@ -443,8 +443,9 @@ export function WheelCarousel({
 
             const angle = offset * spacing;
             const radians = (angle * Math.PI) / 180;
-            const x = -radius * (1 - Math.cos(radians));
-            const y = radius * Math.sin(radians);
+            const responsiveRadius = typeof window !== 'undefined' && window.innerWidth < 640 ? Math.min(radius * 0.65, 170) : radius;
+            const x = -responsiveRadius * (1 - Math.cos(radians));
+            const y = responsiveRadius * Math.sin(radians);
             const distance = Math.min(Math.abs(offset) / visibleItems, 1);
             const opacity = Math.cos((distance * Math.PI) / 2);
             const scale = 1 - Math.min(Math.abs(offset) * 0.04, 0.45);
@@ -461,22 +462,22 @@ export function WheelCarousel({
                   moveBy(offset);
                 }}
                 className={cn(
-                  "absolute top-1/2 origin-left whitespace-nowrap leading-none transition-colors duration-200 cursor-pointer pointer-events-auto",
+                  "absolute top-1/2 origin-left whitespace-nowrap leading-none transition-colors duration-200 cursor-pointer pointer-events-auto py-2.5 px-1 touch-manipulation",
                   selected
-                    ? "font-serif font-black text-sm sm:text-base md:text-xl tracking-tight drop-shadow-xs"
-                    : "font-semibold text-xs sm:text-sm md:text-base tracking-normal hover:opacity-100",
+                    ? "font-serif font-black text-xs sm:text-base md:text-xl tracking-tight drop-shadow-xs"
+                    : "font-semibold text-[11px] sm:text-sm md:text-base tracking-normal hover:opacity-100",
                   itemClassName,
                 )}
                 style={{
-                  left: `${apexInset}%`,
+                  left: `${Math.max(6, apexInset)}%`,
                   color: selected ? palette.selected : palette.text,
                   opacity: selected ? 1 : Math.max(opacity * 0.75, 0.25),
                   transform: `translate(${x}px, ${y}px) translateY(-50%) rotate(${angle}deg) scale(${scale})`,
                 }}
               >
-                <span className="flex items-center gap-1.5">
-                  {selected && <span className="text-[#f5c65d]">✦</span>}
-                  <span>{item.label}</span>
+                <span className="flex items-center gap-1 sm:gap-1.5 max-w-[130px] sm:max-w-none truncate">
+                  {selected && <span className="text-[#f5c65d] shrink-0 text-xs">✦</span>}
+                  <span className="truncate">{item.label}</span>
                 </span>
               </div>
             );

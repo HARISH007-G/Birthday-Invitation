@@ -51,13 +51,13 @@ export const CountdownSection: React.FC = () => {
   ];
 
   return (
-    <section className="relative py-20 px-4 max-w-4xl mx-auto overflow-hidden">
+    <section className="relative py-12 md:py-20 px-3 sm:px-4 max-w-4xl mx-auto overflow-hidden">
       <motion.div
         initial={{ scale: 0.95, opacity: 0 }}
         whileInView={{ scale: 1, opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="glass-card rounded-[40px] p-8 md:p-14 text-center border-4 border-[#fff3d1] shadow-2xl relative"
+        className="glass-card rounded-[40px] p-4 sm:p-6 md:p-8 text-center border-4 border-[#fff3d1] shadow-2xl relative"
       >
         {/* Animated Cake Icon Header */}
         <div className="flex justify-center mb-5 relative">
@@ -103,7 +103,7 @@ export const CountdownSection: React.FC = () => {
                   initial={{ y: -14, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
-                  className="font-serif font-black text-4xl md:text-5xl text-[#49362d] tabular-nums"
+                  className="font-serif font-black text-3xl sm:text-4xl md:text-5xl text-[#49362d] tabular-nums"
                 >
                   {String(unit.value).padStart(2, '0')}
                 </motion.span>

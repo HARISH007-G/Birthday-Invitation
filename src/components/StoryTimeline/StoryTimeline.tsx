@@ -78,10 +78,10 @@ export const StoryTimeline: React.FC = () => {
   };
 
   return (
-    <section id="timeline" className="relative py-20 px-4 max-w-6xl mx-auto overflow-hidden">
+    <section id="timeline" className="relative py-12 md:py-20 px-3 sm:px-4 max-w-6xl mx-auto overflow-hidden">
       {/* Background Soft Glow */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-40">
-        <div className="w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-[#f5c65d]/20 via-[#f3a187]/20 to-[#b9dde4]/20 blur-3xl" />
+        <div className="w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] md:w-[600px] md:h-[600px] rounded-full bg-gradient-to-tr from-[#f5c65d]/20 via-[#f3a187]/20 to-[#b9dde4]/20 blur-3xl" />
       </div>
 
       {/* Header */}
@@ -103,7 +103,7 @@ export const StoryTimeline: React.FC = () => {
         whileInView={{ opacity: 1, y: 0, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="glass-card rounded-[36px] md:rounded-[44px] p-4 sm:p-7 md:p-10 border-4 border-white shadow-2xl relative max-w-4xl mx-auto"
+        className="glass-card rounded-[36px] md:rounded-[44px] p-3 sm:p-6 md:p-10 border-4 border-white shadow-2xl relative max-w-4xl mx-auto"
       >
         {/* Interactive Wheel Carousel */}
         <div className="relative rounded-3xl overflow-hidden bg-gradient-to-b from-white/70 to-[#fff8ee]/70 border border-[#f5c65d]/25 p-2 sm:p-4">

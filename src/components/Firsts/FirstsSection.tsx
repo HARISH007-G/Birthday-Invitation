@@ -13,7 +13,7 @@ export const FirstsSection: React.FC = () => {
   };
 
   return (
-    <section id="firsts" className="relative py-20 px-4 max-w-6xl mx-auto overflow-hidden">
+    <section id="firsts" className="relative py-12 md:py-20 px-3 sm:px-4 max-w-6xl mx-auto overflow-hidden">
       <div className="text-center max-w-2xl mx-auto mb-14">
         <span className="text-xs font-bold uppercase tracking-widest text-[#f3a187]">
           Precious Memories
@@ -49,12 +49,12 @@ export const FirstsSection: React.FC = () => {
                 {/* FRONT FACE */}
                 <div
                   style={{ backgroundColor: first.color }}
-                  className="absolute inset-0 w-full h-full rounded-3xl p-6 shadow-lg border-2 border-white flex flex-col items-center justify-center text-center backface-hidden"
+                  className="absolute inset-0 w-full h-full rounded-3xl p-4 sm:p-6 shadow-lg border-2 border-white flex flex-col items-center justify-center text-center backface-hidden"
                 >
                   <div className="text-5xl mb-3 transform group-hover:scale-110 transition-transform">
                     {first.icon}
                   </div>
-                  <h3 className="text-lg font-serif font-extrabold text-[#49362d] tracking-wide uppercase">
+                  <h3 className="text-base sm:text-lg font-serif font-extrabold text-[#49362d] tracking-wide uppercase">
                     {first.title}
                   </h3>
                   <span className="mt-2 text-[10px] font-bold text-[#49362d]/60 bg-white/60 px-3 py-1 rounded-full">
@@ -63,12 +63,12 @@ export const FirstsSection: React.FC = () => {
                 </div>
 
                 {/* BACK FACE */}
-                <div className="absolute inset-0 w-full h-full rounded-3xl p-6 bg-white shadow-xl border-2 border-[#f5c65d] flex flex-col items-center justify-center text-center rotate-y-180 backface-hidden">
+                <div className="absolute inset-0 w-full h-full rounded-3xl p-4 sm:p-6 bg-white shadow-xl border-2 border-[#f5c65d] flex flex-col items-center justify-center text-center rotate-y-180 backface-hidden">
                   <div className="inline-flex items-center gap-1 text-xs font-extrabold text-[#f3a187] mb-2">
                     <Sparkles className="w-3.5 h-3.5" />
                     <span>{first.dateText}</span>
                   </div>
-                  <p className="text-sm text-[#49362d] font-medium leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[#49362d] font-medium leading-relaxed">
                     {first.backDescription}
                   </p>
                   <span className="mt-3 font-handwriting text-base font-bold text-[#f5c65d]">

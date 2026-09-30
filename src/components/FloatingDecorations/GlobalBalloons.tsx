@@ -36,7 +36,7 @@ export const GlobalBalloons: React.FC = () => {
 
     const animateBalloons = () => {
       const now = Date.now();
-      const delta = (now - lastTime) / 1000;
+      const delta = Math.min((now - lastTime) / 1000, 0.1); // Clamp to prevent teleportation on tab resume
       lastTime = now;
 
       const screenHeight = window.innerHeight || 800;
@@ -80,18 +80,18 @@ export const GlobalBalloons: React.FC = () => {
     <div
       ref={containerRef}
       id="globalBalloons"
-      className="floating-balloons fixed inset-0 w-screen h-screen pointer-events-none z-20 overflow-hidden"
+      className="floating-balloons fixed inset-0 w-full h-full pointer-events-none z-20 overflow-hidden"
     >
       <div className="balloon-wrapper b1 absolute bottom-[-200px] left-[8%] md:left-[12%]" data-speed="1.1" data-sway="35">
         <img src="/images/balloon-red.svg" alt="" className="balloon-img w-12 md:w-16 h-auto block filter drop-shadow-lg" />
       </div>
-      <div className="balloon-wrapper b2 absolute bottom-[-200px] left-[24%] md:left-[30%]" data-speed="0.85" data-sway="45">
+      <div className="balloon-wrapper b2 hidden sm:block absolute bottom-[-200px] left-[24%] md:left-[30%]" data-speed="0.85" data-sway="45">
         <img src="/images/balloon-gold.svg" alt="" className="balloon-img w-14 md:w-20 h-auto block filter drop-shadow-lg" />
       </div>
       <div className="balloon-wrapper b3 absolute bottom-[-200px] left-[40%] md:left-[48%]" data-speed="1.3" data-sway="25">
         <img src="/images/balloon-pink.svg" alt="" className="balloon-img w-12 md:w-16 h-auto block filter drop-shadow-lg" />
       </div>
-      <div className="balloon-wrapper b4 absolute bottom-[-200px] left-[56%] md:left-[65%]" data-speed="0.95" data-sway="40">
+      <div className="balloon-wrapper b4 hidden sm:block absolute bottom-[-200px] left-[56%] md:left-[65%]" data-speed="0.95" data-sway="40">
         <img src="/images/balloon-blue.svg" alt="" className="balloon-img w-12 md:w-16 h-auto block filter drop-shadow-lg" />
       </div>
       <div className="balloon-wrapper b5 absolute bottom-[-200px] left-[72%] md:left-[80%]" data-speed="1.2" data-sway="30">

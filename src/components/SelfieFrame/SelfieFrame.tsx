@@ -183,7 +183,7 @@ export const SelfieFrame: React.FC = () => {
                 placeholder="e.g. Ramesh & Family"
                 value={guestName}
                 onChange={(e) => setGuestName(e.target.value)}
-                className="w-full px-4 py-3 rounded-2xl bg-white border-2 border-gray-100 focus:border-[#f5c65d] focus:outline-hidden text-sm font-bold text-[#49362d]"
+                className="w-full px-4 py-3 rounded-2xl bg-white border-2 border-gray-100 focus:border-[#f5c65d] focus:outline-hidden text-base md:text-sm font-bold text-[#49362d]"
               />
             </div>
 
@@ -213,7 +213,7 @@ export const SelfieFrame: React.FC = () => {
             <select
               value={selectedQuote}
               onChange={(e) => setSelectedQuote(e.target.value)}
-              className="w-full px-4 py-3 rounded-2xl bg-white border-2 border-gray-100 focus:border-[#f5c65d] focus:outline-hidden text-xs md:text-sm font-bold text-[#49362d] shadow-2xs"
+              className="w-full px-4 py-3 rounded-2xl bg-white border-2 border-gray-100 focus:border-[#f5c65d] focus:outline-hidden text-base md:text-sm font-bold text-[#49362d] shadow-2xs"
             >
               {SOUVENIR_QUOTES.map((q, idx) => (
                 <option key={idx} value={q}>
@@ -233,11 +233,11 @@ export const SelfieFrame: React.FC = () => {
           <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-28 h-6 bg-[#f5c65d]/70 rotate-[-1deg] shadow-xs z-20" />
 
           {/* Floating Stickers around corners */}
-          <div className="absolute top-4 left-4 z-20 opacity-90 animate-sway">
-            <BalloonSVG color="#f5c65d" className="w-8 h-10" />
+          <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-20 opacity-90 animate-sway">
+            <BalloonSVG color="#f5c65d" className="w-6 h-8 sm:w-8 sm:h-10" />
           </div>
-          <div className="absolute top-4 right-4 z-20 opacity-90 animate-sway" style={{ animationDelay: '1s' }}>
-            <TeddySVG className="w-8 h-10" />
+          <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-20 opacity-90 animate-sway" style={{ animationDelay: '1s' }}>
+            <TeddySVG className="w-6 h-8 sm:w-8 sm:h-10" />
           </div>
           <div className="absolute bottom-16 left-4 z-20 opacity-90">
             <FlowerSVG color="#f3a187" className="w-7 h-7" />
@@ -247,10 +247,10 @@ export const SelfieFrame: React.FC = () => {
           </div>
 
           {/* TOP SECTION: Soft Gradient Header */}
-          <div className="z-10 pt-2 mb-3">
-            <div className="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-[#f5c65d] text-[#49362d] text-xs font-black shadow-xs mb-1">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>✨ HANVIKA’S 1ST BIRTHDAY SOUVENIR ✨</span>
+          <div className="z-10 pt-2 mb-3 flex flex-col items-center">
+            <div className="inline-flex max-w-full items-center justify-center gap-1.5 px-4 py-1 rounded-full bg-[#f5c65d] text-[#49362d] text-[10px] sm:text-xs font-black shadow-xs mb-1">
+              <Sparkles className="w-3.5 h-3.5 shrink-0" />
+              <span className="truncate">✨ HANVIKA’S 1ST BIRTHDAY SOUVENIR ✨</span>
             </div>
             <p className="text-xs font-bold text-[#f3a187]">
               A Magical Memory To Take Home Forever
@@ -279,7 +279,7 @@ export const SelfieFrame: React.FC = () => {
                   className="w-full h-full object-cover"
                 />
                 {guestName && (
-                  <div className="absolute bottom-2 left-2 right-2 bg-white/90 backdrop-blur-md px-3 py-1 rounded-xl text-xs font-bold text-[#49362d] text-center shadow-xs">
+                  <div className="absolute bottom-2 left-2 right-2 bg-white/90 backdrop-blur-md px-3 py-1 rounded-xl text-xs font-bold text-[#49362d] text-center shadow-xs truncate">
                     With love from: {guestName} ❤️
                   </div>
                 )}
@@ -287,8 +287,8 @@ export const SelfieFrame: React.FC = () => {
             ) : (
               /* ELEGANT EMPTY STATE DESIGN */
               <label className="w-full h-full rounded-2xl border-2 border-dashed border-[#f5c65d] bg-[#fff8ee]/60 hover:bg-[#fff8ee] transition-colors flex flex-col items-center justify-center p-4 cursor-pointer text-center">
-                <div className="w-14 h-14 rounded-full bg-white shadow-md flex items-center justify-center mb-2">
-                  <Camera className="w-7 h-7 text-[#f3a187] animate-pulse" />
+                <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-white shadow-md flex items-center justify-center mb-2">
+                  <Camera className="w-5 h-5 sm:w-7 sm:h-7 text-[#f3a187] animate-pulse" />
                 </div>
                 <p className="font-serif font-bold text-sm text-[#49362d]">
                   Tap to upload your photo
@@ -326,16 +326,16 @@ export const SelfieFrame: React.FC = () => {
             <>
               <button
                 onClick={handleDownloadSelfie}
-                className="flex-1 py-3.5 rounded-full bg-[#49362d] hover:bg-[#f3a187] text-white font-bold text-sm shadow-lg transition-all flex items-center justify-center gap-2 transform hover:scale-105"
+                className="w-full sm:flex-1 min-h-[44px] py-3.5 rounded-full bg-[#49362d] hover:bg-[#f3a187] text-white font-bold text-sm shadow-lg transition-all flex items-center justify-center gap-2 transform hover:scale-105"
               >
-                <Download className="w-4 h-4" />
+                <Download className="w-4 h-4 shrink-0" />
                 <span>Download Souvenir Image 🖼️</span>
               </button>
               <button
                 onClick={handleShareWhatsApp}
-                className="py-3.5 px-5 rounded-full bg-[#25D366] hover:bg-[#1ebd59] text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2"
+                className="w-full sm:flex-1 min-h-[44px] py-3.5 px-5 rounded-full bg-[#25D366] hover:bg-[#1ebd59] text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2"
               >
-                <Share2 className="w-4 h-4" />
+                <Share2 className="w-4 h-4 shrink-0" />
                 <span>Share Card</span>
               </button>
             </>

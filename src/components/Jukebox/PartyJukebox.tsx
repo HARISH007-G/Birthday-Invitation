@@ -100,9 +100,9 @@ export const PartyJukebox: React.FC = () => {
         <span className="text-xs font-bold uppercase tracking-widest text-[#f3a187]">
           Party DJ Jukebox
         </span>
-        <h2 className="text-3xl md:text-5xl font-extrabold font-serif text-[#49362d] mt-1 flex items-center justify-center gap-2">
+        <h2 className="text-2xl sm:text-3xl md:text-5xl font-extrabold font-serif text-[#49362d] mt-1 flex flex-wrap items-center justify-center gap-2">
           <span>Suggest a Party Song</span>
-          <Music2 className="w-8 h-8 text-[#f5c65d] animate-bounce" />
+          <Music2 className="w-6 h-6 sm:w-8 sm:h-8 shrink-0 text-[#f5c65d] animate-bounce" />
         </h2>
         <p className="text-[#49362d]/80 font-medium mt-2 text-sm md:text-base">
           What song would you love to dance to at Y S Hanvika’s 1st Birthday party? Add your song request below to send it to the Party DJ & parents!
@@ -122,7 +122,7 @@ export const PartyJukebox: React.FC = () => {
               placeholder="e.g. The Wheels on the Bus, Baby Shark, Lungi Dance"
               value={newSong}
               onChange={(e) => setNewSong(e.target.value)}
-              className="w-full px-4 py-3.5 rounded-2xl bg-white border border-gray-200 focus:border-[#f5c65d] focus:outline-hidden text-sm font-bold text-[#49362d]"
+              className="w-full px-4 py-3.5 rounded-2xl bg-white border border-gray-200 focus:border-[#f5c65d] focus:outline-hidden text-base sm:text-sm font-bold text-[#49362d]"
             />
           </div>
           <div>
@@ -135,7 +135,7 @@ export const PartyJukebox: React.FC = () => {
               placeholder="e.g. Ramesh & Family"
               value={guestName}
               onChange={(e) => setGuestName(e.target.value)}
-              className="w-full px-4 py-3.5 rounded-2xl bg-white border border-gray-200 focus:border-[#f5c65d] focus:outline-hidden text-sm font-bold text-[#49362d]"
+              className="w-full px-4 py-3.5 rounded-2xl bg-white border border-gray-200 focus:border-[#f5c65d] focus:outline-hidden text-base sm:text-sm font-bold text-[#49362d]"
             />
           </div>
 
@@ -188,11 +188,11 @@ export const PartyJukebox: React.FC = () => {
               <div className="w-10 h-10 rounded-xl bg-[#fff3d1] border border-[#f5c65d]/40 flex items-center justify-center text-[#f5c65d] shrink-0">
                 <Music className="w-5 h-5" />
               </div>
-              <div>
-                <h3 className="font-serif font-bold text-base text-[#49362d] leading-snug">
+              <div className="min-w-0">
+                <h3 className="font-serif font-bold text-base text-[#49362d] leading-snug break-words">
                   {song.songName}
                 </h3>
-                <span className="text-xs font-bold text-[#f3a187]">
+                <span className="text-xs font-bold text-[#f3a187] break-words">
                   Requested by {song.requestedBy}
                 </span>
               </div>
@@ -204,9 +204,9 @@ export const PartyJukebox: React.FC = () => {
               </span>
               <button
                 onClick={() => handleLike(song.id)}
-                className="flex items-center gap-1 px-3 py-1 rounded-full bg-white border border-red-100 text-xs font-bold text-red-500 shadow-2xs hover:bg-red-50 transition-colors"
+                className="flex items-center justify-center gap-1 min-h-[44px] min-w-[44px] px-3 py-1 rounded-full bg-white border border-red-100 text-xs font-bold text-red-500 shadow-2xs hover:bg-red-50 transition-colors"
               >
-                <Heart className="w-3.5 h-3.5 fill-current" />
+                <Heart className="w-3.5 h-3.5 fill-current shrink-0" />
                 <span>{song.likes}</span>
               </button>
             </div>

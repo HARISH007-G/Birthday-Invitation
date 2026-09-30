@@ -268,18 +268,18 @@ export const PrintableInvitationModal: React.FC<PrintableInvitationModalProps> =
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md overflow-y-auto">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-md overflow-y-auto">
         <motion.div
           initial={{ scale: 0.9, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.9, opacity: 0, y: 20 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-          className="relative bg-white rounded-[36px] p-6 md:p-8 max-w-2xl w-full shadow-2xl border-4 border-[#fff3d1] my-8 max-h-[90vh] overflow-y-auto"
+          className="relative bg-white rounded-[36px] p-4 sm:p-6 md:p-8 max-w-2xl w-full shadow-2xl border-4 border-[#fff3d1] my-auto max-h-[92dvh] sm:max-h-[90vh] overflow-y-auto"
         >
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute top-5 right-5 w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 text-[#49362d] flex items-center justify-center transition-all z-10"
+            className="absolute top-3 right-3 sm:top-5 sm:right-5 w-11 h-11 rounded-full bg-gray-100 hover:bg-gray-200 text-[#49362d] flex items-center justify-center transition-all z-10"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" />
@@ -311,7 +311,7 @@ export const PrintableInvitationModal: React.FC<PrintableInvitationModalProps> =
                   <button
                     key={t}
                     onClick={() => setTemplate(t)}
-                    className={`flex-1 py-2 px-2 rounded-xl text-xs font-extrabold capitalize border transition-all ${
+                    className={`flex-1 min-h-[44px] py-2 px-2 rounded-xl text-xs font-extrabold capitalize border transition-all ${
                       template === t
                         ? 'bg-[#f5c65d] text-[#49362d] border-white shadow-sm scale-105 ring-2 ring-[#f3a187]'
                         : 'bg-white text-[#49362d]/70 border-gray-200 hover:bg-gray-50'
@@ -332,7 +332,7 @@ export const PrintableInvitationModal: React.FC<PrintableInvitationModalProps> =
               <div className="flex gap-1.5">
                 <button
                   onClick={() => setLanguage('en')}
-                  className={`flex-1 py-2 rounded-xl text-xs font-extrabold border transition-all ${
+                  className={`flex-1 min-h-[44px] py-2 rounded-xl text-xs font-extrabold border transition-all ${
                     language === 'en'
                       ? 'bg-[#f3a187] text-white border-white shadow-sm scale-105'
                       : 'bg-white text-[#49362d]/70 border-gray-200 hover:bg-gray-50'
@@ -342,7 +342,7 @@ export const PrintableInvitationModal: React.FC<PrintableInvitationModalProps> =
                 </button>
                 <button
                   onClick={() => setLanguage('ta')}
-                  className={`flex-1 py-2 rounded-xl text-xs font-extrabold border transition-all ${
+                  className={`flex-1 min-h-[44px] py-2 rounded-xl text-xs font-extrabold border transition-all ${
                     language === 'ta'
                       ? 'bg-[#f3a187] text-white border-white shadow-sm scale-105'
                       : 'bg-white text-[#49362d]/70 border-gray-200 hover:bg-gray-50'
@@ -356,7 +356,7 @@ export const PrintableInvitationModal: React.FC<PrintableInvitationModalProps> =
 
           {/* DYNAMIC LIVE CARD PREVIEW (Fully responds to Classic / Modern / Pastel themes!) */}
           <div
-            className={`relative rounded-3xl p-6 md:p-8 text-center border-4 shadow-xl mb-6 overflow-hidden transition-all duration-300 ${currentTheme.cardBg} ${currentTheme.borderColor}`}
+            className={`relative rounded-3xl p-4 sm:p-6 md:p-8 text-center border-4 shadow-xl mb-6 overflow-hidden transition-all duration-300 ${currentTheme.cardBg} ${currentTheme.borderColor}`}
           >
             {/* Tagline Crest */}
             <div className={`inline-block px-4 py-1 rounded-full text-[11px] font-black uppercase tracking-wider mb-3 shadow-xs ${currentTheme.taglineBg}`}>
@@ -388,7 +388,7 @@ export const PrintableInvitationModal: React.FC<PrintableInvitationModalProps> =
             <div className={`p-4 rounded-2xl text-left text-xs font-bold space-y-2 max-w-md mx-auto shadow-xs ${currentTheme.detailsBg}`}>
               <div>🗓️ {t.dateLabel}</div>
               <div>⏰ {t.timeLabel}</div>
-              <div>📍 {t.venueLabel}, {t.addressLabel}</div>
+              <div className="break-words">📍 {t.venueLabel}, {t.addressLabel}</div>
               <div className={currentTheme.accentText}>🎨 {t.dressCodeLabel}</div>
             </div>
 
@@ -411,9 +411,9 @@ export const PrintableInvitationModal: React.FC<PrintableInvitationModalProps> =
             <button
               onClick={() => handleDownload('image')}
               disabled={isGenerating}
-              className="py-3 px-4 rounded-full bg-[#49362d] hover:bg-[#f3a187] text-white font-extrabold text-xs shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+              className="min-h-[44px] py-3 px-4 rounded-full bg-[#49362d] hover:bg-[#f3a187] text-white font-extrabold text-xs shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50"
             >
-              <ImageIcon className="w-4 h-4 text-[#f5c65d]" />
+              <ImageIcon className="w-4 h-4 text-[#f5c65d] shrink-0" />
               <span>WhatsApp Image 🖼️</span>
             </button>
 
@@ -421,18 +421,18 @@ export const PrintableInvitationModal: React.FC<PrintableInvitationModalProps> =
             <button
               onClick={() => handleDownload('pdf')}
               disabled={isGenerating}
-              className="py-3 px-4 rounded-full bg-[#f5c65d] hover:bg-[#f3a187] text-[#49362d] font-extrabold text-xs shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+              className="min-h-[44px] py-3 px-4 rounded-full bg-[#f5c65d] hover:bg-[#f3a187] text-[#49362d] font-extrabold text-xs shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50"
             >
-              <FileText className="w-4 h-4" />
+              <FileText className="w-4 h-4 shrink-0" />
               <span>Printable PDF 📄</span>
             </button>
 
             {/* Share via WhatsApp */}
             <button
               onClick={handleShareWhatsApp}
-              className="py-3 px-4 rounded-full bg-[#25D366] hover:bg-[#1eb853] text-white font-extrabold text-xs shadow-md transition-all flex items-center justify-center gap-2"
+              className="min-h-[44px] py-3 px-4 rounded-full bg-[#25D366] hover:bg-[#1eb853] text-white font-extrabold text-xs shadow-md transition-all flex items-center justify-center gap-2"
             >
-              <Share2 className="w-4 h-4" />
+              <Share2 className="w-4 h-4 shrink-0" />
               <span>Share WhatsApp 📲</span>
             </button>
           </div>

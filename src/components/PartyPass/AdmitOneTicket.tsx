@@ -653,7 +653,18 @@ const Dithering = forwardRef<HTMLDivElement, any>(function DitheringImpl(
     const ro = new ResizeObserver(() => mountRef.current?.handleResize());
     ro.observe(el);
 
+    const io = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting && mountRef.current?.rafId) {
+        cancelAnimationFrame(mountRef.current.rafId);
+        mountRef.current.rafId = null;
+      } else if (entry.isIntersecting && mountRef.current && !mountRef.current.rafId) {
+        mountRef.current.requestRender();
+      }
+    }, { threshold: 0.05 });
+    io.observe(el);
+
     return () => {
+      io.disconnect();
       ro.disconnect();
       mountRef.current?.dispose();
       mountRef.current = null;
@@ -686,7 +697,7 @@ export const TICKET_GEOMETRY = {
 export const TICKET_LAYOUT = {
   padding: 44 / REF,
   watermarkSize: 130 / REF,
-  watermarkOpacity: 0.65,
+  watermarkOpacity: 0.22,
   watermarkColor: "#ffffff",
   inkColor: "#49362d", // Warm deep birthday brown
 };
@@ -914,46 +925,46 @@ export function TicketCard({
       >
         {/* Top Header: Presenter + Pass ID + Event Title */}
         <div>
-          <div className="flex items-center justify-between text-[9px] sm:text-xs font-black uppercase tracking-wider text-[#49362d]/85">
-            <span>{presenter}</span>
-            <span className="font-mono text-[9px] sm:text-[11px] bg-white/70 px-2 py-0.5 rounded-full border border-white shadow-2xs">
+          <div className="flex items-center justify-between gap-1 text-[8px] sm:text-xs font-black uppercase tracking-wider text-[#49362d]/85 min-w-0">
+            <span className="truncate">{presenter}</span>
+            <span className="font-mono text-[8px] sm:text-[11px] bg-white/70 px-1.5 sm:px-2 py-0.5 rounded-full border border-white shadow-2xs shrink-0">
               {passId}
             </span>
           </div>
-          <h3 className="font-serif font-black text-xs sm:text-lg md:text-xl text-[#49362d] uppercase tracking-tight mt-0.5">
+          <h3 className="font-serif font-black text-[11px] sm:text-lg md:text-xl text-[#49362d] uppercase tracking-tight mt-0.5 truncate">
             {event}
           </h3>
         </div>
 
         {/* Center: Guest Name (Guest of Honor) */}
-        <div className="my-auto py-1">
-          <span className="text-[9px] sm:text-[11px] font-black uppercase tracking-widest text-[#f3a187] block mb-0.5">
+        <div className="my-auto py-1 min-w-0">
+          <span className="text-[8px] sm:text-[11px] font-black uppercase tracking-widest text-[#f3a187] block mb-0.5 truncate">
             ✦ GUEST OF HONOR ✦
           </span>
-          <div className="font-serif font-black text-base sm:text-2xl md:text-3xl text-[#49362d] uppercase tracking-tight leading-tight line-clamp-1 drop-shadow-xs">
+          <div className="font-serif font-black text-sm sm:text-2xl md:text-3xl text-[#49362d] uppercase tracking-tight leading-tight line-clamp-1 drop-shadow-xs">
             {name}
           </div>
         </div>
 
         {/* Bottom Highlights & QR Code Box */}
-        <div className="flex items-center justify-between gap-2 bg-white/85 backdrop-blur-xs p-2 sm:p-3 rounded-xl sm:rounded-2xl border border-white/90 shadow-xs">
+        <div className="flex items-center justify-between gap-1.5 sm:gap-2 bg-white/85 backdrop-blur-xs p-1.5 sm:p-3 rounded-xl sm:rounded-2xl border border-white/90 shadow-xs min-w-0">
           {/* Details Column */}
-          <div className="flex-1 space-y-0.5 sm:space-y-1 text-[9px] sm:text-[11px] md:text-xs font-extrabold text-[#49362d]">
-            <div className="flex items-center gap-1.5">
-              <span>🗓️</span>
-              <span>{dates}</span>
+          <div className="flex-1 min-w-0 space-y-0.5 sm:space-y-1 text-[8px] sm:text-[11px] md:text-xs font-extrabold text-[#49362d]">
+            <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
+              <span className="shrink-0">🗓️</span>
+              <span className="truncate">{dates}</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <span>⏰</span>
-              <span>{time}</span>
+            <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
+              <span className="shrink-0">⏰</span>
+              <span className="truncate">{time}</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <span>📍</span>
+            <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
+              <span className="shrink-0">📍</span>
               <span className="truncate">{venue}</span>
             </div>
             {dressCode && (
-              <div className="flex items-center gap-1.5 text-[#f3a187]">
-                <span>🎨</span>
+              <div className="flex items-center gap-1 sm:gap-1.5 text-[#f3a187] min-w-0">
+                <span className="shrink-0">🎨</span>
                 <span className="truncate">Dress Code: {dressCode}</span>
               </div>
             )}
@@ -962,7 +973,7 @@ export function TicketCard({
           {/* Scannable Location QR Code */}
           {qrCodeUrl && (
             <div className="flex flex-col items-center bg-white p-1 sm:p-1.5 rounded-lg border border-gray-200 shadow-2xs shrink-0">
-              <div className="w-11 h-11 sm:w-14 sm:h-14 flex items-center justify-center bg-white overflow-hidden">
+              <div className="w-8 h-8 sm:w-14 sm:h-14 flex items-center justify-center bg-white overflow-hidden">
                 <img
                   src={qrCodeUrl}
                   alt="Venue Google Maps QR Code"
@@ -971,7 +982,7 @@ export function TicketCard({
                   draggable={false}
                 />
               </div>
-              <span className="text-[7px] sm:text-[9px] font-black text-[#49362d] mt-0.5 whitespace-nowrap">
+              <span className="text-[6px] sm:text-[9px] font-black text-[#49362d] mt-0.5 whitespace-nowrap">
                 Scan Map 📍
               </span>
             </div>
@@ -986,7 +997,7 @@ export function TicketCard({
 export function TiltCard({
   children,
   clipPath,
-  maxTilt = 9,
+  maxTilt = 8,
   scale = 1.02,
   glare = 0.22,
   className = "",
@@ -1004,6 +1015,7 @@ export function TiltCard({
 
   const onMove = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
+      if (e.pointerType === "touch") return; // Disable tilt on touch to allow normal scroll
       const el = cardRef.current;
       if (!el) return;
       const rect = el.getBoundingClientRect();
@@ -1030,9 +1042,10 @@ export function TiltCard({
   return (
     <div
       ref={cardRef}
-      onPointerEnter={() => setHovering(true)}
+      onPointerEnter={(e) => e.pointerType !== "touch" && setHovering(true)}
       onPointerMove={onMove}
       onPointerLeave={onLeave}
+      onPointerCancel={onLeave}
       className={`relative w-fit will-change-transform ${className}`}
       style={{
         transition: hovering ? "none" : "transform 420ms cubic-bezier(0.22, 1, 0.36, 1)",

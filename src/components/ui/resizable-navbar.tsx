@@ -61,6 +61,7 @@ export const Navbar = ({ children, className, isOpen = false }: NavbarProps) => 
   }, [isOpen]);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
+    if (latest < 0) return; // Prevent iOS rubber-band bounce jitter
     // 1. Detect whether we should enter the compact resizable pill mode
     if (latest > 80) {
       setVisible(true);
@@ -242,7 +243,7 @@ export const MobileNavMenu = ({
           exit={{ opacity: 0, y: -10, scale: 0.98 }}
           transition={{ duration: 0.22 }}
           className={cn(
-            "absolute inset-x-0 top-16 z-50 flex w-full flex-col items-start justify-start gap-3 rounded-3xl bg-white/98 backdrop-blur-2xl p-5 shadow-2xl border-4 border-[#fff3d1]",
+            "absolute inset-x-0 top-full mt-2 z-50 flex w-full flex-col items-start justify-start gap-3 rounded-3xl bg-white/98 backdrop-blur-2xl p-5 shadow-2xl border-4 border-[#fff3d1] max-h-[calc(100dvh-5.5rem)] overflow-y-auto overscroll-contain",
             className,
           )}
         >
@@ -263,7 +264,7 @@ export const MobileNavToggle = ({
   return (
     <button
       onClick={onClick}
-      className="p-1.5 rounded-full bg-white/90 text-[#49362d] border border-[#f5c65d]/50 shadow-xs hover:bg-[#fff3d1] transition-colors"
+      className="min-w-[44px] min-h-[44px] p-2.5 flex items-center justify-center rounded-full bg-white/90 text-[#49362d] border border-[#f5c65d]/50 shadow-xs hover:bg-[#fff3d1] active:scale-95 transition-all"
       aria-label={isOpen ? "Close navigation" : "Open navigation"}
     >
       {isOpen ? (
@@ -314,7 +315,7 @@ export const NavbarButton = ({
   | React.ComponentPropsWithoutRef<"button">
 )) => {
   const baseStyles =
-    "px-4 py-1.5 rounded-full text-xs font-black relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-flex items-center justify-center text-center shadow-md";
+    "px-4 py-2 min-h-[44px] rounded-full text-xs font-black relative cursor-pointer hover:-translate-y-0.5 active:translate-y-0 transition duration-200 inline-flex items-center justify-center text-center shadow-md";
 
   const variantStyles = {
     primary:
