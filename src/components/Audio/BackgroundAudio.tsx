@@ -122,11 +122,11 @@ export const BackgroundAudio: React.FC<BackgroundAudioProps> = ({ isPlaying, onT
   if (!isPlaying) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-40">
+    <div className="fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom,0px))] right-[calc(1rem+env(safe-area-inset-right,0px))] z-40">
       <button
         onClick={toggleMute}
         aria-label={isMuted ? 'Unmute birthday music' : 'Mute birthday music'}
-        className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/90 backdrop-blur-md shadow-lg border border-[#f5c65d]/40 text-[#49362d] font-bold text-xs hover:bg-[#fff3d1] transition-all transform hover:scale-105 active:scale-95"
+        className="flex items-center gap-2 px-3.5 sm:px-4 py-2.5 min-h-[44px] rounded-full bg-white/90 backdrop-blur-md shadow-lg border border-[#f5c65d]/40 text-[#49362d] font-bold text-xs hover:bg-[#fff3d1] transition-all transform hover:scale-105 active:scale-95"
       >
         {isMuted ? (
           <>

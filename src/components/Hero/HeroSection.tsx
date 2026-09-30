@@ -177,7 +177,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenInvitation }) =>
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 1.2 }}
-          className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-[#49362d]/50"
+          className="pointer-events-none mt-8 sm:mt-12 flex flex-col items-center gap-1 text-[#49362d]/50"
           aria-hidden="true"
         >
           <span className="text-[10px] font-bold uppercase tracking-widest">Scroll</span>

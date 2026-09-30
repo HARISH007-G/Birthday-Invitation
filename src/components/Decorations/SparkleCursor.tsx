@@ -48,11 +48,9 @@ export const SparkleCursor: React.FC = () => {
     };
 
     window.addEventListener('mousemove', handlePointerMove);
-    window.addEventListener('touchmove', handlePointerMove);
 
     return () => {
       window.removeEventListener('mousemove', handlePointerMove);
-      window.removeEventListener('touchmove', handlePointerMove);
     };
   }, [isReducedMotion]);
 

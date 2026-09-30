@@ -90,11 +90,9 @@ export const ImageTrail: React.FC<ImageTrailProps> = ({
     };
 
     window.addEventListener('mousemove', handlePointerMove);
-    window.addEventListener('touchmove', handlePointerMove);
 
     return () => {
       window.removeEventListener('mousemove', handlePointerMove);
-      window.removeEventListener('touchmove', handlePointerMove);
     };
   }, [isReducedMotion, threshold, minDelay, duration, maxItems, rotationRange]);
 
