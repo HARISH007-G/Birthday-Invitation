@@ -70,6 +70,11 @@ export const birthdayConfig = {
 
 
 
+  audio: {
+    bgMusic: "/audio/birthday-song.mp3", // Place your downloaded audio file in public/audio/
+    volume: 0.6,
+  },
+
   images: {
     hero: "/images/hero.jpg",
     newborn: "/images/newborn.jpg",

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
+import { birthdayConfig } from '../../config/birthdayConfig';
 
 interface BackgroundAudioProps {
   isPlaying: boolean;
@@ -7,13 +8,14 @@ interface BackgroundAudioProps {
 }
 
 export const BackgroundAudio: React.FC<BackgroundAudioProps> = ({ isPlaying, onTogglePlay }) => {
-
   const [isMuted, setIsMuted] = useState<boolean>(() => {
     return localStorage.getItem('birthday_audio_muted') === 'true';
   });
 
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const timerRef = useRef<number | null>(null);
+  const [isPlayingCustomSong, setIsPlayingCustomSong] = useState(false);
 
   // Soft celebratory chime notes (Happy Birthday melody frequencies in Hz)
   const notes = [
@@ -57,28 +59,53 @@ export const BackgroundAudio: React.FC<BackgroundAudioProps> = ({ isPlaying, onT
   };
 
   useEffect(() => {
+    const audioEl = audioRef.current;
+    if (audioEl) {
+      audioEl.volume = birthdayConfig.audio?.volume ?? 0.6;
+    }
+
     if (isPlaying && !isMuted) {
-      if (!audioCtxRef.current) {
-        const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-        audioCtxRef.current = new AudioCtx();
+      if (audioEl && birthdayConfig.audio?.bgMusic) {
+        audioEl
+          .play()
+          .then(() => {
+            setIsPlayingCustomSong(true);
+          })
+          .catch(() => {
+            // Audio file was not found or blocked -> fallback to synthesized chimes
+            setIsPlayingCustomSong(false);
+            startChimeLoop();
+          });
+      } else {
+        startChimeLoop();
       }
 
-      if (audioCtxRef.current.state === 'suspended') {
-        audioCtxRef.current.resume();
+      function startChimeLoop() {
+        if (!audioCtxRef.current) {
+          const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+          audioCtxRef.current = new AudioCtx();
+        }
+
+        if (audioCtxRef.current.state === 'suspended') {
+          audioCtxRef.current.resume();
+        }
+
+        let noteIdx = 0;
+        const playLoop = () => {
+          const freq = notes[noteIdx];
+          const duration = noteDurations[noteIdx];
+          playChimeNote(freq, duration);
+
+          noteIdx = (noteIdx + 1) % notes.length;
+          timerRef.current = window.setTimeout(playLoop, duration * 1000 + 100);
+        };
+
+        playLoop();
       }
-
-      let noteIdx = 0;
-      const playLoop = () => {
-        const freq = notes[noteIdx];
-        const duration = noteDurations[noteIdx];
-        playChimeNote(freq, duration);
-
-        noteIdx = (noteIdx + 1) % notes.length;
-        timerRef.current = window.setTimeout(playLoop, duration * 1000 + 100);
-      };
-
-      playLoop();
     } else {
+      if (audioEl) {
+        audioEl.pause();
+      }
       if (timerRef.current) {
         clearTimeout(timerRef.current);
         timerRef.current = null;
@@ -86,60 +113,83 @@ export const BackgroundAudio: React.FC<BackgroundAudioProps> = ({ isPlaying, onT
       if (audioCtxRef.current && audioCtxRef.current.state === 'running') {
         audioCtxRef.current.suspend();
       }
+      setIsPlayingCustomSong(false);
     }
 
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
+      if (audioEl) audioEl.pause();
     };
   }, [isPlaying, isMuted]);
 
   // Handle visibility change (pause on tab hide)
   useEffect(() => {
     const handleVisibilityChange = () => {
+      const audioEl = audioRef.current;
       if (document.hidden) {
+        if (audioEl && !audioEl.paused) {
+          audioEl.pause();
+        }
         if (audioCtxRef.current && audioCtxRef.current.state === 'running') {
           audioCtxRef.current.suspend();
         }
-      } else if (isPlaying && !isMuted && audioCtxRef.current) {
-        audioCtxRef.current.resume();
+      } else if (isPlaying && !isMuted) {
+        if (audioEl && isPlayingCustomSong) {
+          audioEl.play().catch(() => {});
+        } else if (audioCtxRef.current) {
+          audioCtxRef.current.resume();
+        }
       }
     };
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, [isPlaying, isMuted]);
+  }, [isPlaying, isMuted, isPlayingCustomSong]);
 
   const toggleMute = () => {
+    if (!isPlaying) {
+      onTogglePlay();
+      setIsMuted(false);
+      localStorage.setItem('birthday_audio_muted', 'false');
+      return;
+    }
     const nextMuted = !isMuted;
     setIsMuted(nextMuted);
     localStorage.setItem('birthday_audio_muted', String(nextMuted));
-    if (nextMuted === false && !isPlaying) {
-      onTogglePlay();
-    }
   };
 
-
-  if (!isPlaying) return null;
+  const isActive = isPlaying && !isMuted;
 
   return (
-    <div className="fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom,0px))] right-[calc(1rem+env(safe-area-inset-right,0px))] z-40">
-      <button
-        onClick={toggleMute}
-        aria-label={isMuted ? 'Unmute birthday music' : 'Mute birthday music'}
-        className="flex items-center gap-2 px-3.5 sm:px-4 py-2.5 min-h-[44px] rounded-full bg-white/90 backdrop-blur-md shadow-lg border border-[#f5c65d]/40 text-[#49362d] font-bold text-xs hover:bg-[#fff3d1] transition-all transform hover:scale-105 active:scale-95"
-      >
-        {isMuted ? (
-          <>
-            <VolumeX className="w-4 h-4 text-red-400" />
-            <span>Music Off</span>
-          </>
-        ) : (
-          <>
-            <Volume2 className="w-4 h-4 text-[#f3a187] animate-pulse" />
-            <span>Music Playing 🎵</span>
-          </>
-        )}
-      </button>
-    </div>
+    <>
+      {birthdayConfig.audio?.bgMusic && (
+        <audio
+          ref={audioRef}
+          src={birthdayConfig.audio.bgMusic}
+          loop
+          preload="auto"
+          aria-hidden="true"
+        />
+      )}
+      <div className="fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom,0px))] right-[calc(1rem+env(safe-area-inset-right,0px))] z-40">
+        <button
+          onClick={toggleMute}
+          aria-label={isActive ? 'Mute birthday music' : 'Play birthday music'}
+          className="flex items-center gap-2 px-3.5 sm:px-4 py-2.5 min-h-[44px] rounded-full bg-white/95 backdrop-blur-md shadow-lg border border-[#f5c65d]/50 text-[#49362d] font-extrabold text-xs hover:bg-[#fff3d1] transition-all transform hover:scale-105 active:scale-95"
+        >
+          {isActive ? (
+            <>
+              <Volume2 className="w-4 h-4 text-[#f3a187] animate-pulse" />
+              <span>{isPlayingCustomSong ? 'Song Playing 🎶' : 'Music Playing 🎵'}</span>
+            </>
+          ) : (
+            <>
+              <VolumeX className="w-4 h-4 text-[#49362d]/60" />
+              <span>Play Music 🎵</span>
+            </>
+          )}
+        </button>
+      </div>
+    </>
   );
 };
