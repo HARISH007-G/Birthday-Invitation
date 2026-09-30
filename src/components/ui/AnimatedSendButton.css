@@ -247,68 +247,107 @@
 /* Plane animations */
 .animated-send-btn .state--default .icon svg {
   animation: sendBtnLand 0.6s ease forwards;
+  filter: drop-shadow(0 1px 2px rgba(73, 54, 45, 0.25));
+  transition: filter 0.3s ease;
 }
 
-.animated-send-btn:hover .state--default .icon {
-  transform: rotate(40deg) scale(1.25);
+.animated-send-btn:hover:not(.is-launching):not(.is-sending):not(.is-sent) .state--default .icon {
+  transform: rotate(-10deg) scale(1.2);
   color: var(--primary);
+  filter: drop-shadow(0 2px 6px rgba(243, 161, 135, 0.6));
 }
 
+/* Reset parent icon rotation during flight so plane flies perfectly straight */
+.animated-send-btn.is-launching .state--default .icon,
+.animated-send-btn.is-sending .state--default .icon,
+.animated-send-btn:focus:not(.is-sent) .state--default .icon {
+  transform: none !important;
+  color: var(--primary-gold);
+}
+
+/* Aerodynamically straight launch trajectory — flies completely OUTSIDE the button into the air */
 @keyframes sendBtnTakeOff {
   0% {
     opacity: 1;
-    transform: translateX(0) rotate(0) scale(1.2);
+    transform: translate(0, 0) rotate(-6deg) scale(1.15);
+    filter: drop-shadow(0 2px 6px rgba(245, 198, 93, 0.7));
+  }
+  20% {
+    opacity: 1;
+    transform: translate(75px, -24px) rotate(-14deg) scale(1.35);
+    filter: drop-shadow(0 4px 10px rgba(243, 161, 135, 0.8));
   }
   50% {
     opacity: 1;
-    transform: translateX(60px) rotate(35deg) scale(1.6);
+    transform: translate(200px, -62px) rotate(-18deg) scale(1.4);
+    filter: drop-shadow(0 6px 14px rgba(245, 198, 93, 0.9));
+  }
+  80% {
+    opacity: 0.95;
+    transform: translate(340px, -102px) rotate(-20deg) scale(1.2);
+    filter: drop-shadow(0 6px 16px rgba(243, 161, 135, 0.8));
   }
   100% {
     opacity: 0;
-    transform: translateX(140px) rotate(45deg) scale(0.2);
+    transform: translate(460px, -138px) rotate(-22deg) scale(0.65);
+    filter: drop-shadow(0 2px 8px rgba(245, 198, 93, 0));
   }
 }
 
 @keyframes sendBtnLand {
   0% {
-    transform: translateX(-40px) translateY(20px) rotate(-40deg) scale(1.6);
+    transform: translate(-30px, 15px) rotate(-25deg) scale(1.4);
     opacity: 0;
     filter: blur(2px);
   }
   100% {
-    transform: translateX(0) translateY(0) rotate(0) scale(1);
+    transform: translate(0, 0) rotate(0) scale(1);
     opacity: 1;
     filter: blur(0);
   }
 }
 
-/* Contrail smoke trail */
+/* Contrail golden-peach smoke trail */
 .animated-send-btn .state--default .icon:before {
   content: "";
   position: absolute;
   top: 50%;
-  height: 2px;
+  height: 3px;
   width: 0;
-  left: -5px;
-  background: linear-gradient(to right, transparent, rgba(245, 198, 93, 0.7), var(--primary));
+  left: -8px;
+  background: linear-gradient(to right, transparent, rgba(245, 198, 93, 0.95), var(--primary), #ffffff);
   border-radius: 99px;
+  box-shadow: 0 0 10px rgba(245, 198, 93, 0.7);
+  transform-origin: left center;
+  pointer-events: none;
+  z-index: -1;
 }
 
 @keyframes sendBtnContrail {
   0% {
     width: 0;
     opacity: 1;
+    transform: translateY(-2px) rotate(-18deg);
   }
-  15% {
-    width: 20px;
-  }
-  60% {
-    opacity: 0.8;
+  20% {
     width: 70px;
+    opacity: 0.95;
+    transform: translate(45px, -16px) rotate(-18deg);
+  }
+  50% {
+    width: 180px;
+    opacity: 0.85;
+    transform: translate(130px, -44px) rotate(-18deg);
+  }
+  80% {
+    width: 300px;
+    opacity: 0.65;
+    transform: translate(240px, -78px) rotate(-18deg);
   }
   100% {
+    width: 380px;
     opacity: 0;
-    width: 140px;
+    transform: translate(340px, -108px) rotate(-18deg);
   }
 }
 
@@ -325,19 +364,23 @@
 .animated-send-btn .state--sent svg {
   transform: scale(1.25);
   margin-right: 6px;
+  filter: drop-shadow(0 2px 6px rgba(46, 125, 50, 0.3));
 }
 
-/* Triggered sending or focus */
+/* Triggered sending or launching or focus */
+.animated-send-btn.is-launching .state--default svg,
 .animated-send-btn.is-sending .state--default svg,
 .animated-send-btn:focus:not(.is-sent) .state--default svg {
-  animation: sendBtnTakeOff 0.8s linear forwards;
+  animation: sendBtnTakeOff 0.95s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
+.animated-send-btn.is-launching .state--default .icon:before,
 .animated-send-btn.is-sending .state--default .icon:before,
 .animated-send-btn:focus:not(.is-sent) .state--default .icon:before {
-  animation: sendBtnContrail 0.8s linear forwards;
+  animation: sendBtnContrail 0.95s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
+.animated-send-btn.is-launching .state--default p span,
 .animated-send-btn.is-sending .state--default p span,
 .animated-send-btn:focus:not(.is-sent) .state--default p span {
   animation: sendBtnDisappear 0.5s ease forwards calc(var(--i) * 0.02s);

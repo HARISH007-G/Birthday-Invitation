@@ -1,4 +1,4 @@
-import React, { useId } from 'react';
+import React, { useId, useState, useEffect } from 'react';
 import './AnimatedSendButton.css';
 
 export interface AnimatedSendButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -19,18 +19,38 @@ export const AnimatedSendButton: React.FC<AnimatedSendButtonProps> = ({
   className = "",
   disabled,
   children,
+  onClick,
   ...props
 }) => {
   const filterId = useId().replace(/:/g, "-");
   const shadowId = `plane-shadow-${filterId}`;
+  const [isLaunching, setIsLaunching] = useState(false);
+
+  useEffect(() => {
+    if (isSending || isSent) {
+      setIsLaunching(true);
+    } else {
+      const timer = setTimeout(() => setIsLaunching(false), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [isSending, isSent]);
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    setIsLaunching(true);
+    if (onClick) {
+      onClick(e);
+    }
+  };
 
   const activeDefaultText = children && typeof children === 'string' ? children : defaultText;
+  const isFlying = isLaunching || isSending;
 
   return (
     <button
       {...props}
+      onClick={handleClick}
       disabled={disabled || isSending}
-      className={`animated-send-btn ${fullWidth ? 'w-full' : ''} ${isSending ? 'is-sending' : ''} ${isSent ? 'is-sent' : ''} ${className}`}
+      className={`animated-send-btn ${fullWidth ? 'w-full' : ''} ${isFlying ? 'is-launching' : ''} ${isSending ? 'is-sending' : ''} ${isSent ? 'is-sent' : ''} ${className}`}
     >
       <div className="btn-outline" aria-hidden="true" />
 
