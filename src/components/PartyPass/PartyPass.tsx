@@ -1,16 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Ticket, Sparkles, Download, CheckCircle, RotateCcw } from 'lucide-react';
 import { birthdayConfig } from '../../config/birthdayConfig';
 import { useConfetti } from '../../hooks/useConfetti';
 import { AdmitOneTicket, playShutterSound, ticketClipPath, TICKET_GEOMETRY } from './AdmitOneTicket';
 
 export const PartyPass: React.FC = () => {
-  const [guestName, setGuestName] = useState('Guest of Honor');
+  const [guestName, setGuestName] = useState('');
   const [inputName, setInputName] = useState('');
   const [passGenerated, setPassGenerated] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isDownloaded, setIsDownloaded] = useState(false);
   const [ticketWidth, setTicketWidth] = useState(640);
+  const [passId, setPassId] = useState('#YSH-2026');
   const containerRef = useRef<HTMLDivElement | null>(null);
   const { triggerHeroBurst } = useConfetti();
 
@@ -37,6 +39,7 @@ export const PartyPass: React.FC = () => {
     e.preventDefault();
     if (!inputName.trim()) return;
     setGuestName(inputName.trim());
+    setPassId(`#YSH-${Math.floor(1000 + Math.random() * 9000)}`);
     setPassGenerated(true);
     playShutterSound({ volume: 0.4 });
     triggerHeroBurst();
@@ -115,26 +118,47 @@ export const PartyPass: React.FC = () => {
     ctx.fillStyle = '#49362d';
     ctx.textAlign = 'left';
 
-    // Presenter
+    // Presenter & Pass ID
+    ctx.font = '800 22px sans-serif';
+    ctx.fillText('SUGANYA & YOGARAJAN PRESENT', 60, 75);
+    ctx.font = 'bold 20px monospace';
+    ctx.fillText(passId, perfX - 160, 75);
+
+    // Event Title
+    ctx.font = '900 34px serif';
+    ctx.fillText("Y S HANVIKA'S 1ST BIRTHDAY", 60, 125);
+
+    // Guest of Honor
+    ctx.fillStyle = '#f3a187';
+    ctx.font = 'bold 20px sans-serif';
+    ctx.fillText('✦ GUEST OF HONOR ✦', 60, 205);
+
+    ctx.fillStyle = '#49362d';
+    ctx.font = '900 52px serif';
+    ctx.fillText(guestName.toUpperCase(), 60, 265);
+
+    // Highlights Box Background
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.88)';
+    ctx.beginPath();
+    ctx.roundRect(60, 360, perfX - 120, 220, 24);
+    ctx.fill();
+
+    ctx.strokeStyle = '#f5c65d';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(60, 360, perfX - 120, 220);
+
+    // Event Info
+    ctx.fillStyle = '#49362d';
     ctx.font = '800 24px sans-serif';
-    ctx.fillText('SUGANYA & YOGARAJAN PRESENT', 80, 90);
+    ctx.fillText('🗓️  Wednesday, 14 October 2026', 90, 415);
+    ctx.fillText('⏰  6:00 PM (Cake cutting 7:00 PM)', 90, 465);
+    ctx.fillText('📍  Kalaignar Thirumana Maligai, Royapuram', 90, 515);
 
-    // Event
-    ctx.font = '900 32px serif';
-    ctx.fillText("Y S HANVIKA'S 1ST BIRTHDAY", 80, 130);
+    ctx.fillStyle = '#f3a187';
+    ctx.font = 'bold 20px sans-serif';
+    ctx.fillText('🎨  Dress Code: Pastel Colors', 90, 555);
 
-    // Guest Name
-    ctx.font = '900 64px serif';
-    ctx.fillText(guestName.toUpperCase(), 80, 240);
-
-    // Venue & Date
-    ctx.font = '800 24px sans-serif';
-    ctx.fillText('KALAIGNAR MALIGAI, ROYAPURAM · OCT 14 · 6:00 PM', 80, 480);
-    ctx.font = '600 18px sans-serif';
-    ctx.fillStyle = 'rgba(73, 54, 45, 0.8)';
-    ctx.fillText('Dress Code: Pastel Colors · Cake Cutting: 7:00 PM', 80, 515);
-
-    // Draw QR Code
+    // Draw QR Code Right inside highlights
     const qrImg = new Image();
     qrImg.crossOrigin = 'anonymous';
     qrImg.src = qrCodeUrl;
@@ -143,7 +167,7 @@ export const PartyPass: React.FC = () => {
       ctx.restore();
       const a = document.createElement('a');
       a.href = canvas.toDataURL('image/png');
-      a.download = `Hanvika-VIP-Pass-${guestName.replace(/\s+/g, '-')}.png`;
+      a.download = `Hanvika-VIP-Ticket-${guestName.replace(/\s+/g, '-')}.png`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -154,8 +178,14 @@ export const PartyPass: React.FC = () => {
 
     qrImg.onload = () => {
       ctx.fillStyle = '#ffffff';
-      ctx.fillRect(perfX - 170, 270, 140, 140);
-      ctx.drawImage(qrImg, perfX - 165, 275, 130, 130);
+      ctx.fillRect(perfX - 260, 385, 170, 170);
+      ctx.drawImage(qrImg, perfX - 250, 395, 150, 150);
+
+      ctx.fillStyle = '#49362d';
+      ctx.font = 'bold 13px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Scan for Location 📍', perfX - 175, 570);
+
       finishCanvas();
     };
     qrImg.onerror = finishCanvas;
@@ -177,7 +207,7 @@ export const PartyPass: React.FC = () => {
           Admit One Party Pass
         </h2>
         <p className="text-[#49362d]/80 font-medium mt-2 text-sm md:text-base">
-          Personalize your official birthday VIP ticket with interactive 3D tilt, realistic lighting glare, and vintage perforation notches!
+          Enter your family name below to unlock your personalized VIP Admission Ticket with interactive 3D tilt, holographic lighting, and venue QR code!
         </p>
       </div>
 
@@ -185,84 +215,123 @@ export const PartyPass: React.FC = () => {
         ref={containerRef}
         className="glass-card rounded-[36px] md:rounded-[44px] p-6 sm:p-10 border-4 border-white shadow-2xl relative max-w-3xl mx-auto flex flex-col items-center"
       >
-        {/* Name Input Bar */}
-        <form onSubmit={handleGeneratePass} className="w-full max-w-md mb-8">
-          <label className="block text-xs font-extrabold uppercase tracking-wider text-[#49362d] mb-2 text-center">
-            {passGenerated ? "Personalize Another Guest Name" : "Enter Your Name / Family Name"}
-          </label>
-          <div className="flex flex-col sm:flex-row gap-2">
-            <input
-              type="text"
-              required
-              placeholder="e.g. Ramesh & Family"
-              value={inputName}
-              onChange={(e) => setInputName(e.target.value)}
-              className="flex-1 px-5 py-3.5 rounded-2xl bg-white border-2 border-gray-100 focus:border-[#f5c65d] focus:outline-hidden text-sm font-bold text-[#49362d] text-center sm:text-left shadow-xs"
-            />
-            <button
-              type="submit"
-              className="px-6 py-3.5 rounded-2xl bg-[#f5c65d] hover:bg-[#f3a187] text-[#49362d] hover:text-white font-extrabold text-sm shadow-md transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+        <AnimatePresence mode="wait">
+          {!passGenerated ? (
+            /* 1. INITIAL FORM STATE: ONLY INPUT FORM SHOWN */
+            <motion.form
+              key="pass-form"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              onSubmit={handleGeneratePass}
+              className="w-full max-w-md my-4 space-y-4 text-center"
             >
-              <Ticket className="w-4 h-4" />
-              <span>{passGenerated ? "Update Pass" : "Generate Pass"}</span>
-            </button>
-          </div>
-        </form>
+              <div className="p-4 rounded-3xl bg-[#fff8ee] border-2 border-[#f5c65d]/30 shadow-xs mb-2">
+                <Ticket className="w-8 h-8 text-[#f5c65d] mx-auto mb-2 animate-bounce" />
+                <h3 className="font-serif font-black text-xl text-[#49362d]">
+                  Personalize Your Ticket
+                </h3>
+                <p className="text-xs text-[#49362d]/70 font-medium mt-1">
+                  Please enter your name or family name to generate your personalized 3D VIP party admission pass.
+                </p>
+              </div>
 
-        {/* 3D TILT ADMIT-ONE TICKET SHOWCASE */}
-        <div className="flex flex-col items-center justify-center w-full my-2">
-          <AdmitOneTicket
-            name={passGenerated ? guestName : (inputName.trim() || "GUEST OF HONOR")}
-            presenter="SUGANYA & YOGARAJAN PRESENT"
-            event="HANVIKA'S 1ST BIRTHDAY"
-            venue="KALAIGNAR MALIGAI, ROYAPURAM"
-            dates="OCTOBER 14 · 6:00 PM"
-            stubText="VIP PASS"
-            watermark="2026"
-            width={ticketWidth}
-          />
+              <div>
+                <label className="block text-xs font-extrabold uppercase tracking-wider text-[#49362d] mb-2 text-center">
+                  Your Name / Family Name
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Uncle Ramesh & Family"
+                  value={inputName}
+                  onChange={(e) => setInputName(e.target.value)}
+                  className="w-full px-5 py-4 rounded-2xl bg-white border-2 border-gray-100 focus:border-[#f5c65d] focus:outline-hidden text-sm sm:text-base font-bold text-[#49362d] text-center shadow-xs"
+                />
+              </div>
 
-          <span className="text-[11px] font-bold text-[#49362d]/60 mt-4 flex items-center gap-1.5 text-center">
-            <Sparkles className="w-3.5 h-3.5 text-[#f5c65d] animate-pulse" />
-            <span>Hover or touch the ticket to experience 3D tilt with real-time specular light glare!</span>
-          </span>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-3 mt-8 w-full max-w-md">
-          <button
-            onClick={handleDownloadPassImage}
-            disabled={isDownloading}
-            className={`flex-1 py-3.5 px-6 rounded-full font-extrabold text-sm shadow-lg transition-all flex items-center justify-center gap-2 transform hover:scale-105 active:scale-95 ${
-              isDownloaded
-                ? 'bg-[#e2f0d9] text-[#49362d] border border-[#afc6a4]'
-                : 'bg-[#49362d] hover:bg-[#f3a187] text-white'
-            }`}
-          >
-            {isDownloaded ? (
-              <><CheckCircle className="w-4 h-4 text-[#afc6a4]" /><span>Pass Downloaded! ✓</span></>
-            ) : isDownloading ? (
-              <><Download className="w-4 h-4 animate-bounce" /><span>Generating Ticket... ⏳</span></>
-            ) : (
-              <><Download className="w-4 h-4" /><span>Download VIP Ticket 🖼️</span></>
-            )}
-          </button>
-
-          {passGenerated && (
-            <button
-              onClick={() => {
-                setPassGenerated(false);
-                setInputName('');
-                setGuestName('Guest of Honor');
-              }}
-              className="py-3.5 px-5 rounded-full bg-white hover:bg-gray-100 text-[#49362d] font-bold text-sm border border-gray-200 shadow-xs flex items-center gap-1.5 transition-all"
-              title="Reset Pass"
+              <button
+                type="submit"
+                className="w-full py-4 rounded-2xl bg-[#f5c65d] hover:bg-[#f3a187] text-[#49362d] hover:text-white font-black text-base shadow-lg transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+              >
+                <Ticket className="w-5 h-5" />
+                <span>Generate My VIP Party Pass 🎟️</span>
+              </button>
+            </motion.form>
+          ) : (
+            /* 2. REVEALED STATE: FULL ADMIT-ONE TICKET WITH ALL DETAILS SHOWN */
+            <motion.div
+              key="pass-ticket"
+              initial={{ scale: 0.85, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.85, opacity: 0, y: 20 }}
+              transition={{ type: 'spring', damping: 22, stiffness: 260 }}
+              className="flex flex-col items-center justify-center w-full"
             >
-              <RotateCcw className="w-4 h-4 text-[#f3a187]" />
-              <span>Reset</span>
-            </button>
+              {/* Top Success Badge */}
+              <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#e2f0d9] border border-[#afc6a4] text-[#49362d] text-xs font-black shadow-xs mb-6">
+                <CheckCircle className="w-4 h-4 text-[#afc6a4]" />
+                <span>VIP PASS VERIFIED & GENERATED FOR: {guestName.toUpperCase()}</span>
+              </div>
+
+              {/* 3D TILT ADMIT-ONE TICKET SHOWCASE WITH ALL DETAILS & QR */}
+              <div className="flex flex-col items-center justify-center w-full my-2">
+                <AdmitOneTicket
+                  name={guestName}
+                  presenter="SUGANYA & YOGARAJAN PRESENT"
+                  event="HANVIKA'S 1ST BIRTHDAY"
+                  venue="Kalaignar Thirumana Maligai, Royapuram"
+                  dates="Wednesday, 14 Oct 2026"
+                  time="6:00 PM (Cake cutting 7:00 PM)"
+                  dressCode="Pastel Colors"
+                  qrCodeUrl={qrCodeUrl}
+                  passId={passId}
+                  stubText="VIP PASS"
+                  watermark="2026"
+                  width={ticketWidth}
+                />
+
+                <span className="text-[11px] font-bold text-[#49362d]/65 mt-4 flex items-center gap-1.5 text-center">
+                  <Sparkles className="w-3.5 h-3.5 text-[#f5c65d] animate-pulse" />
+                  <span>Hover or drag the ticket to experience 3D tilt with real-time specular light glare!</span>
+                </span>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center justify-center gap-3 mt-8 w-full max-w-md">
+                <button
+                  onClick={handleDownloadPassImage}
+                  disabled={isDownloading}
+                  className={`flex-1 py-3.5 px-6 rounded-full font-extrabold text-sm shadow-lg transition-all flex items-center justify-center gap-2 transform hover:scale-105 active:scale-95 ${
+                    isDownloaded
+                      ? 'bg-[#e2f0d9] text-[#49362d] border border-[#afc6a4]'
+                      : 'bg-[#49362d] hover:bg-[#f3a187] text-white'
+                  }`}
+                >
+                  {isDownloaded ? (
+                    <><CheckCircle className="w-4 h-4 text-[#afc6a4]" /><span>Ticket Downloaded! ✓</span></>
+                  ) : isDownloading ? (
+                    <><Download className="w-4 h-4 animate-bounce" /><span>Generating Ticket... ⏳</span></>
+                  ) : (
+                    <><Download className="w-4 h-4" /><span>Download VIP Ticket 🖼️</span></>
+                  )}
+                </button>
+
+                <button
+                  onClick={() => {
+                    setPassGenerated(false);
+                    setInputName('');
+                  }}
+                  className="py-3.5 px-5 rounded-full bg-white hover:bg-gray-100 text-[#49362d] font-bold text-sm border border-gray-200 shadow-xs flex items-center gap-1.5 transition-all"
+                  title="Personalize for Another Family Member"
+                >
+                  <RotateCcw className="w-4 h-4 text-[#f3a187]" />
+                  <span>Create Another Pass</span>
+                </button>
+              </div>
+            </motion.div>
           )}
-        </div>
+        </AnimatePresence>
       </div>
     </section>
   );

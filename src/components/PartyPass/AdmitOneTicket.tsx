@@ -443,7 +443,7 @@ function getShaderColorFromString(colorString: string | number[]): number[] {
   if (colorString.startsWith("#")) {
     return hexToRgba(colorString);
   }
-  return [0.96, 0.77, 0.36, 1]; // fallback gold
+  return [0.96, 0.77, 0.36, 1];
 }
 
 class ShaderMount {
@@ -684,22 +684,8 @@ export const TICKET_GEOMETRY = {
 };
 
 export const TICKET_LAYOUT = {
-  padding: 57 / REF,
-  labelTop: 54 / REF,
-  labelSize: 18.5 / REF,
-  labelLead: 26 / REF,
-  labelTracking: 0.02,
-  nameTop: 180 / REF,
-  nameSize: 58 / REF,
-  nameLead: 62 / REF,
-  nameTracking: -0.01,
-  footerTop: 345 / REF,
-  footerSize: 18.5 / REF,
-  footerTracking: 0.02,
-  stubSize: 62 / REF,
-  stubTracking: 0.04,
-  stubOpacity: 0.9,
-  watermarkSize: 135 / REF,
+  padding: 44 / REF,
+  watermarkSize: 130 / REF,
   watermarkOpacity: 0.65,
   watermarkColor: "#ffffff",
   inkColor: "#49362d", // Warm deep birthday brown
@@ -739,41 +725,6 @@ export function ticketClipPath(width: number, height: number, geometry = TICKET_
     `A ${r} ${r} 0 0 0 ${r} 0`,
     "Z",
   ].join(" ");
-}
-
-function splitName(name: string, max = 3): string[] {
-  const clean = name.trim().replace(/\s+/g, " ").toUpperCase();
-  if (!clean) return [];
-  const words = clean.split(" ");
-  const lines: string[] = [];
-  for (const word of words) {
-    if (lines.length < max) lines.push(word);
-    else lines[lines.length - 1] = `${lines[lines.length - 1]} ${word}`;
-  }
-  return lines;
-}
-
-function fitScale(lines: string[], opts: {
-  availableWidth: number;
-  availableHeight: number;
-  fontSize: number;
-  lineHeight: number;
-  tracking: number;
-}): number {
-  if (lines.length === 0) return 1;
-  const { availableWidth, availableHeight, fontSize, lineHeight, tracking } = opts;
-  if (fontSize <= 0 || availableWidth <= 0) return 1;
-  const longest = Math.max(...lines.map((l) => l.length));
-  const charWidth = (0.6 + tracking) * fontSize;
-  const block = lines.length * lineHeight;
-  return Math.max(
-    0.05,
-    Math.min(
-      1,
-      charWidth > 0 ? availableWidth / (longest * charWidth) : 1,
-      block > 0 && availableHeight > 0 ? availableHeight / block : 1
-    )
-  );
 }
 
 function usePrefersReducedMotion() {
@@ -833,6 +784,11 @@ export interface TicketCardProps {
   event: string;
   venue: string;
   dates: string;
+  time?: string;
+  cakeCutting?: string;
+  dressCode?: string;
+  qrCodeUrl?: string;
+  passId?: string;
   stubText: string;
   watermark: string;
   width?: number;
@@ -848,8 +804,12 @@ export function TicketCard({
   event,
   venue,
   dates,
-  stubText,
-  watermark,
+  time = "6:00 PM (Cake cutting 7:00 PM)",
+  dressCode = "Pastel Colors",
+  qrCodeUrl,
+  passId = "#YSH-2026",
+  stubText = "VIP PASS",
+  watermark = "2026",
   width = REF,
   geometry = TICKET_GEOMETRY,
   layout = TICKET_LAYOUT,
@@ -859,15 +819,6 @@ export function TicketCard({
   const height = width / geometry.aspect;
   const perfX = geometry.perforation * width;
   const reduced = usePrefersReducedMotion();
-  const lines = splitName(name);
-
-  const scale = fitScale(lines, {
-    availableWidth: perfX - layout.padding * width - 0.03 * width,
-    availableHeight: layout.footerTop * width - layout.nameTop * width - 0.02 * width,
-    fontSize: layout.nameSize * width,
-    lineHeight: layout.nameLead * width,
-    tracking: layout.nameTracking,
-  });
 
   const shaderStyle = {
     position: "absolute" as const,
@@ -875,6 +826,8 @@ export function TicketCard({
     width,
     height,
   };
+
+  const stubWidth = width - perfX;
 
   return (
     <div
@@ -917,7 +870,7 @@ export function TicketCard({
         style={{
           left: perfX,
           top: 0,
-          width: width - perfX,
+          width: stubWidth,
           height,
           color: layout.watermarkColor,
           opacity: layout.watermarkOpacity,
@@ -935,69 +888,94 @@ export function TicketCard({
         </span>
       </div>
 
-      {/* Typography Overlay */}
-      <div className="absolute inset-0" style={{ color: layout.inkColor }}>
-        {/* Presenter & Event Subheading */}
-        <div
-          className="absolute whitespace-pre uppercase font-extrabold"
-          style={{
-            left: layout.padding * width,
-            top: layout.labelTop * width,
-            fontSize: layout.labelSize * width,
-            lineHeight: `${layout.labelLead * width}px`,
-            letterSpacing: `${layout.labelTracking}em`,
-            opacity: 0.9,
-          }}
-        >
-          {presenter}
-          {"\n"}
-          <span className="font-serif font-black">{event}</span>
+      {/* Stub Vertical VIP Pass Text */}
+      <div
+        className="absolute grid place-items-center font-black whitespace-nowrap uppercase tracking-widest pointer-events-none"
+        style={{
+          left: perfX,
+          top: 0,
+          width: stubWidth,
+          height,
+          color: layout.inkColor,
+          fontSize: Math.max(12, 0.048 * width),
+          opacity: 0.9,
+        }}
+      >
+        <span style={{ writingMode: "vertical-rl" }}>{stubText}</span>
+      </div>
+
+      {/* Main Ticket Details Content Overlay */}
+      <div
+        className="absolute inset-0 flex flex-col justify-between p-3.5 sm:p-5 md:p-6"
+        style={{
+          color: layout.inkColor,
+          width: perfX,
+        }}
+      >
+        {/* Top Header: Presenter + Pass ID + Event Title */}
+        <div>
+          <div className="flex items-center justify-between text-[9px] sm:text-xs font-black uppercase tracking-wider text-[#49362d]/85">
+            <span>{presenter}</span>
+            <span className="font-mono text-[9px] sm:text-[11px] bg-white/70 px-2 py-0.5 rounded-full border border-white shadow-2xs">
+              {passId}
+            </span>
+          </div>
+          <h3 className="font-serif font-black text-xs sm:text-lg md:text-xl text-[#49362d] uppercase tracking-tight mt-0.5">
+            {event}
+          </h3>
         </div>
 
-        {/* Guest Name */}
-        <div
-          className="absolute font-black font-serif uppercase tracking-tight drop-shadow-xs"
-          style={{
-            left: layout.padding * width,
-            top: layout.nameTop * width,
-            fontSize: layout.nameSize * width * scale,
-            lineHeight: `${layout.nameLead * width * scale}px`,
-            letterSpacing: `${layout.nameTracking}em`,
-          }}
-        >
-          {lines.map((line, i) => (
-            <div key={i}>{line}</div>
-          ))}
+        {/* Center: Guest Name (Guest of Honor) */}
+        <div className="my-auto py-1">
+          <span className="text-[9px] sm:text-[11px] font-black uppercase tracking-widest text-[#f3a187] block mb-0.5">
+            ✦ GUEST OF HONOR ✦
+          </span>
+          <div className="font-serif font-black text-base sm:text-2xl md:text-3xl text-[#49362d] uppercase tracking-tight leading-tight line-clamp-1 drop-shadow-xs">
+            {name}
+          </div>
         </div>
 
-        {/* Footer Details: Venue & Date */}
-        <div
-          className="absolute whitespace-nowrap uppercase font-bold"
-          style={{
-            left: layout.padding * width,
-            top: layout.footerTop * width,
-            fontSize: layout.footerSize * width,
-            letterSpacing: `${layout.footerTracking}em`,
-            opacity: 0.85,
-          }}
-        >
-          {venue} · {dates}
-        </div>
+        {/* Bottom Highlights & QR Code Box */}
+        <div className="flex items-center justify-between gap-2 bg-white/85 backdrop-blur-xs p-2 sm:p-3 rounded-xl sm:rounded-2xl border border-white/90 shadow-xs">
+          {/* Details Column */}
+          <div className="flex-1 space-y-0.5 sm:space-y-1 text-[9px] sm:text-[11px] md:text-xs font-extrabold text-[#49362d]">
+            <div className="flex items-center gap-1.5">
+              <span>🗓️</span>
+              <span>{dates}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span>⏰</span>
+              <span>{time}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span>📍</span>
+              <span className="truncate">{venue}</span>
+            </div>
+            {dressCode && (
+              <div className="flex items-center gap-1.5 text-[#f3a187]">
+                <span>🎨</span>
+                <span className="truncate">Dress Code: {dressCode}</span>
+              </div>
+            )}
+          </div>
 
-        {/* Vertical Stub Text */}
-        <div
-          className="absolute grid place-items-center font-black whitespace-nowrap uppercase"
-          style={{
-            left: perfX,
-            top: 0,
-            width: width - perfX,
-            height,
-            fontSize: layout.stubSize * width,
-            letterSpacing: `${layout.stubTracking}em`,
-            opacity: layout.stubOpacity,
-          }}
-        >
-          <span style={{ writingMode: "vertical-rl" }}>{stubText}</span>
+          {/* Scannable Location QR Code */}
+          {qrCodeUrl && (
+            <div className="flex flex-col items-center bg-white p-1 sm:p-1.5 rounded-lg border border-gray-200 shadow-2xs shrink-0">
+              <div className="w-11 h-11 sm:w-14 sm:h-14 flex items-center justify-center bg-white overflow-hidden">
+                <img
+                  src={qrCodeUrl}
+                  alt="Venue Google Maps QR Code"
+                  className="w-full h-full object-contain"
+                  style={{ borderRadius: 0 }}
+                  draggable={false}
+                />
+              </div>
+              <span className="text-[7px] sm:text-[9px] font-black text-[#49362d] mt-0.5 whitespace-nowrap">
+                Scan Map 📍
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </div>
