@@ -218,9 +218,9 @@ export const RSVPSection: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleWhatsAppRSVP}
-                  className="py-4 px-6 rounded-full bg-[#25D366] hover:bg-[#1ebd59] text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2"
+                  className="min-h-[48px] py-4 px-6 rounded-full bg-[#25D366] hover:bg-[#1ebd59] active:scale-95 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2"
                 >
-                  <MessageCircle className="w-5 h-5" />
+                  <MessageCircle className="w-5 h-5 shrink-0" />
                   <span>Send WhatsApp Message</span>
                 </button>
               </div>

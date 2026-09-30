@@ -46,6 +46,62 @@
   .animated-send-btn .state {
     padding-left: 24px;
   }
+
+  @keyframes sendBtnTakeOff {
+    0% {
+      opacity: 1;
+      transform: translate(0, 0) rotate(-6deg) scale(1.1);
+      filter: drop-shadow(0 2px 6px rgba(245, 198, 93, 0.7));
+    }
+    20% {
+      opacity: 1;
+      transform: translate(50px, -18px) rotate(-14deg) scale(1.25);
+      filter: drop-shadow(0 4px 10px rgba(243, 161, 135, 0.8));
+    }
+    50% {
+      opacity: 1;
+      transform: translate(130px, -45px) rotate(-18deg) scale(1.3);
+      filter: drop-shadow(0 6px 14px rgba(245, 198, 93, 0.9));
+    }
+    80% {
+      opacity: 0.95;
+      transform: translate(210px, -70px) rotate(-20deg) scale(1.1);
+      filter: drop-shadow(0 6px 16px rgba(243, 161, 135, 0.8));
+    }
+    100% {
+      opacity: 0;
+      transform: translate(280px, -95px) rotate(-22deg) scale(0.65);
+      filter: drop-shadow(0 2px 8px rgba(245, 198, 93, 0));
+    }
+  }
+
+  @keyframes sendBtnContrail {
+    0% {
+      width: 0;
+      opacity: 1;
+      transform: translateY(-2px) rotate(-18deg);
+    }
+    20% {
+      width: 45px;
+      opacity: 0.95;
+      transform: translate(30px, -12px) rotate(-18deg);
+    }
+    50% {
+      width: 120px;
+      opacity: 0.85;
+      transform: translate(85px, -32px) rotate(-18deg);
+    }
+    80% {
+      width: 190px;
+      opacity: 0.65;
+      transform: translate(150px, -55px) rotate(-18deg);
+    }
+    100% {
+      width: 250px;
+      opacity: 0;
+      transform: translate(210px, -75px) rotate(-18deg);
+    }
+  }
 }
 
 @media (min-width: 640px) {
