@@ -133,8 +133,10 @@ export function WheelCarousel({
   const appliedActiveIndexRef = useRef<number | null>(null);
   const velocityRef = useRef(0);
   const draggingRef = useRef(false);
-  const dragOriginRef = useRef({ y: 0, rotation: startingIndex });
+  const dragOriginRef = useRef({ x: 0, y: 0, rotation: startingIndex });
   const previousDragRotationRef = useRef(startingIndex);
+  const dragAxisRef = useRef<"undecided" | "horizontal" | "vertical">("undecided");
+  const hasDraggedRef = useRef(false);
   const frameRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -275,15 +277,45 @@ export function WheelCarousel({
     if (!event.isPrimary || event.button !== 0) return;
     draggingRef.current = true;
     setIsDragging(true);
+    hasDraggedRef.current = false;
+    dragAxisRef.current = "undecided";
     velocityRef.current = 0;
-    dragOriginRef.current = { y: event.clientY, rotation: rotationRef.current };
+    dragOriginRef.current = {
+      x: event.clientX,
+      y: event.clientY,
+      rotation: rotationRef.current,
+    };
     previousDragRotationRef.current = rotationRef.current;
-    event.currentTarget.setPointerCapture(event.pointerId);
+    try {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    } catch {
+      // Gracefully handle if setPointerCapture is unsupported
+    }
   };
 
   const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
     if (!draggingRef.current) return;
-    const distance = event.clientY - dragOriginRef.current.y;
+    const deltaX = event.clientX - dragOriginRef.current.x;
+    const deltaY = event.clientY - dragOriginRef.current.y;
+    const totalDist = Math.hypot(deltaX, deltaY);
+
+    if (totalDist > 6) {
+      hasDraggedRef.current = true;
+    }
+
+    if (dragAxisRef.current === "undecided" && totalDist > 4) {
+      dragAxisRef.current = Math.abs(deltaX) > Math.abs(deltaY) ? "horizontal" : "vertical";
+    }
+
+    // Swiping left (deltaX < 0) or dragging up (deltaY < 0) advances to next month (+rotation)
+    // Swiping right (deltaX > 0) or dragging down (deltaY > 0) goes to previous month (-rotation)
+    let distance = deltaY;
+    if (dragAxisRef.current === "horizontal") {
+      distance = deltaX * 1.25;
+    } else if (dragAxisRef.current === "undecided") {
+      distance = Math.abs(deltaX) > Math.abs(deltaY) ? deltaX * 1.25 : deltaY;
+    }
+
     const nextRotation = dragOriginRef.current.rotation - distance * dragSpeed;
     velocityRef.current = nextRotation - previousDragRotationRef.current;
     previousDragRotationRef.current = nextRotation;
@@ -294,8 +326,12 @@ export function WheelCarousel({
     if (!draggingRef.current) return;
     draggingRef.current = false;
     setIsDragging(false);
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
+    try {
+      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      }
+    } catch {
+      // Gracefully handle if pointer capture was already released
     }
     runAnimation();
   };
@@ -355,11 +391,11 @@ export function WheelCarousel({
         }
         tabIndex={0}
         className={cn(
-          "flex h-full w-full select-none items-stretch overflow-hidden outline-none touch-pan-y",
+          "flex h-full w-full select-none items-stretch overflow-hidden outline-none touch-none",
           photoSide === "right" && "flex-row-reverse",
           isDragging ? "cursor-grabbing" : "cursor-grab",
         )}
-        style={{ maxWidth: contentWidth, gap }}
+        style={{ maxWidth: contentWidth, gap, touchAction: "none" }}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerEnd}
@@ -413,6 +449,36 @@ export function WheelCarousel({
                 <span>Month {selectedItem.month}</span>
               </div>
             )}
+
+            {/* Quick Prev/Next floating arrows directly on photo for effortless 1-tap mobile navigation */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                moveBy(-1);
+              }}
+              aria-label="Previous month"
+              title="Previous month"
+              className="absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#49362d]/75 hover:bg-[#49362d] active:scale-90 text-white backdrop-blur-md flex items-center justify-center transition-all border border-white/50 shadow-md touch-manipulation cursor-pointer"
+            >
+              <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                moveBy(1);
+              }}
+              aria-label="Next month"
+              title="Next month"
+              className="absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#49362d]/75 hover:bg-[#49362d] active:scale-90 text-white backdrop-blur-md flex items-center justify-center transition-all border border-white/50 shadow-md touch-manipulation cursor-pointer"
+            >
+              <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
           </div>
         </div>
 
@@ -459,6 +525,7 @@ export function WheelCarousel({
                 aria-selected={selected}
                 onClick={(e) => {
                   e.stopPropagation();
+                  if (hasDraggedRef.current) return;
                   moveBy(offset);
                 }}
                 className={cn(

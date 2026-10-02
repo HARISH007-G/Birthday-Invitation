@@ -166,7 +166,7 @@ export const StoryTimeline: React.FC = () => {
               <div className="flex items-center gap-2 shrink-0">
                 <button
                   onClick={handlePrev}
-                  className="w-10 h-10 rounded-full bg-white hover:bg-[#fff8ee] text-[#49362d] border border-gray-200 shadow-sm flex items-center justify-center transition-all transform hover:scale-105 active:scale-95"
+                  className="w-10 h-10 sm:w-11 sm:h-11 min-w-[44px] min-h-[44px] rounded-full bg-white hover:bg-[#fff8ee] active:scale-95 text-[#49362d] border border-gray-200 shadow-sm flex items-center justify-center transition-all transform hover:scale-105 touch-manipulation cursor-pointer"
                   aria-label="Previous month"
                   title="Previous month"
                 >
@@ -174,7 +174,7 @@ export const StoryTimeline: React.FC = () => {
                 </button>
                 <button
                   onClick={handleNext}
-                  className="w-10 h-10 rounded-full bg-[#f5c65d] hover:bg-[#f3a187] text-[#49362d] hover:text-white border border-white shadow-sm flex items-center justify-center transition-all transform hover:scale-105 active:scale-95"
+                  className="w-10 h-10 sm:w-11 sm:h-11 min-w-[44px] min-h-[44px] rounded-full bg-[#f5c65d] hover:bg-[#f3a187] active:scale-95 text-[#49362d] hover:text-white border border-white shadow-sm flex items-center justify-center transition-all transform hover:scale-105 touch-manipulation cursor-pointer"
                   aria-label="Next month"
                   title="Next month"
                 >
@@ -193,7 +193,7 @@ export const StoryTimeline: React.FC = () => {
               <button
                 key={item.month}
                 onClick={() => handleActiveChange(item, idx)}
-                className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full text-[11px] sm:text-xs font-black transition-all transform ${
+                className={`w-7 h-7 sm:w-8 sm:h-8 min-w-[28px] min-h-[28px] sm:min-w-[32px] sm:min-h-[32px] rounded-full text-[11px] sm:text-xs font-black transition-all transform flex items-center justify-center touch-manipulation cursor-pointer ${
                   isSelected
                     ? 'bg-[#f5c65d] text-[#49362d] scale-110 shadow-md ring-2 ring-[#f3a187]/60'
                     : 'bg-white/80 hover:bg-white text-[#49362d]/70 border border-gray-200 hover:scale-105'
@@ -208,9 +208,9 @@ export const StoryTimeline: React.FC = () => {
 
         {/* Interaction Hint */}
         <div className="mt-4 text-center">
-          <span className="text-[11px] font-bold text-[#49362d]/60 inline-flex items-center gap-1.5">
-            <MoveVertical className="w-3.5 h-3.5 text-[#f3a187]" />
-            <span>Drag the wheel, scroll, or tap any month to spin through Hanvika's first year!</span>
+          <span className="text-[11px] font-bold text-[#49362d]/65 inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-full bg-white/60 border border-[#f5c65d]/20 shadow-xs">
+            <MoveVertical className="w-3.5 h-3.5 text-[#f3a187] shrink-0" />
+            <span>Swipe photo, drag wheel, or tap arrows / months to explore all 12 months!</span>
           </span>
         </div>
       </motion.div>
