@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Music, Music2, Heart, CheckCircle2 } from 'lucide-react';
+import { Music, Music2, Plus, Heart, CheckCircle2, Send } from 'lucide-react';
 import { birthdayConfig } from '../../config/birthdayConfig';
-import { AnimatedSendButton } from '../ui/AnimatedSendButton';
 
 interface SongRequest {
   id: string;
@@ -140,15 +139,23 @@ export const PartyJukebox: React.FC = () => {
             />
           </div>
 
-          <AnimatedSendButton
+          <button
             type="submit"
             disabled={isSending}
-            isSending={isSending}
-            isSent={isSubmittedSuccess}
-            defaultText="Send Song to Party DJ 🎵"
-            sentText="Song Sent to DJ! 🎶"
-            fullWidth
-          />
+            className="btn-premium w-full py-4 min-h-[48px] rounded-full bg-gradient-to-r from-[#f5c65d] to-[#f3a187] hover:from-[#f3a187] hover:to-[#f5c65d] text-white font-extrabold text-sm shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
+          >
+            {isSending ? (
+              <>
+                <Send className="w-4 h-4 animate-spin shrink-0" />
+                <span>Sending Song Request to DJ... 🎶</span>
+              </>
+            ) : (
+              <>
+                <Plus className="w-4 h-4 shrink-0" />
+                <span>Send Song to Party DJ 🎵</span>
+              </>
+            )}
+          </button>
 
           {/* Success Banner */}
           <AnimatePresence>
