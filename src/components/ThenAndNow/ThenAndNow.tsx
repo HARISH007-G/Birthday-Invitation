@@ -1,32 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { birthdayConfig } from '../../config/birthdayConfig';
 import { Sparkles, MoveHorizontal } from 'lucide-react';
+import { CompareReveal } from '../ui/compare-reveal';
 
 export const ThenAndNow: React.FC = () => {
-  const [sliderPosition, setSliderPosition] = useState(50);
-  const [isDragging, setIsDragging] = useState(false);
-
-  const handleMove = (clientX: number, rect: DOMRect) => {
-    const x = clientX - rect.left;
-    const pos = Math.max(0, Math.min(100, (x / rect.width) * 100));
-    setSliderPosition(pos);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    handleMove(e.touches[0].clientX, rect);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isDragging) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    handleMove(e.clientX, rect);
-  };
-
   return (
-    <section id="then-and-now" className="relative py-20 px-4 max-w-5xl mx-auto overflow-hidden">
-      <div className="text-center max-w-2xl mx-auto mb-14">
+    <section id="then-and-now" className="relative py-16 sm:py-20 px-3 sm:px-4 max-w-5xl mx-auto overflow-hidden">
+      <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
         <span className="text-xs font-bold uppercase tracking-widest text-[#f3a187]">
           Growing Up So Fast
         </span>
@@ -44,67 +25,46 @@ export const ThenAndNow: React.FC = () => {
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="relative max-w-3xl mx-auto rounded-[36px] overflow-hidden shadow-2xl border-4 border-white bg-white select-none"
+        className="relative max-w-3xl mx-auto rounded-[32px] sm:rounded-[36px] overflow-hidden shadow-2xl border-4 border-white bg-white select-none"
       >
-        <div
-          className="relative w-full h-[280px] sm:h-[360px] md:h-[500px] cursor-ew-resize overflow-hidden touch-none select-none"
-          onMouseDown={() => setIsDragging(true)}
-          onMouseUp={() => setIsDragging(false)}
-          onMouseLeave={() => setIsDragging(false)}
-          onMouseMove={handleMouseMove}
-          onTouchMove={handleTouchMove}
-        >
-          {/* NOW PHOTO (Background Layer - 1 Year Birthday) */}
-          <div className="absolute inset-0 w-full h-full">
-            <img
-              src={birthdayConfig.images.birthday}
-              alt="Hanvika Turns One"
-              className="w-full h-full object-cover"
-              style={{ objectPosition: birthdayConfig.images.birthdayObjectPosition || 'center' }}
-            />
-          </div>
-
-          {/* THEN PHOTO (Clipped Layer with smooth clip-path, zero zoom/stretch!) */}
-          <div
-            className="absolute inset-0 w-full h-full"
-            style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
-          >
-            <img
-              src={birthdayConfig.images.newborn}
-              alt="Newborn Hanvika"
-              className="w-full h-full object-cover"
-              style={{ objectPosition: birthdayConfig.images.newbornObjectPosition || 'center 20%' }}
-            />
-          </div>
-
-          {/* THEN Photo Title Card (Top Left - Newborn Photo Badge) */}
-          <div className="absolute top-3 left-3 sm:top-6 sm:left-6 px-2.5 py-1 sm:px-4 sm:py-2 rounded-full bg-[#f3a187] text-white font-bold text-[10px] sm:text-xs shadow-md border border-white flex items-center gap-1 sm:gap-1.5 z-20 pointer-events-none max-w-[48%] sm:max-w-none">
-            <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
-            <span className="truncate whitespace-nowrap"><span className="sm:hidden">THEN</span><span className="hidden sm:inline">AT THE BEGINNING (OCT 2025)</span></span>
-          </div>
-
-          {/* NOW Photo Title Card (Top Right - 1 Year Photo Badge) */}
-          <div className="absolute top-3 right-3 sm:top-6 sm:right-6 px-2.5 py-1 sm:px-4 sm:py-2 rounded-full bg-[#f5c65d] text-[#49362d] font-bold text-[10px] sm:text-xs shadow-md border border-white flex items-center gap-1 sm:gap-1.5 z-20 pointer-events-none max-w-[48%] sm:max-w-none">
-            <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
-            <span className="truncate whitespace-nowrap"><span className="sm:hidden">NOW</span><span className="hidden sm:inline">ONE YEAR LATER (OCT 2026)</span></span>
-          </div>
-
-          {/* Draggable Divider Handle Line */}
-          <div
-            className="absolute top-0 bottom-0 w-1 bg-white shadow-2xl -translate-x-1/2 pointer-events-none z-30"
-            style={{ left: `${sliderPosition}%` }}
-          >
-            <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white shadow-2xl border-4 border-[#f5c65d] flex items-center justify-center text-[#49362d]">
-              <MoveHorizontal className="w-4 h-4 sm:w-5 sm:h-5 animate-pulse" />
-            </div>
-          </div>
-        </div>
+        <CompareReveal
+          before={{
+            src: birthdayConfig.images.newborn,
+            alt: "Newborn Hanvika",
+            objectPosition: birthdayConfig.images.newbornObjectPosition || 'center 20%',
+          }}
+          after={{
+            src: birthdayConfig.images.birthday,
+            alt: "Hanvika Turns One",
+            objectPosition: birthdayConfig.images.birthdayObjectPosition || 'center',
+          }}
+          defaultPosition={50}
+          introSweep={true}
+          snapOnDoubleClick={50}
+          className="w-full h-[280px] sm:h-[380px] md:h-[500px]"
+          labels={[
+            <div className="px-2.5 py-1 sm:px-4 sm:py-2 rounded-full bg-[#f3a187]/95 backdrop-blur-md text-white font-bold text-[10px] sm:text-xs shadow-md border border-white flex items-center gap-1 sm:gap-1.5">
+              <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+              <span className="truncate whitespace-nowrap">
+                <span className="sm:hidden">THEN</span>
+                <span className="hidden sm:inline">AT THE BEGINNING (OCT 2025)</span>
+              </span>
+            </div>,
+            <div className="px-2.5 py-1 sm:px-4 sm:py-2 rounded-full bg-[#f5c65d]/95 backdrop-blur-md text-[#49362d] font-bold text-[10px] sm:text-xs shadow-md border border-white flex items-center gap-1 sm:gap-1.5">
+              <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+              <span className="truncate whitespace-nowrap">
+                <span className="sm:hidden">NOW</span>
+                <span className="hidden sm:inline">ONE YEAR LATER (OCT 2026)</span>
+              </span>
+            </div>,
+          ]}
+        />
 
         {/* Drag Helper Pill */}
         <div className="bg-[#fff8ee] py-3 text-center border-t border-[#f5c65d]/30">
           <span className="text-[10px] sm:text-xs font-extrabold uppercase tracking-wider sm:tracking-widest px-3 text-[#49362d]/70 flex items-center justify-center gap-2">
             <MoveHorizontal className="w-4 h-4 text-[#f3a187] shrink-0" />
-            Drag or swipe slider left and right to compare!
+            Drag or swipe slider left and right to compare (double tap to center)!
           </span>
         </div>
       </motion.div>
