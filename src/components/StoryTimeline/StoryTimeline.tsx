@@ -103,10 +103,10 @@ export const StoryTimeline: React.FC = () => {
         whileInView={{ opacity: 1, y: 0, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="glass-card rounded-[36px] md:rounded-[44px] p-3 sm:p-6 md:p-10 border-4 border-white shadow-2xl relative max-w-4xl mx-auto"
+        className="glass-card rounded-[28px] sm:rounded-[36px] md:rounded-[44px] p-2 sm:p-6 md:p-10 border-2 sm:border-4 border-white shadow-2xl relative max-w-4xl mx-auto"
       >
         {/* Interactive Wheel Carousel */}
-        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-b from-white/70 to-[#fff8ee]/70 border border-[#f5c65d]/25 p-2 sm:p-4">
+        <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-gradient-to-b from-white/70 to-[#fff8ee]/70 border border-[#f5c65d]/25 p-1 sm:p-4">
           <WheelCarousel
             items={milestoneItems}
             activeIndex={activeIndex}
@@ -210,7 +210,7 @@ export const StoryTimeline: React.FC = () => {
         <div className="mt-4 text-center">
           <span className="text-[11px] font-bold text-[#49362d]/65 inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-full bg-white/60 border border-[#f5c65d]/20 shadow-xs">
             <MoveVertical className="w-3.5 h-3.5 text-[#f3a187] shrink-0" />
-            <span>Swipe photo, drag wheel, or tap arrows / months to explore all 12 months!</span>
+            <span>Swipe photo, drag wheel, or tap months below to explore!</span>
           </span>
         </div>
       </motion.div>

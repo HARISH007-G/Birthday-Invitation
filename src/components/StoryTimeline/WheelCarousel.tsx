@@ -139,6 +139,20 @@ export function WheelCarousel({
   const hasDraggedRef = useRef(false);
   const frameRef = useRef<number | null>(null);
 
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== "undefined" ? window.innerWidth < 640 : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const effectivePhotoWidth = isMobile ? Math.max(photoWidth, 62) : photoWidth;
+
   useEffect(() => {
     const normalizedIndex = wrapIndex(selectedRef.current, itemCount);
     if (normalizedIndex === selectedRef.current) return;
@@ -404,14 +418,14 @@ export function WheelCarousel({
       >
         {/* Photo Display Card */}
         <div
-          className="flex h-full shrink-0 items-center justify-center p-1 sm:p-3"
+          className="flex h-full shrink-0 items-center justify-center p-0.5 sm:p-3"
           style={{
-            width: `${photoWidth}%`,
+            width: `${effectivePhotoWidth}%`,
           }}
         >
           <div
             className={cn(
-              "relative w-full overflow-hidden shadow-2xl border-4 border-white/95 bg-white transition-all duration-300",
+              "relative w-full overflow-hidden shadow-2xl border-2 sm:border-4 border-white/95 bg-white transition-all duration-300",
               photoClassName,
             )}
             style={{
@@ -449,36 +463,6 @@ export function WheelCarousel({
                 <span>Month {selectedItem.month}</span>
               </div>
             )}
-
-            {/* Quick Prev/Next floating arrows directly on photo for effortless 1-tap mobile navigation */}
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                moveBy(-1);
-              }}
-              aria-label="Previous month"
-              title="Previous month"
-              className="absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#49362d]/75 hover:bg-[#49362d] active:scale-90 text-white backdrop-blur-md flex items-center justify-center transition-all border border-white/50 shadow-md touch-manipulation cursor-pointer"
-            >
-              <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                moveBy(1);
-              }}
-              aria-label="Next month"
-              title="Next month"
-              className="absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#49362d]/75 hover:bg-[#49362d] active:scale-90 text-white backdrop-blur-md flex items-center justify-center transition-all border border-white/50 shadow-md touch-manipulation cursor-pointer"
-            >
-              <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
           </div>
         </div>
 
@@ -542,9 +526,14 @@ export function WheelCarousel({
                   transform: `translate(${x}px, ${y}px) translateY(-50%) rotate(${angle}deg) scale(${scale})`,
                 }}
               >
-                <span className="flex items-center gap-1 sm:gap-1.5 max-w-[130px] sm:max-w-none truncate">
+                <span className="flex items-center gap-1 sm:gap-1.5 max-w-[125px] sm:max-w-none truncate">
                   {selected && <span className="text-[#f5c65d] shrink-0 text-xs">✦</span>}
-                  <span className="truncate">{item.label}</span>
+                  <span className="truncate sm:hidden font-bold">
+                    {item.month ? `Month ${parseInt(item.month, 10)}` : item.label}
+                  </span>
+                  <span className="truncate hidden sm:inline">
+                    {item.label}
+                  </span>
                 </span>
               </div>
             );
