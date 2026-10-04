@@ -18,16 +18,16 @@ export default function NavbarDemo() {
       link: "#timeline",
     },
     {
-      name: "Firsts",
-      link: "#firsts",
+      name: "Then & Now",
+      link: "#then-and-now",
     },
     {
       name: "Pass 🎟️",
       link: "#party-pass",
     },
     {
-      name: "Jukebox 🎵",
-      link: "#jukebox",
+      name: "Family 💖",
+      link: "#family-gallery",
     },
     {
       name: "Details",

@@ -10,11 +10,8 @@ import { FloatingNavbar } from './components/Navbar/FloatingNavbar';
 import { HeroSection } from './components/Hero/HeroSection';
 import { WelcomeSection } from './components/Welcome/WelcomeSection';
 import { StoryTimeline } from './components/StoryTimeline/StoryTimeline';
-import { FirstsSection } from './components/Firsts/FirstsSection';
 import { ThenAndNow } from './components/ThenAndNow/ThenAndNow';
-import { FavoriteThings } from './components/FavoriteThings/FavoriteThings';
 import { FamilyGallery } from './components/FamilyGallery/FamilyGallery';
-import { PartyPhotoDump } from './components/FamilyGallery/PartyPhotoDump';
 import { EventDetails } from './components/EventDetails/EventDetails';
 import { CountdownSection } from './components/Countdown/CountdownSection';
 import { RSVPSection } from './components/RSVP/RSVPSection';
@@ -23,7 +20,6 @@ import { LocationSection } from './components/Location/LocationSection';
 import { FinalCelebration } from './components/FinalCelebration/FinalCelebration';
 import { BackgroundAudio } from './components/Audio/BackgroundAudio';
 import { PartyPass } from './components/PartyPass/PartyPass';
-import { PartyJukebox } from './components/Jukebox/PartyJukebox';
 import { SelfieFrame } from './components/SelfieFrame/SelfieFrame';
 
 export function App() {
@@ -132,31 +128,19 @@ export function App() {
             {/* 5. 12-Month Story Journey Timeline */}
             <StoryTimeline />
 
-            {/* 6. A Collection of Firsts */}
-            <FirstsSection />
-
-            {/* 7. Personalized Digital VIP Party Pass */}
+            {/* 6. Personalized Digital VIP Party Pass */}
             <PartyPass />
 
             {/* ☁️ Cloud Wave Divider */}
             <CloudDivider fillColor="#fff8ee" />
 
-            {/* 8. Then and Now Comparison */}
+            {/* 7. Then and Now Comparison */}
             <ThenAndNow />
 
-            {/* 9. Favorite Things */}
-            <FavoriteThings />
-
-            {/* 10. Guest Party Song Request Jukebox */}
-            <PartyJukebox />
-
-            {/* 11. Family Photo Collage */}
+            {/* 8. Family Photo Collage */}
             <FamilyGallery />
 
-            {/* 📸 Guest Memory Drive & Party Photo Dump */}
-            <PartyPhotoDump />
-
-            {/* 12. Event Details */}
+            {/* 9. Event Details */}
             <EventDetails />
 
             {/* 13. Virtual Guest Selfie Souvenir Frame */}

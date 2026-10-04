@@ -7,7 +7,7 @@ import { Heart } from 'lucide-react';
 
 export const FamilyGallery: React.FC = () => {
   return (
-    <section className="relative py-12 md:py-20 px-3 sm:px-4 max-w-6xl mx-auto overflow-hidden">
+    <section id="family-gallery" className="relative py-12 md:py-20 px-3 sm:px-4 max-w-6xl mx-auto overflow-hidden">
       <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-14">
         <span className="text-xs font-bold uppercase tracking-widest text-[#f3a187]">
           Family & Happiness
