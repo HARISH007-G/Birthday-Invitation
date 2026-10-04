@@ -51,7 +51,7 @@ export const CountdownSection: React.FC = () => {
   ];
 
   return (
-    <section className="relative py-12 md:py-20 px-3 sm:px-4 max-w-4xl mx-auto overflow-hidden">
+    <section id="countdown" className="relative py-12 md:py-20 px-3 sm:px-4 max-w-4xl mx-auto overflow-hidden">
       <motion.div
         initial={{ scale: 0.95, opacity: 0 }}
         whileInView={{ scale: 1, opacity: 1 }}

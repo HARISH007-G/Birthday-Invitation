@@ -116,11 +116,11 @@ export function App() {
             {/* ☁️ Cloud Wave Divider */}
             <CloudDivider fillColor="#fff3d1" />
 
-            {/* 3. Birthday Countdown Timer Card */}
-            <CountdownSection />
-
-            {/* 4. Welcome Section */}
+            {/* 3. Welcome Section ("Our Sunshine's Story") */}
             <WelcomeSection />
+
+            {/* 4. Birthday Countdown Timer Card ("The Big Day Is Almost Here!") */}
+            <CountdownSection />
 
             {/* 5. Event Celebration Details (Date, Time, Venue) */}
             <EventDetails />
