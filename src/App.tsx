@@ -122,26 +122,26 @@ export function App() {
             {/* 4. Welcome Section */}
             <WelcomeSection />
 
+            {/* 5. Event Celebration Details (Date, Time, Venue) */}
+            <EventDetails />
+
             {/* ☁️ Cloud Wave Divider */}
             <CloudDivider fillColor="#ffffff" />
 
-            {/* 5. 12-Month Story Journey Timeline */}
+            {/* 6. 12-Month Story Journey Timeline */}
             <StoryTimeline />
 
-            {/* 6. Personalized Digital VIP Party Pass */}
+            {/* 7. Personalized Digital VIP Party Pass */}
             <PartyPass />
 
             {/* ☁️ Cloud Wave Divider */}
             <CloudDivider fillColor="#fff8ee" />
 
-            {/* 7. Then and Now Comparison */}
+            {/* 8. Then and Now Comparison */}
             <ThenAndNow />
 
-            {/* 8. Family Photo Collage */}
+            {/* 9. Family Photo Collage */}
             <FamilyGallery />
-
-            {/* 9. Event Details */}
-            <EventDetails />
 
             {/* 13. Virtual Guest Selfie Souvenir Frame */}
             <SelfieFrame />

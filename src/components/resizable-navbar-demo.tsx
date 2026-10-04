@@ -14,24 +14,24 @@ import { useState } from "react";
 export default function NavbarDemo() {
   const navItems = [
     {
-      name: "Story",
-      link: "#timeline",
+      name: "Details",
+      link: "#event-details",
     },
     {
-      name: "Then & Now",
-      link: "#then-and-now",
+      name: "Story",
+      link: "#timeline",
     },
     {
       name: "Pass 🎟️",
       link: "#party-pass",
     },
     {
-      name: "Family 💖",
-      link: "#family-gallery",
+      name: "Then & Now",
+      link: "#then-and-now",
     },
     {
-      name: "Details",
-      link: "#event-details",
+      name: "Family 💖",
+      link: "#family-gallery",
     },
     {
       name: "Join Party",
